@@ -1,7 +1,7 @@
 {
   "name": "kanbananza-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": " ",
   "main": "src/main/index.js",
   "scripts": {
     "postinstall": "cd .. && husky install kanbananza-backend/.husky",
