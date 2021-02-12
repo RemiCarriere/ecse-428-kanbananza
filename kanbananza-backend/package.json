@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main/index.js",
   "scripts": {
-    "postinstall": "husky install",
+    "postinstall": "cd .. && husky install kanbananza-backend/.husky",
     "start": "NODE_ENV=production babel-node src/main/index.js",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/main/index.js",
     "test": "jest",
@@ -60,9 +60,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "echo hi",
-      "eslint",
-      "prettier --write"
+      "cd kanbananza-backend && eslint || prettier --write"
     ]
   }
 }
