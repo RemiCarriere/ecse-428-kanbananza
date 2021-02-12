@@ -11,9 +11,10 @@
     "format:fix": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
-    "clean": "rimraf dist",
+    "clean": "rimraf node_modules",
+    "clean:build": "rimraf dist",
     "transpile": "babel ./src --out-dir dist",
-    "build": "NODE_ENV=PRODUCTION npm run clean && npm run transpile"
+    "build": "NODE_ENV=PRODUCTION npm run clean:build && npm run transpile"
   },
   "repository": {
     "type": "git",
