@@ -4,8 +4,8 @@ import express from "express";
 
 import "dotenv/config";
 
-import controller from "./api";
-import errorHandler from "./api/middleware/error_handler";
+import routes from "./routes";
+import errorHandler from "./middleware/error_handler";
 
 const app = express();
 
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // app routes
-app.use("/", controller);
+app.use("/", routes);
 
 // error-handling
 app.use(errorHandler);

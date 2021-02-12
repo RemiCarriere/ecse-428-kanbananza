@@ -21,13 +21,7 @@ class HttpError extends Error {
   serialize() {
     const { id, code, reasonPhrase, message, body } = this;
     // should automatically strip undefined attributes
-    return JSON.stringify({
-      id,
-      code,
-      reasonPhrase,
-      message,
-      body,
-    });
+    return this;
   }
 }
 
