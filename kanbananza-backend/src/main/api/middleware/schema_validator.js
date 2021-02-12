@@ -1,6 +1,11 @@
 import Ajv from "ajv";
-let ajv = new Ajv({ allErrors: true, removeAdditional: "all", verbose: true });
 import HttpError from "../http_error";
+
+const ajv = new Ajv({
+  allErrors: true,
+  removeAdditional: "all",
+  verbose: true,
+});
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});

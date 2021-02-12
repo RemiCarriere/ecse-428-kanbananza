@@ -13,12 +13,14 @@ class HttpError extends Error {
     this.id = uuidv4();
     this.code = code.toString() in http.STATUS_CODES ? code : DEFAULT_CODE;
     this.reasonPhrase = http.STATUS_CODES[this.code];
+
     this.message = message;
     this.body = body;
   }
 
   serialize() {
     const { id, code, reasonPhrase, message, body } = this;
+    // should automatically strip undefined attributes
     return JSON.stringify({
       id,
       code,
