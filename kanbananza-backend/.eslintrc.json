@@ -1,0 +1,30 @@
+{
+  "root": true,
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["airbnb-base", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "import/no-dynamic-require": "off",
+    "import/no-mutable-exports": "off",
+    "prefer-template": "off",
+    "consistent-return": "warn",
+    "camelcase": "warn",
+    "global-require": "off",
+    "no-unused-vars": "warn",
+    "arrow-body-style": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.js", "**/*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
