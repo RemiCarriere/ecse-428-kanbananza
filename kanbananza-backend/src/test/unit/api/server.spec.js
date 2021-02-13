@@ -33,7 +33,7 @@ test("GET /", (done) => {
     .catch((err) => done(err));
 });
 
-test("async GET /", async (done) => {
+test("async POST /", async (done) => {
   const res = await request.get("/");
   expect(res.status).toBe(200);
   done();
