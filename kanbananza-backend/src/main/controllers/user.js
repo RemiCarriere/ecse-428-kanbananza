@@ -2,12 +2,12 @@ import { command } from "yargs";
 import HttpError from "../http_error";
 import userService from "../services/user";
 
-const index = async (req, res) => {
+const create = async (req, res) => {
   try {
     const user = await userService.createUser({
       email: req.body.email,
-      firstName: "bob",
-      lastName: "jones",
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       password: req.body.password,
     });
     console.log(user);
@@ -17,4 +17,4 @@ const index = async (req, res) => {
   }
 };
 
-export default { index };
+export default { create };
