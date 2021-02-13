@@ -10,7 +10,7 @@ export default {
   port: parseInt(process.env.PORT, 10),
 
   /**
-   * That long string from mlab
+   * mongoDB Connection String URI
    */
   databaseURL: {
     development: "placeholder",
