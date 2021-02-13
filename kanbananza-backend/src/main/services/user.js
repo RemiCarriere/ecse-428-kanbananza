@@ -1,12 +1,8 @@
 const UserDB = require('../models/user')
 
-const createUser = async ({ email, firstName, lastName, password }) => {
+const createUser = async ({ email, password, firstName, lastName }) => {
   try{
-    const newUser = await UserDB.insertOne({ email, firstName, lastName, password }, function(err, res) {
-      if (err) throw err;
-      console.log("1 user inserted");
-      UserDB.close();
-    });
+    const newUser = await UserDB.insertOne({ email, password, firstName, lastName });
     return newUser;
   }
   catch(e){
