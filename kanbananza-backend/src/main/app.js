@@ -3,6 +3,7 @@ import morgan from "morgan";
 import express from "express";
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
+import mongoose from "mongoose";
 
 const config = {
   db: { development: "placeholder", production: "placeholder 2" },
