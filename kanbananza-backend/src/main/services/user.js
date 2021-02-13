@@ -1,12 +1,12 @@
-import UserDB from "../models/user";
+import User from "../models/user";
 
 const createUser = async ({ email, password, firstName, lastName }) => {
   try {
-    const newUser = await UserDB.insertOne({
+    const newUser = await User.create({
       email,
       password,
-      firstName,
-      lastName,
+      first_name: firstName,
+      last_name: lastName,
     });
     return newUser;
   } catch (e) {
