@@ -13,7 +13,7 @@ export default {
    * mongoDB Connection String URI
    */
   databaseURL: {
-    development: "placeholder",
+    development: "mongodb://127.0.0.1:27017",
     production: process.env.DATABASE_URL,
   },
 
