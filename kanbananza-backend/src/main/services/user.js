@@ -1,4 +1,4 @@
-const UserDB = require('../models/user')
+import UserDB from '../models/user'
 
 const createUser = async ({ email, password, firstName, lastName }) => {
   try{

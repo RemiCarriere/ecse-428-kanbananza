@@ -12,7 +12,6 @@ test("GET /", (done) => {
 });
 
 test("async POST /", async (done) => {
-  //todo change this
   const res = await request.get("/");
   expect(res.status).toBe(200);
   done();
