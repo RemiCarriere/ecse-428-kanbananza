@@ -1,5 +1,3 @@
-// logging-in.steps.js
-
 import { defineFeature, loadFeature } from 'jest-cucumber';
 
 const feature = loadFeature('src/test/acceptance/features/Example.feature');
@@ -7,7 +5,7 @@ const feature = loadFeature('src/test/acceptance/features/Example.feature');
 defineFeature(feature, (test) => {
   let accountCreated = false;
   
-  beforeEach(() => {
+  afterEach(() => {
       accountCreated = false;
   });
 
