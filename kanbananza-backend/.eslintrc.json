@@ -23,7 +23,7 @@
   },
   "overrides": [
     {
-      "files": ["**/*.spec.js", "**/*.test.js"],
+      "files": ["**/*.spec.js", "**/*.test.js", "**/*.steps.js"],
       "env": {
         "jest": true
       }

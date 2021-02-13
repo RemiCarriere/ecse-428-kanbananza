@@ -1,3 +1,4 @@
 {
-  "testEnvironment": "node"
+  "testEnvironment": "node",
+  "testMatch": ["**/*.steps.js", "**/*.spec.js"]
 }
