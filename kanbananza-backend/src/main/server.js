@@ -3,8 +3,10 @@
  */
 
 import app from "./app";
+import config from "./config";
+import { connectDb } from "./database";
 
-const port = process.env.PORT || 3000;
+const port = config.port;
 
 app.listen(port, (e) => {
   if (e) {
@@ -12,4 +14,11 @@ app.listen(port, (e) => {
   }
 
   console.log(`Listening on port ${port}.`);
+});
+
+const db = connectDb();
+
+db.on("error", console.error.bind(console, "mongoDB connection error:"));
+db.once("open", () => {
+  console.log("connected to database");
 });

@@ -7,10 +7,10 @@ export default {
   /**
    * Your favorite port
    */
-  port: parseInt(process.env.PORT, 10),
+  port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
 
   /**
-   * That long string from mlab
+   * mongoDB Connection String URI
    */
   databaseURL: {
     development: "placeholder",
