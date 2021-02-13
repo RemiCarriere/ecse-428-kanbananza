@@ -1,9 +1,9 @@
 import cors from "cors";
 import morgan from "morgan";
 import express from "express";
+import mongoose from "mongoose";
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
-import mongoose from "mongoose";
 
 const config = {
   db: { development: "placeholder", production: "placeholder 2" },
