@@ -5,8 +5,8 @@ import columnService from "../services/column";
 const index = async (req, res) => {
   try {
     const column = await columnService.createcolumn({
-        label: "todo"
-        //TODO: add ref for board
+        label: req.body.label,
+        board: req.body.board
     });
     console.log(column);
     res.status(201).json(column); // convert to dto

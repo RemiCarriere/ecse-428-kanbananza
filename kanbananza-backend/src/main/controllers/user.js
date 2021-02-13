@@ -6,8 +6,8 @@ const index = async (req, res) => {
   try {
     const user = await userService.createUser({
       email: req.body.email,
-      firstName: "bob",
-      lastName: "jones",
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       password: req.body.password,
     });
     console.log(user);

@@ -5,8 +5,8 @@ import boardService from "../services/board";
 const index = async (req, res) => {
   try {
     const board = await boardService.createboard({
-        label: "Project Mars"
-        //TODO: add ref for user
+        label: req.body.label,
+        user: req.body.board
     });
     console.log(board);
     res.status(201).json(board); // convert to dto
