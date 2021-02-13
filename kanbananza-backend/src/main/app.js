@@ -1,27 +1,8 @@
 import cors from "cors";
 import morgan from "morgan";
 import express from "express";
-import mongoose from "mongoose";
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
-
-const config = {
-  db: { development: "placeholder", production: "placeholder 2" },
-};
-
-const databaseUrl = process.env.NODE_ENV
-  ? config[process.env.NODE_ENV]
-  : config.db.development;
-
-mongoose.connect(databaseUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "mongoDB connection error:"));
-db.once("open", () => {
-  console.log("connected to database");
-});
 
 const app = express();
 

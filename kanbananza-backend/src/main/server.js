@@ -3,8 +3,9 @@
  */
 
 import app from "./app";
-import config from "./config";
 import { connectDb } from "./database";
+
+import config from "./config";
 
 const port = config.port;
 
@@ -16,9 +17,11 @@ app.listen(port, (e) => {
   console.log(`Listening on port ${port}.`);
 });
 
-const db = connectDb();
+const databaseURL = config.databaseURL[process.env.NODE_ENV];
+
+const db = connectDb(databaseURL);
 
 db.on("error", console.error.bind(console, "mongoDB connection error:"));
 db.once("open", () => {
-  console.log("connected to database");
+  console.log(`Connected to ${process.env.NODE_ENV} database.`);
 });
