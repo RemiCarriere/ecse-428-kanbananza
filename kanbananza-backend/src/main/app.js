@@ -2,19 +2,12 @@ import cors from "cors";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import express from "express";
-
-import "dotenv/config";
-
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
 
-const config = {
-  db: { development: "placeholder", production: "placeholder 2" },
-};
+import config from "./config";
 
-const databaseUrl = process.env.NODE_ENV
-  ? config[process.env.NODE_ENV]
-  : config.db.development;
+const databaseUrl = config.databaseURL[process.env.NODE_ENV];
 
 mongoose.connect(databaseUrl, {
   useNewUrlParser: true,
@@ -22,7 +15,7 @@ mongoose.connect(databaseUrl, {
 });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongoDB connection error:"));
-db.once("open", function () {
+db.once("open", () => {
   console.log("connected to database");
 });
 

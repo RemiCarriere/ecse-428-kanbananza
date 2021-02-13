@@ -4,6 +4,7 @@
   "description": " ",
   "main": "src/main/index.js",
   "scripts": {
+    "pre-commit": "eslint . || prettier --write .",
     "start": "NODE_ENV=production babel-node src/main/index.js",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/main/index.js",
     "test": "jest",

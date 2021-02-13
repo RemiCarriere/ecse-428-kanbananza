@@ -1,4 +1,3 @@
-import { command } from "yargs";
 import HttpError from "../http_error";
 import userService from "../services/user";
 
