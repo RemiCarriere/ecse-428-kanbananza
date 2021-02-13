@@ -7,7 +7,7 @@ export default {
   /**
    * Your favorite port
    */
-  port: parseInt(process.env.PORT, 10),
+  port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
 
   /**
    * mongoDB Connection String URI
