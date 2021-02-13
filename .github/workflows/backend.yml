@@ -55,6 +55,6 @@ jobs:
         with:
           node-version: "12.x"
       - name: Install dependencies
-        run: npm install
+        run: npm ci # see https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable
       - run: npm run lint:check
       - run: npm run format:check

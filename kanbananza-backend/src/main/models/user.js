@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
-
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema({
   fist_name: { type: String, required: true, maxLength: 100 },

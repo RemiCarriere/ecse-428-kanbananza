@@ -4,8 +4,6 @@ import express from "express";
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
 
-import config from "./config";
-
 const app = express();
 
 // middleware

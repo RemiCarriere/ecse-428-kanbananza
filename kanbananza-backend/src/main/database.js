@@ -1,4 +1,4 @@
-import mongoose from mongoose;
+import mongoose from "mongoose";
 import config from "./config";
 
 const databaseUrl = config.databaseURL[process.env.NODE_ENV];
