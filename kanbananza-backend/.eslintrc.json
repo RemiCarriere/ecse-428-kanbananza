@@ -10,9 +10,11 @@
     "sourceType": "module"
   },
   "rules": {
+    "import/prefer-default-export": "warn",
     "import/no-dynamic-require": "off",
     "import/no-mutable-exports": "off",
     "prefer-template": "off",
+    "prefer-destructuring": "off",
     "consistent-return": "warn",
     "camelcase": "warn",
     "global-require": "off",

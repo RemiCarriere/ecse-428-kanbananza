@@ -1,10 +1,6 @@
 import cors from "cors";
 import morgan from "morgan";
-import mongoose from "mongoose";
 import express from "express";
-
-import "dotenv/config";
-
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
 
