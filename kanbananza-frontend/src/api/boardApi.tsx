@@ -4,5 +4,6 @@ import API from './api'
 const getBoard = (id: number) => {
 
 }
-const updateBoard = (id: number, data){
+
+const updateBoard = (id: number, data) => {
 }
