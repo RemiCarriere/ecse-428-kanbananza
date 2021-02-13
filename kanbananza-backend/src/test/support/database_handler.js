@@ -35,11 +35,11 @@ const close = async () => {
 const clear = async () => {
   const collections = mongoose.connection.collections;
 
-  /* eslint-disable */
-  for (const collection of collections) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const collection of Object.values(collections)) {
+    // eslint-disable-next-line no-await-in-loop
     await collection.deleteMany();
   }
-  /* eslint-enable */
 };
 
 export default {
