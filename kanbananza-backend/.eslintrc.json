@@ -10,6 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-underscore-dangle": "off",
     "import/prefer-default-export": "warn",
     "import/no-dynamic-require": "off",
     "import/no-mutable-exports": "off",
