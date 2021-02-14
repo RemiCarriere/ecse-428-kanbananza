@@ -1,5 +1,5 @@
 import userService from "../services/user";
-import UserDTO from "../DTO/user_DTO";
+import UserDTO from "../DTO/user";
 
 const create = async (req, res, next) => {
   try {
