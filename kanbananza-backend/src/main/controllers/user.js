@@ -1,6 +1,7 @@
 import userService from "../services/user";
+import UserDTO from "../DTO/user_DTO";
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     console.log(req.body);
     const user = await userService.createUser({
@@ -10,10 +11,9 @@ const create = async (req, res) => {
       password: req.body.password,
     });
     console.log(user);
-    res.status(201).json(user); // convert to dto
+    res.status(201).json(UserDTO.fromDocument(user));
   } catch (e) {
-    res.status(400);
-    res.json({ message: "user could not be created" });
+    next(e);
   }
 };
 

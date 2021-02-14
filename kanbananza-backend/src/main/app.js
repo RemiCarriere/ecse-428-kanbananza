@@ -4,6 +4,8 @@ import express from "express";
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
 
+import config from "./config";
+
 const app = express();
 
 // middleware
@@ -19,7 +21,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // app routes
-app.use("/", routes);
+const prefix = config.api.prefix ? config.api.prefix + "/" : "";
+
+app.use(`/${prefix}`, routes);
 
 // error-handling
 app.use(errorHandler);

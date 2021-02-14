@@ -9,7 +9,7 @@ const router = Router();
 // root route
 router.get("/", (req, res) => res.status(200).json("root"));
 
-// register endpoints
+// register endpoints to injected router
 userRoutes(router);
 boardRoutes(router);
 
@@ -18,7 +18,7 @@ router.use("*", (req, res, next) => {
   next(
     new HttpError({
       code: 404,
-      message: `Route '${req.originalUrl}' not supported.`,
+      message: `${req.method} '${req.originalUrl}' is not supported.`,
     })
   );
 });
