@@ -10,7 +10,7 @@ class HttpError extends Error {
   /**
    * @see https://tools.ietf.org/html/rfc7231#section-6.5.1
    */
-  constructor({ code = DEFAULT_CODE, message, body, errors = [] }) {
+  constructor({ code = DEFAULT_CODE, message, body, errors = undefined }) {
     super();
     this.id = uuidv4();
     this.code = code.toString() in http.STATUS_CODES ? code : DEFAULT_CODE;

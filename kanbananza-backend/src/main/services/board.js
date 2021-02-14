@@ -2,6 +2,7 @@ import { Error } from "mongoose";
 import HttpError from "../http_error";
 import Board from "../models/board";
 import User from "../models/user";
+import Column from "../models/column";
 
 const createBoard = async ({ name, ownerId }) => {
   if (!(await User.exists({ _id: ownerId }))) {
@@ -12,7 +13,7 @@ const createBoard = async ({ name, ownerId }) => {
   }
 
   try {
-    return await Board.create({ name, owner: ownerId });
+    return Board.create({ name, owner: ownerId });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({
@@ -26,4 +27,37 @@ const createBoard = async ({ name, ownerId }) => {
   }
 };
 
-export default { createBoard };
+const findBoardById = async (id) => {
+  if (!(await Board.exists({ _id: id }))) {
+    throw new HttpError({
+      code: 404,
+      message: `Board with id ${id} does not exist.`,
+    });
+  }
+  return Board.findOne({ _id: id }).exec();
+};
+
+const findAllBoards = async () => {
+  return Board.find().exec();
+};
+
+const findBoardsByName = async (name) => {
+  return Board.find({ name }).exec();
+};
+
+const findAllBoardColumns = async (id) => {
+  return Column.find({ boardId: id }).exec();
+};
+
+const findAllBoardColumnsByName = async (id, name) => {
+  return Column.find({ boardId: id, name }).exec();
+};
+
+export default {
+  createBoard,
+  findAllBoards,
+  findBoardById,
+  findBoardsByName,
+  findAllBoardColumns,
+  findAllBoardColumnsByName,
+};
