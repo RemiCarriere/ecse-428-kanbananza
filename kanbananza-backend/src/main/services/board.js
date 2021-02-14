@@ -1,7 +1,7 @@
+import { Error } from "mongoose";
 import HttpError from "../http_error";
 import Board from "../models/board";
 import User from "../models/user";
-import { Error } from "mongoose";
 
 const createBoard = async ({ label, ownerId }) => {
   if (!(await User.exists({ _id: ownerId }))) {
