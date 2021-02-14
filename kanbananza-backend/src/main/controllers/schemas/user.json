@@ -1,28 +1,27 @@
 {
-    "create": {
-        "title": "new user",
-        "description": "describes propertiees required to create a new user and their characteristics",
-        "type": "object",
-        "properties":  {
-            "firstName": {
-                "type": "string",
-                "description": "first name of the user"
-            },
-            "lastName": {
-                "type":"string",
-                "description": "last name of the user"
-
-            },
-            "email": {
-                "type": "string",
-                "format": "email",
-                "description": "email of the user"
-            },
-            "password": {
-                "type": "string",
-                "description": "password of the user"
-            }
-        },
-        "required": ["firstName", "lastName", "email", "password"]
-    }
+  "create": {
+    "title": "new user",
+    "description": "describes propertiees required to create a new user and their characteristics",
+    "type": "object",
+    "properties": {
+      "firstName": {
+        "type": "string",
+        "description": "first name of the user"
+      },
+      "lastName": {
+        "type": "string",
+        "description": "last name of the user"
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "description": "email of the user"
+      },
+      "password": {
+        "type": "string",
+        "description": "password of the user"
+      }
+    },
+    "required": ["firstName", "lastName", "email", "password"]
+  }
 }
