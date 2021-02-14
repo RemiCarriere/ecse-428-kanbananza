@@ -28,6 +28,12 @@ const createBoard = async ({ name, ownerId }) => {
 };
 
 const findBoardById = async (id) => {
+  if (!(await Board.exists({ _id: id }))) {
+    throw new HttpError({
+      code: 404,
+      message: `Board with id ${id} does not exist.`,
+    });
+  }
   return Board.findOne({ _id: id }).exec();
 };
 
