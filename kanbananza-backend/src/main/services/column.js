@@ -13,7 +13,7 @@ const createColumn = async ({ label, board }) => {
   if (await Column.exists({ "label": label })) {
     throw new HttpError({
       code: 400,
-      message: `Column with label ${newlabel} already exists.`,
+      message: `Column with label ${label} already exists.`,
     });
   }
   try {
