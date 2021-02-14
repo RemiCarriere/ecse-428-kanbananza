@@ -1,5 +1,5 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserIsLoggedIn } from "./background.steps.js";
+import { givenUserIsLoggedIn, systemShallReport } from "./background.steps.js";
 
 const feature = loadFeature("src/test/acceptance/features/ID002_Create_Board.feature");
 
@@ -64,7 +64,7 @@ defineFeature(feature, (test) => {
 
     whenUserCreatesBoardWithName(when)
 
-    then(/^the system shall report "(.*)"$/, (arg0) => {});
+    systemShallReport(then);
 
     userShallHaveBoardWithName(then);
 
@@ -88,7 +88,7 @@ defineFeature(feature, (test) => {
 
     whenUserCreatesBoardWithName(when)
 
-    then(/^the system shall report "(.*)"$/, (arg0) => {});
+    systemShallReport(then);
 
     then(
       /^the logged-in user shall not have a board with name "(.*)"$/,

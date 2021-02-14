@@ -4,3 +4,9 @@ export const givenUserIsLoggedIn = (given) => {
 
   });
 };
+
+export const systemShallReport = (then) => {
+  then(/^the system shall report "(.*)"$/, (arg0) => {
+    
+  });
+};
