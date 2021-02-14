@@ -5,7 +5,7 @@ const create = async (req, res, next) => {
   try {
     const column = await columnService.createcolumn({
       label: req.body.label,
-      board: req.body.board,
+      boardId: req.body.boardId,
     });
     console.log(column);
     res.status(201).json(column); // convert to dto
