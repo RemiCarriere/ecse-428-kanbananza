@@ -18,7 +18,7 @@ router.use("*", (req, res, next) => {
   next(
     new HttpError({
       code: 404,
-      message: `Route '${req.originalUrl}' not supported.`,
+      message: `${req.method} '${req.originalUrl}' is not supported.`,
     })
   );
 });

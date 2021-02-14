@@ -21,9 +21,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // app routes
-const prefix = config.api.prefix || "";
+const prefix = config.api.prefix + "/" || "";
 
-app.use(`/${prefix}/`, routes);
+app.use(`/${prefix}`, routes);
 
 // error-handling
 app.use(errorHandler);
