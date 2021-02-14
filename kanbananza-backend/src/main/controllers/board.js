@@ -1,5 +1,6 @@
 import boardService from "../services/board";
 import HttpError from "../http_error";
+import BoardDTO from "../DTO/board";
 
 const create = async (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ const create = async (req, res, next) => {
       ownerId: req.body.ownerId,
     });
     console.log(board);
-    res.status(201).json(board);
+    res.status(201).json(BoardDTO.fromDocument(board));
   } catch (e) {
     if (e instanceof HttpError) {
       next(e);
