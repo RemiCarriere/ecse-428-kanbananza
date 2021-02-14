@@ -63,7 +63,12 @@ const Signup = () => {
                     <Button type="submit">
                         Sign Up
                   </Button>
-                    
+                     <Button type="submit">
+                        Return to Login
+                  </Button>
+                    <Button type="submit">
+                        Logout 
+                  </Button>
                 </form>
             </div>
         </div>
