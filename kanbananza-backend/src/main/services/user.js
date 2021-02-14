@@ -40,11 +40,11 @@ const findUserByEmail = async ({ email }) => {
   try {
     return await User.findOne({ email }).exec();
   } catch (e) {
-    throw new HttpError({
-      code: 400,
-      message: "sadsd field(s)",
-      body: Object.values(e.errors).map((error) => error.message),
-    });
+    if (e instanceof Error.ValidationError) {
+      throw HttpError.fromMongooseValidationError(e);
+    } else {
+      throw e;
+    }
   }
 };
 
