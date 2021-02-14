@@ -4,18 +4,16 @@ import HttpError from "../http_error";
 
 const userSchema = require("../controllers/schemas/user.json");
 
-console.log(userSchema);
-
 const ajv = new Ajv({
   allErrors: true,
   removeAdditional: "all",
   verbose: true,
 });
 
-addFormats(ajv, ["email"]); // see https://ajv.js.org/docs/validation.html#Formats
+addFormats(ajv, ["email", "date"]); // see https://ajv.js.org/docs/validation.html#Formats
 
 // register schemas
-ajv.addSchema(userSchema["create"], "createUser");
+ajv.addSchema(userSchema.create, "createUser");
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});
@@ -33,7 +31,7 @@ export const validateSchema = (schemaName) => {
           message: `Validation error${ajv.errors.length > 1 ? "s" : ""}.`,
           body: ajv.errors.map((e) => {
             return {
-              path: e.dataPath || e.params["missingProperty"],
+              path: e.dataPath || e.params.missingProperty,
               reason: e.message,
               data: e.data,
             };
