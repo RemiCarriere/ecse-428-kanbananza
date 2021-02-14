@@ -1,5 +1,5 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserIsLoggedIn, systemShallReport } from "./background.steps.js";
+import { givenUserIsLoggedIn, systemShallReport } from "./background.steps";
 
 const feature = loadFeature("src/test/acceptance/features/ID002_Create_Board.feature");
 

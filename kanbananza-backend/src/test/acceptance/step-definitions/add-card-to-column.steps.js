@@ -1,5 +1,5 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { systemShallReport } from "./background.steps.js";
+import { systemShallReport } from "./background.steps";
 
 const feature = loadFeature("src/test/acceptance/features/ID005_Add_A_Card_To_A_Column.feature");
 

@@ -1,5 +1,5 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { systemShallReport } from "./background.steps.js";
+import { systemShallReport } from "./background.steps";
 
 const login = loadFeature("src/test/acceptance/features/ID0029_Login.feature");
 const logout = loadFeature("src/test/acceptance/features/ID0030_Logout.feature");
