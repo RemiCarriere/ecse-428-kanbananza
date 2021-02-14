@@ -29,5 +29,25 @@ const createUser = async ({ email, password, firstName, lastName }) => {
     }
   }
 };
+const findUserByEmail = async ({ email }) => {
+  if (!(await User.exists({ email }))) {
+    throw new HttpError({
+      code: 404,
+      message: `User with email '${email}' does not exist.`,
+    });
+  }
 
-export default { createUser };
+  try {
+    return await User.findOne({
+      email: email,
+    });
+  } catch (e) {
+    throw new HttpError({
+      code: 400,
+      message: "sadsd field(s)",
+      body: Object.values(e.errors).map((error) => error.message),
+    });
+  }
+};
+
+export default { createUser, findUserByEmail };
