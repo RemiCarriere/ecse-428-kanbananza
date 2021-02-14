@@ -18,17 +18,14 @@ const createUser = async ({ email, password, firstName, lastName }) => {
       last_name: lastName,
     });
   } catch (e) {
-    if (e) {
-      if (e instanceof Error.ValidationError) {
-        throw new HttpError({
-          code: 400,
-          message: "Invalid field(s)",
-          body: Object.values(e.errors).map((error) => error.message),
-        });
-      } else {
-        console.error(e);
-        throw e;
-      }
+    if (e instanceof Error.ValidationError) {
+      throw new HttpError({
+        code: 400,
+        message: "Invalid field(s)",
+        body: Object.values(e.errors).map((error) => error.message),
+      });
+    } else {
+      throw e;
     }
   }
 };
