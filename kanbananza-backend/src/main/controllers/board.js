@@ -1,4 +1,3 @@
-import HttpError from "../http_error";
 import boardService from "../services/board";
 
 const create = async (req, res, next) => {

@@ -1,9 +1,9 @@
-import HttpError from "../http_error";
 import userService from "../services/user";
 import UserDTO from "../DTO/user_DTO";
 
 const create = async (req, res, next) => {
   try {
+    console.log(req.body);
     const user = await userService.createUser({
       email: req.body.email,
       firstName: req.body.firstName,
