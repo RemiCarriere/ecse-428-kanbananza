@@ -9,10 +9,6 @@ import HttpError from "./http_error";
 
 const app = express();
 
-// middleware
-
-// http
-
 // wrap express.json() to handle JSON SyntaxError
 // see https://stackoverflow.com/a/53049009
 app.use((req, res, next) => {

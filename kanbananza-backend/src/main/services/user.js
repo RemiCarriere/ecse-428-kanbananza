@@ -33,5 +33,23 @@ const createUser = async ({ email, password, firstName, lastName }) => {
     }
   }
 };
+const findUserByEmail = async ({ email }) => {
+  if (!(await User.exists({ email }))) {
+    throw new HttpError({
+      code: 404,
+      message: `User with email '${email}' does not exist.`,
+    });
+  }
 
-export default { createUser };
+  try {
+    return await User.findOne({ email }).exec();
+  } catch (e) {
+    if (e instanceof Error.ValidationError) {
+      throw HttpError.fromMongooseValidationError(e);
+    } else {
+      throw e;
+    }
+  }
+};
+
+export default { createUser, findUserByEmail };
