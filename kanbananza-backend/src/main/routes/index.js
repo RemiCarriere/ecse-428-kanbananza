@@ -1,5 +1,6 @@
 import Router from "express";
 import userRoutes from "./user";
+import boardRoutes from "./board";
 
 import HttpError from "../http_error";
 
@@ -10,6 +11,7 @@ router.get("/", (req, res) => res.status(200).json("root"));
 
 // register endpoints
 userRoutes(router);
+boardRoutes(router);
 
 // default route handler middleware
 router.use("*", (req, res, next) => {
