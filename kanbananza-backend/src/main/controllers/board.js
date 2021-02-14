@@ -3,14 +3,18 @@ import HttpError from "../http_error";
 
 const create = async (req, res, next) => {
   try {
-    const board = await boardService.createboard({
+    const board = await boardService.createBoard({
       label: req.body.label,
-      user: req.body.board,
+      ownerId: req.body.ownerId,
     });
     console.log(board);
-    res.status(201).json(board); // convert to dto
+    res.status(201).json(board);
   } catch (e) {
-    next(new HttpError({ code: 400, message: e.message }));
+    if (e instanceof HttpError) {
+      next(e);
+    } else {
+      next(new HttpError({ code: 400, message: e.message }));
+    }
   }
 };
 
