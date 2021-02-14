@@ -1,0 +1,18 @@
+{
+  "create": {
+    "title": "new board",
+    "description": "describes properties required to create a new board and their characteristics",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "name of the board"
+      },
+      "ownerId": {
+        "type": "string",
+        "description": "id of the user who owns the board"
+      }
+    },
+    "required": ["name", "ownerId"]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "create": {
     "title": "new user",
-    "description": "describes propertiees required to create a new user and their characteristics",
+    "description": "describes properties required to create a new user and their characteristics",
     "type": "object",
     "properties": {
       "firstName": {

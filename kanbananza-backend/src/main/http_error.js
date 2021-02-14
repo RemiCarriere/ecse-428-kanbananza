@@ -8,7 +8,7 @@ class HttpError extends Error {
   /**
    * @see https://tools.ietf.org/html/rfc7231#section-6.5.1
    */
-  constructor({ code = DEFAULT_CODE, message, body }) {
+  constructor({ code = DEFAULT_CODE, message, body, errors = [] }) {
     super();
     this.id = uuidv4();
     this.code = code.toString() in http.STATUS_CODES ? code : DEFAULT_CODE;
@@ -16,6 +16,8 @@ class HttpError extends Error {
 
     this.message = message;
     this.body = body;
+
+    this.errors = errors; // sub-errors
   }
 
   serialize() {

@@ -1,14 +1,14 @@
 export default class BoardDTO {
-  constructor({ id, label, ownerId }) {
+  constructor({ id, name, ownerId }) {
     this.id = id;
-    this.label = label;
+    this.name = name;
     this.ownerId = ownerId;
   }
 
   static fromDocument(board) {
     return new this({
       id: board._id,
-      label: board.label,
+      name: board.name,
       ownerId: board.ownerId,
     });
   }
