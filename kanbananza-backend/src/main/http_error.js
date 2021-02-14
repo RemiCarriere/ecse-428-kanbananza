@@ -17,7 +17,7 @@ class HttpError extends Error {
     this.message = message;
     this.body = body;
 
-    this.errors = errors;
+    this.errors = errors; // sub-errors
   }
 
   serialize() {
