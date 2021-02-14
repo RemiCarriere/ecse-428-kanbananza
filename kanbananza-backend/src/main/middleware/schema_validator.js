@@ -31,7 +31,9 @@ export const validateSchema = (schemaName) => {
           message: `Validation error${ajv.errors.length > 1 ? "s" : ""}.`,
           body: ajv.errors.map((e) => {
             return {
-              path: e.dataPath || e.params.missingProperty,
+              path: e.dataPath
+                ? e.dataPath.replace("/", "")
+                : e.params.missingProperty,
               reason: e.message,
               data: e.data,
             };
