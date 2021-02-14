@@ -38,7 +38,7 @@ const findUserByEmail = async ({ email }) => {
   }
 
   try {
-    return await User.findOne({ email });
+    return await User.findOne({ email }).exec();
   } catch (e) {
     throw new HttpError({
       code: 400,
