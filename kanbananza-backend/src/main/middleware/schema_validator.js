@@ -1,8 +1,10 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import HttpError from "../http_error";
+import ValidationError from "../validation_error";
 
 const userSchema = require("../controllers/schemas/user.json");
+const boardSchema = require("../controllers/schemas/board.json");
 
 const ajv = new Ajv({
   allErrors: true,
@@ -14,6 +16,7 @@ addFormats(ajv, ["email", "date"]); // see https://ajv.js.org/docs/validation.ht
 
 // register schemas
 ajv.addSchema(userSchema.create, "createUser");
+ajv.addSchema(boardSchema.create, "createBoard");
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});
@@ -25,19 +28,22 @@ export const validateSchema = (schemaName) => {
     if (!ajv.validate(schemaName, req.body)) {
       console.log("ajv");
       console.log(ajv.errors);
+      const validationErrors = ajv.errors.map(
+        (e) =>
+          new ValidationError({
+            path: e.dataPath
+              ? e.dataPath.replace("/", "")
+              : e.params.missingProperty,
+            reason: e.message,
+            data: e.data,
+          })
+      );
+
       return next(
         new HttpError({
           code: 400,
-          message: `Validation error${ajv.errors.length > 1 ? "s" : ""}.`,
-          body: ajv.errors.map((e) => {
-            return {
-              path: e.dataPath
-                ? e.dataPath.replace("/", "")
-                : e.params.missingProperty,
-              reason: e.message,
-              data: e.data,
-            };
-          }),
+          message: `Invalid field${ajv.errors.length > 1 ? "s" : ""}.`,
+          errors: validationErrors,
         })
       );
     }

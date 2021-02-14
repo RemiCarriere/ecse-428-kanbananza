@@ -5,7 +5,7 @@ import BoardDTO from "../DTO/board";
 const create = async (req, res, next) => {
   try {
     const board = await boardService.createBoard({
-      label: req.body.label,
+      name: req.body.name,
       ownerId: req.body.ownerId,
     });
     console.log(board);

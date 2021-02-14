@@ -1,12 +1,20 @@
 import { Error } from "mongoose";
 import HttpError from "../http_error";
 import User from "../models/user";
+import ValidationError from "../validation_error";
 
 const createUser = async ({ email, password, firstName, lastName }) => {
   if (await User.exists({ email })) {
     throw new HttpError({
       code: 400,
-      message: `User with email '${email}' aready exists.`,
+      message: "Uniqueness violation.",
+      errors: [
+        new ValidationError({
+          path: "email",
+          reason: "email is already in use.",
+          data: email,
+        }),
+      ],
     });
   }
 
@@ -21,8 +29,17 @@ const createUser = async ({ email, password, firstName, lastName }) => {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({
         code: 400,
-        message: "Invalid field(s)",
-        body: Object.values(e.errors).map((error) => error.message),
+        message: `Invalid field${
+          Object.values(e.errors).length > 1 ? "s" : ""
+        }.`,
+        errors: Object.values(e.errors).map(
+          (error) =>
+            new ValidationError({
+              path: error.path,
+              reason: error.message,
+              data: error.value,
+            })
+        ),
       });
     } else {
       throw e;

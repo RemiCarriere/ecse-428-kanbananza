@@ -3,7 +3,7 @@ import HttpError from "../http_error";
 import Board from "../models/board";
 import User from "../models/user";
 
-const createBoard = async ({ label, ownerId }) => {
+const createBoard = async ({ name, ownerId }) => {
   if (!(await User.exists({ _id: ownerId }))) {
     throw new HttpError({
       code: 400,
@@ -12,7 +12,7 @@ const createBoard = async ({ label, ownerId }) => {
   }
 
   try {
-    return await Board.create({ label, owner: ownerId });
+    return await Board.create({ name, owner: ownerId });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({
