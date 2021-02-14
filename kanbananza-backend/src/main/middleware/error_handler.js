@@ -1,6 +1,7 @@
 import HttpError from "../http_error";
 
 export default (err, req, res, next) => {
+  console.log("Handling error");
   console.error(err.stack);
   let httpError;
 
@@ -13,4 +14,5 @@ export default (err, req, res, next) => {
   }
 
   res.status(httpError.code).json(httpError.serialize());
+  next();
 };

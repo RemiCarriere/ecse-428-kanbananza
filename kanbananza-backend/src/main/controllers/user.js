@@ -1,7 +1,8 @@
 import HttpError from "../http_error";
 import userService from "../services/user";
+import UserDTO from "../DTO/user_DTO";
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     const user = await userService.createUser({
       email: req.body.email,
@@ -9,10 +10,9 @@ const create = async (req, res) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
-    console.log(user);
-    res.status(201).json(user); // convert to dto
+    res.status(201).json(UserDTO.fromDocument(user));
   } catch (e) {
-    throw new HttpError({ code: 400, message: e.message });
+    next(e);
   }
 };
 

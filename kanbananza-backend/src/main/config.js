@@ -24,6 +24,6 @@ export default {
   jwtAlgorithm: process.env.JWT_ALGO,
 
   api: {
-    prefix: "api",
+    prefix: "",
   },
 };

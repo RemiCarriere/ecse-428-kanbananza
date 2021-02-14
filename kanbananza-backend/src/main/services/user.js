@@ -1,3 +1,6 @@
+import ajv from "ajv";
+import { Error } from "mongoose";
+import HttpError from "../http_error";
 import User from "../models/user";
 
 const createUser = async ({ email, password, firstName, lastName }) => {
@@ -10,7 +13,12 @@ const createUser = async ({ email, password, firstName, lastName }) => {
     });
     return newUser;
   } catch (e) {
-    throw Error("Error while adding user");
+    if (e instanceof Error.ValidationError)
+      throw new HttpError({
+        code: 400,
+        message: "Invalid field(s)",
+        body: Object.values(e.errors).map((error) => error.message),
+      });
   }
 };
 
