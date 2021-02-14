@@ -57,4 +57,5 @@ const selectColumns = async (req, res, next) => {
   }
   res.status(200).json(columns.map((column) => ColumnDTO.fromDocument(column)));
 };
+
 export default { create, select, index, selectColumns };

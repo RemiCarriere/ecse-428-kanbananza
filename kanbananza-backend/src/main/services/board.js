@@ -50,6 +50,7 @@ const findAllBoardColumnsByName = async (id, name) => {
 export default {
   createBoard,
   findAllBoards,
+  findBoardById,
   findBoardsByName,
   findAllBoardColumns,
   findAllBoardColumnsByName,
