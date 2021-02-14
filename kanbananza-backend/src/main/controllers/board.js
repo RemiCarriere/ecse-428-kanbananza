@@ -22,10 +22,8 @@ const select = async (req, res, next) => {
     if (Object.keys(req.query).length === 0) {
       // no query params
       boards = await boardService.findAllBoards();
-    } else {
-      if (req.params.name) {
-        boards = await boardService.findBoardsByName(req.params.name);
-      }
+    } else if (req.params.name) {
+      boards = await boardService.findBoardsByName(req.params.name);
     }
   } catch (e) {
     next(e);
@@ -42,20 +40,21 @@ const index = async (req, res, next) => {
   }
 };
 
-const selectColumns = (req, res, next)  => {
+const selectColumns = async (req, res, next) => {
   let columns = [];
   try {
     if (Object.keys(req.query).length === 0) {
       // no query params
       columns = await boardService.findAllBoardColumns(req.params.id);
-    } else {
-      if (req.params.name) {
-        boards = await boardService.findBoardColumnsByName(req.params.id, req.params.name);
-      }
+    } else if (req.params.name) {
+      columns = await boardService.findBoardColumnsByName(
+        req.params.id,
+        req.params.name
+      );
     }
   } catch (e) {
     next(e);
   }
   res.status(200).json(columns.map((column) => ColumnDTO.fromDocument(column)));
-}
+};
 export default { create, select, index, selectColumns };
