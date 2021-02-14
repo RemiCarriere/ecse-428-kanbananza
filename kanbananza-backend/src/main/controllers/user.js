@@ -1,4 +1,3 @@
-import HttpError from "../http_error";
 import userService from "../services/user";
 
 const create = async (req, res) => {
