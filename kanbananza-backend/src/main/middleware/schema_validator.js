@@ -28,8 +28,6 @@ ajv.addSchema(columnSchemas.create, "createColumn");
 export const validateSchema = (schemaName) => {
   return (req, res, next) => {
     if (!ajv.validate(schemaName, req.body)) {
-      console.log("ajv");
-      console.log(ajv.errors);
       const validationErrors = ajv.errors.map(
         (e) =>
           new ValidationError({
