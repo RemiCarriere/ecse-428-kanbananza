@@ -5,14 +5,14 @@ const feature = loadFeature("src/test/acceptance/features/ID002_Create_Board.fea
 
 const whenUserCreatesBoardWithName = (when) => {
   when(
-    /^the logged-in user attempts to create a new board with name "(.*)"$/,(arg0) => {
+    /^the logged-in user attempts to create a new board with name "(.*)"$/,(name) => {
 
     });
 };
 
 const userShallHaveBoardWithName = (then) => {
   then(
-    /^the logged-in user shall have a board with name "(.*)"$/, (arg0) => {
+    /^the logged-in user shall have a board with name "(.*)"$/, (name) => {
 
     });
 };
@@ -33,8 +33,9 @@ defineFeature(feature, (test) => {
     givenUserIsLoggedIn(given);
 
     given(
-      /^the logged-in user has no existing boards with name "(.*)"$/,
-      (arg0) => {}
+      /^the logged-in user has no existing boards with name "(.*)"$/, (name) => {
+
+      }
     );
 
     whenUserCreatesBoardWithName(when);
@@ -42,8 +43,9 @@ defineFeature(feature, (test) => {
     userShallHaveBoardWithName(then);
 
     then(
-      /^the logged-in user shall be authorized to view the board with name "(.*)"$/,
-      (arg0, arg1, arg2) => {}
+      /^the logged-in user shall be authorized to view the board with name "(.*)"$/, (name) => {
+
+      }
     );
 
     then(
@@ -60,7 +62,9 @@ defineFeature(feature, (test) => {
 
     givenUserIsLoggedIn(given);
 
-    given(/^the logged-in user has an existing board with name "(.*)"$/, (arg0) => {});
+    given(/^the logged-in user has an existing board with name "(.*)"$/, (name) => {
+
+    });
 
     whenUserCreatesBoardWithName(when)
 
@@ -69,8 +73,9 @@ defineFeature(feature, (test) => {
     userShallHaveBoardWithName(then);
 
     then(
-      /^the logged-in user shall be authorized to view the board with name "(.*)"$/,
-      (arg0) => {}
+      /^the logged-in user shall be authorized to view the board with name "(.*)"$/, (name) => {
+
+      }
     );
 
     then("the number of boards the logged-in user has shall remain the same", () => {});
@@ -84,17 +89,20 @@ defineFeature(feature, (test) => {
 
     givenUserIsLoggedIn(given);
 
-    given(/^the logged-in user has no existing boards$/, () => {});
+    given(/^the logged-in user has no existing boards$/, () => {
+
+    });
 
     whenUserCreatesBoardWithName(when)
 
     systemShallReport(then);
 
-    then(
-      /^the logged-in user shall not have a board with name "(.*)"$/,
-      (arg0) => {}
-    );
+    then(/^the logged-in user shall not have a board with name "(.*)"$/, (name) => {
 
-    then("the number of boards the logged-in user has shall remain zero", () => {});
+    });
+
+    then("the number of boards the logged-in user has shall remain zero", () => {
+
+    });
   });
 });
