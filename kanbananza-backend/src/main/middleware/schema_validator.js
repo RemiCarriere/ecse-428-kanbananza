@@ -3,8 +3,9 @@ import addFormats from "ajv-formats";
 import HttpError from "../http_error";
 import ValidationError from "../validation_error";
 
-const userSchema = require("../controllers/schemas/user.json");
-const boardSchema = require("../controllers/schemas/board.json");
+const userSchemas = require("../controllers/schemas/user.json");
+const boardSchemas = require("../controllers/schemas/board.json");
+const columnSchemas = require("../controllers/schemas/column.json");
 
 const ajv = new Ajv({
   allErrors: true,
@@ -15,8 +16,9 @@ const ajv = new Ajv({
 addFormats(ajv, ["email", "date"]); // see https://ajv.js.org/docs/validation.html#Formats
 
 // register schemas
-ajv.addSchema(userSchema.create, "createUser");
-ajv.addSchema(boardSchema.create, "createBoard");
+ajv.addSchema(userSchemas.create, "createUser");
+ajv.addSchema(boardSchemas.create, "createBoard");
+ajv.addSchema(columnSchemas.create, "createColumn");
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});

@@ -1,0 +1,19 @@
+{
+    "create": {
+      "title": "new column",
+      "description": "describes properties required to create a new column and their characteristics",
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "label of the column"
+        },
+        "boardId": {
+          "type": "string",
+          "description": "id of the board of the column"
+        }
+      },
+      "required": ["label", "boardId"]
+    }
+  }
+  

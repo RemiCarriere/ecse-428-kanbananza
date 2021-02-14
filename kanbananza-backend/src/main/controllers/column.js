@@ -1,16 +1,16 @@
+import ColumnDTO from "../DTO/column";
 import HttpError from "../http_error";
 import columnService from "../services/column";
 
 const create = async (req, res, next) => {
   try {
-    const column = await columnService.createcolumn({
+    const column = await columnService.createColumn({
       label: req.body.label,
       boardId: req.body.boardId,
     });
-    console.log(column);
-    res.status(201).json(column); // convert to dto
+    res.status(201).json(ColumnDTO.fromDocument(column)); // convert to dto
   } catch (e) {
-    throw new HttpError({ code: 400, message: e.message });
+    next(e); // handle downstream
   }
 };
 
