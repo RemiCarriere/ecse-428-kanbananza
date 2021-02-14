@@ -10,6 +10,7 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
+    console.log(user);
     res.status(201).json(UserDTO.fromDocument(user));
   } catch (e) {
     next(e);

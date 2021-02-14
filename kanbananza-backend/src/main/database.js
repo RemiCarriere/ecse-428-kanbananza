@@ -3,8 +3,10 @@ import config from "./config";
 
 const databaseUrl = config.databaseURL[process.env.NODE_ENV];
 
-const connectDb = () => {
-  mongoose.connect(databaseUrl, {
+const connectDb = (databaseURL) => {
+  mongoose.connect(databaseURL, {
+    autoIndex: true,
+    useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
