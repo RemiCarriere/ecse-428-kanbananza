@@ -31,6 +31,7 @@
   "homepage": "https://github.com/RemiCarriere/ecse-428-kanbananza#readme",
   "dependencies": {
     "ajv": "^7.1.0",
+    "ajv-formats": "^1.5.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

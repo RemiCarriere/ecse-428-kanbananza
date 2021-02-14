@@ -15,12 +15,22 @@ boardRoutes(router);
 
 // default route handler middleware
 router.use("*", (req, res, next) => {
-  next(
-    new HttpError({
-      code: 404,
-      message: `${req.method} '${req.originalUrl}' is not supported.`,
-    })
-  );
+  if (req.method === "GET") {
+    next(
+      new HttpError({
+        code: 404,
+        message: `'${req.originalUrl}' is not recognized.`,
+      })
+    );
+  } else {
+    // see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501
+    next(
+      new HttpError({
+        code: 501,
+        message: `${req.method} '${req.originalUrl}' is not supported.`,
+      })
+    );
+  }
 });
 
 export default router;
