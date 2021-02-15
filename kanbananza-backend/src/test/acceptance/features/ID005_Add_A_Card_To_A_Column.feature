@@ -1,11 +1,12 @@
 Feature: Add a card to a column
 
-  As a user
-  I want to be able to add a card to a board
-  So that I can track the tasks of a project
+  As a user,
+  I want to be able to add a card to a board,
+  so that I can track the tasks of a project
 
   Background:
-    Given user with username Fizbin is logged in
+    Given there exists a user with first name "John", last name "Smith", and email "john.smith@mail.com" in the system
+    Given the user with email "john.smith@mail.com" is logged into the system
     Given the user has one board
     Given the user has selected that board
     Given the board has one column with name "Doing"
