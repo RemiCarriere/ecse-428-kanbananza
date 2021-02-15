@@ -1,14 +1,9 @@
-import { system } from "faker";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { systemShallReport } from "./background.steps";
+import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
 
 const feature = loadFeature(
   "src/test/acceptance/features/ID007_Add-Column.feature"
 );
-
-const givenUserLoggedIn = (given) => {
-  given("user with username Fizbin is logged in", () => {});
-};
 
 const givenUserHasOneBoard = (given) => {
   given("the user has one board", () => {});
@@ -34,6 +29,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
@@ -54,6 +50,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
@@ -84,6 +81,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
@@ -94,9 +92,9 @@ defineFeature(feature, (test) => {
       () => {}
     );
 
-    then(/^the system shall report (.*)$/, (arg0) => {});
+    // then(/^the system shall report (.*)$/, (arg0) => {});
 
-    then(/^the system shall report "Email '(.*)' is invalid'"$/, (email) => {});
+    // then(/^the system shall report "Email '(.*)' is invalid'"$/, (email) => {});
 
     then("the number of columns in the board shall remain zero", () => {});
   });
@@ -106,6 +104,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
@@ -116,7 +115,7 @@ defineFeature(feature, (test) => {
       (name) => {}
     );
 
-    systemShallReport(then);
+    // systemShallReport(then);
 
     then("the number of columns in the board shall remain zero", () => {});
   });
@@ -126,6 +125,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
@@ -139,7 +139,7 @@ defineFeature(feature, (test) => {
       /^the user attempts to create a column with name"(.*)"$/,
       (name) => {}
     );
-    systemShallReport(then);
+    // systemShallReport(then);
 
     then("the number of columns in the board shall remain three", () => {});
     then(

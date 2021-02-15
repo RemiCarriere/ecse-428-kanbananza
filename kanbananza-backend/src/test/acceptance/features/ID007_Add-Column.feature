@@ -7,7 +7,7 @@ Feature: Add a Column
   Background:
     Given there exists a user with first name "John", last name "Smith", and email "john.smith@mail.com" in the system
     Given the user with email "john.smith@mail.com" is logged into the system
-    Given the user owns one board
+    Given the user has one board
     Given the user has selected that board
     Given the selected board has no columns
 
