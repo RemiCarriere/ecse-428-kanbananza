@@ -5,20 +5,47 @@ const feature = loadFeature(
   "src/test/acceptance/features/ID007_Add-Column.feature"
 );
 
-const givenUserHasOneBoard = (given) => {
-  given("the user has one board", () => {});
+const givenUserHasOneBoard = (given, id) => {
+  given("the user has one board", async () => {
+
+    const { body } = await request()
+        .get('/user/' + id + '/boards')
+        .expect(200);
+
+    expect(body).to.have.lengthOf(1); 
+
+  });
 };
 
 const givenBoardIsSelected = (given) => {
-  given("the user has selected that board", () => {});
+  given("the user has selected that board", async () => {
+    
+    const { body } = await request()
+        .get('/user/' + id + '/boards')
+        .expect(200);
+
+    selectedBoard = body[0].id;  
+
+  });
 };
 
 const givenBoardHasNoColumns = (given) => {
-  given(/^the selected board has no columns$/, () => {});
+  given(/^the selected board has no columns$/, async () => {
+
+    const { body } = await request()
+        .get('/board/' + selectedBoard + '/columns')
+        .expect(200);
+
+    expect(body).to.have.lengthOf(0);  
+
+  });
 };
+
+let selectedBoard = 0;
 
 defineFeature(feature, (test) => {
   let columnCreated = false;
+ 
 
   afterEach(() => {
     columnCreated = false;
@@ -31,18 +58,40 @@ defineFeature(feature, (test) => {
   }) => {
     givenExistsUser(given);
     givenUserLoggedIn(given);
-    givenUserHasOneBoard(given);
+    givenUserHasOneBoard(given, id);
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
 
     when(
-      /^the user attempts to create a column with name "(.*)"$/,
-      (name) => {}
+      /^the user attempts to create a column with name "(.*)"$/, async (name) => {
+
+        const { body } = await request()
+        .post('/column')
+        .send({label: name, boardId: selectedBoard})
+        .expect(200);
+ 
+      }
     );
 
-    then(/^the board contains a column with name "(.*)"$/, (name) => {});
+    then(/^the board contains a column with name "(.*)"$/, async (name) => {
 
-    then("the board contains one column", () => {});
+      const { body } = await request()
+        .get('/board/' + selectedBoard + '/columns')
+        .expect(200);
+
+      expect(body[0].label).toBe(name);  
+
+    });
+
+    then("the board contains one column", () => {
+
+      const { body } = await request()
+        .get('/board/' + selectedBoard + '/columns')
+        .expect(200);
+
+      expect(body).to.have.lengthOf(1);
+
+    });
   });
 
   test("Successfully add a column with a valid name to a board with existing columns (Alternate Flow)", ({
