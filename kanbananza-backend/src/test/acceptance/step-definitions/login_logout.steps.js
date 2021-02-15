@@ -1,3 +1,4 @@
+import { request } from "express";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
 
@@ -9,7 +10,9 @@ const logout = loadFeature(
 const whenUserAttemptsLogin = (when) => {
   when(
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
-    (email, pass) => {}
+    (email, pass) => {
+      const {body} = await request.get("/user", {email: email, password: pass}).expect(200)
+    }
   );
 };
 
@@ -31,7 +34,9 @@ defineFeature(login, (test) => {
 
     then(
       /^the user with email "(.*)" shall be logged into the system$/,
-      (email) => {}
+      (email) => {
+        const {body} = await request.get("/login", {email: email, password: pass}).expect(200)
+      }
     );
   });
 
@@ -48,7 +53,9 @@ defineFeature(login, (test) => {
 
     then(
       /^the user with email "(.*)" shall not be logged into the system$/,
-      (email) => {}
+      (email) => {
+        const {body} = await request.get('login', {email: email, password: pass}).expect(400)
+      }
     );
   });
 });
