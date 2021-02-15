@@ -6,6 +6,7 @@
     "properties": {
       "name": {
         "type": "string",
+        "isNotEmpty": true,
         "description": "name of the board"
       },
       "ownerId": {

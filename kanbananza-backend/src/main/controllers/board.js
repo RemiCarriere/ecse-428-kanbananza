@@ -9,7 +9,6 @@ const create = async (req, res, next) => {
       name: req.body.name,
       ownerId: req.body.ownerId,
     });
-    console.log(board);
     res.status(201).json(BoardDTO.fromDocument(board));
   } catch (e) {
     next(e);
@@ -58,4 +57,13 @@ const selectColumns = async (req, res, next) => {
   res.status(200).json(columns.map((column) => ColumnDTO.fromDocument(column)));
 };
 
-export default { create, select, index, selectColumns };
+const remove = async (req, res, next) => {
+  try {
+    await boardService.deleteBoardById(req.params.id);
+  } catch (e) {
+    next(e);
+  }
+  res.status(204);
+};
+
+export default { create, select, index, selectColumns, remove };

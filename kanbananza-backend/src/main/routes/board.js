@@ -11,4 +11,5 @@ export default (router) => {
     idParamValidator,
     boardController.selectColumns
   );
+  router.delete("/board/:id", idParamValidator, boardController.remove);
 };

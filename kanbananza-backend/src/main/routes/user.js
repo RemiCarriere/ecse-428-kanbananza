@@ -9,7 +9,7 @@ export default (router) => {
   router.get("/user", userController.findByEmail);
   router.get("/user/:id", idParamValidator, userController.index);
   router.get("/user/:id/boards", idParamValidator, userController.selectBoards);
-  router.get("/users/", userController.select);
+  router.get("/users", userController.select);
   router.get(
     "/login",
     basicAuth({ authorizer: auth.authAll }),

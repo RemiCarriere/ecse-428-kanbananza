@@ -15,6 +15,14 @@ const ajv = new Ajv({
 
 addFormats(ajv, ["email", "date"]); // see https://ajv.js.org/docs/validation.html#Formats
 
+ajv.addKeyword("isNotEmpty", {
+  type: "string",
+  validate: function (schema, data) {
+    return typeof data === "string" && data.trim() !== "";
+  },
+  errors: false,
+});
+
 // register schemas
 ajv.addSchema(userSchemas.create, "createUser");
 ajv.addSchema(boardSchemas.create, "createBoard");
