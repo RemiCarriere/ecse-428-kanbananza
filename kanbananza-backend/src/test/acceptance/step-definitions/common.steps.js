@@ -7,9 +7,10 @@ export const givenUserLoggedIn = (given) => {
 export const givenExistsUser = (given) => {
   given(
     /^there exists a user with first name "(.*)", last name "(.*)", and email "(.*)" in the system$/,
-    async (arg0, arg1, arg2) => {
-      const { body } = await request.get("/users");
-      console.log(body);
+    async (firstName, lastName, email) => {
+      await request
+        .post("/user")
+        .send({ email, firstName, lastName, password: "foobar" });
     }
   );
 };
