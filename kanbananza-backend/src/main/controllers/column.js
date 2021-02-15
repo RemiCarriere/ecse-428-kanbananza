@@ -7,7 +7,7 @@ const create = async (req, res, next) => {
     const column = await columnService.createColumn({
       label: req.body.label,
       boardId: req.body.boardId,
-      order: req.body.order
+      order: req.body.order,
     });
     res.status(201).json(ColumnDTO.fromDocument(column)); // convert to dto
   } catch (e) {
@@ -34,4 +34,4 @@ const index = async (req, res, next) => {
   }
 };
 
-export default { create, select, index};
+export default { create, select, index };

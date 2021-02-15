@@ -11,6 +11,10 @@
       "boardId": {
         "type": "string",
         "description": "id of the board of the column"
+      },
+      "order": {
+        "type": "integer",
+        "description": "order of the column"
       }
     },
     "required": ["label", "boardId"]

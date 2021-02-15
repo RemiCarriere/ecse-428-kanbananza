@@ -3,22 +3,9 @@ import HttpError from "../http_error";
 import Board from "../models/board";
 import Column from "../models/column";
 
-const createColumn = async ({ newlabel, boardId }) => {
-  if (!(await Board.exists({ _id: boardId }))) {
-    throw new HttpError({
-      code: 400,
-      message: `Board with id ${boardId} does not exist.`,
-    });
-  }
-  if (await Column.exists({ label: newlabel, boardId })) {
-    throw new HttpError({
-      code: 400,
-      message: `Board has already a column with label ${newlabel}.`,
-    });
-  }
+const createColumn = async ({ label, boardId, order }) => {
   try {
-    const newCol = await Column.create({ newlabel, boardId });
-    return newCol;
+    return await Column.create({ label, boardId, order });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({

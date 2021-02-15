@@ -8,7 +8,6 @@ export default (router) => {
     validateSchema("createColumn"),
     columnController.create
   );
-  router.get( "/columns", columnController.select);
-  router.get("/user/:id", idParamValidator, columnController.index);
-
+  router.get("/columns", columnController.select);
+  router.get("/column/:id", idParamValidator, columnController.index);
 };
