@@ -1,11 +1,11 @@
 Feature: Logout
 
-  As a user
-  I want to logout of my account
-  So that I can prevent local access to my boards
+  As a user,
+  I want to logout of my account,
+  so that I can prevent local access to my boards
 
   Scenario: User successfully logs out of account
-    Given a user with email "johnsmith@mail.com" and password "password" exists in the system
-    Given user with email "johnsmith@mail.com" is logged in to the system
-    When the logged-in user attempts to logout
+    Given there exists a user with first name "John", last name "Smith", and email "john.smith@mail.com" in the system
+    Given the user with email "johnsmith@mail.com" is logged into the system
+    When the user attempts to logout
     Then the user with email "johnsmith@mail.com" shall be logged out of the system

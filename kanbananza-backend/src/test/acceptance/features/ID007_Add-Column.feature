@@ -1,12 +1,13 @@
 Feature: Add a Column
 
-  As a user
-  I want to add a column to my board
-  So that I can add cards to the new column
+  As a user,
+  I want to add a column to my board,
+  so that I can add cards to the new column
 
   Background:
-    Given user with username Fizbin is logged in
-    Given the user owns one board
+    Given there exists a user with first name "John", last name "Smith", and email "john.smith@mail.com" in the system
+    Given the user with email "john.smith@mail.com" is logged into the system
+    Given the user has one board
     Given the user has selected that board
     Given the selected board has no columns
 
@@ -37,12 +38,12 @@ Feature: Add a Column
 
   Scenario: Unsuccessfully add a column with an empty name (Error Flow)
     When the user attempts to create a column without entering a name
-    Then the system shall report "Column name cannot be empty"
+    Then the system shall report that the column name cannot be empty
     And the number of columns in the board shall remain zero
 
   Scenario: Unsuccessfully add a column with an invalid name comprising only whitespace (Error Flow)
     When the user attempts to create a column with name "      "
-    Then the system shall report "Column name cannot be empty"
+    Then the system shall report that the column name cannot be empty
     And the number of columns in the board shall remain zero
 
   Scenario: Unsuccessfully add a column with the name of an existing column (Error Flow)
@@ -52,7 +53,7 @@ Feature: Add a Column
       | Doing      | 2           |
       | Done       | 3           |
     When the user attempts to create a column with name "Done"
-    Then the system shall report "Column name 'Done' is already in use"
+    Then the system shall report that the column name "Done" is already in use
     And the number of columns in the board shall remain three
     And the columns in the board shall have the following names and order:
       | columnName | columnOrder |
