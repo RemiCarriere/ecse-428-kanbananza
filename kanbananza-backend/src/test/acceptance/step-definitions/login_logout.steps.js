@@ -1,4 +1,4 @@
-import { request } from "express";
+import request from "../../support/request";
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
 
@@ -16,8 +16,8 @@ const whenUserAttemptsLogin = (when) => {
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
     async (email, pass) => {
       const res = await request
-      .post('/user/').send({email: email, password: pass})
-      .expect(200);
+      .post('/user/').send({email: email, password: pass, firstName: "fdsf", lastName: "fdsjf"})
+      .expect(201);
       responseStatus = res.statusCode
     }
   );
