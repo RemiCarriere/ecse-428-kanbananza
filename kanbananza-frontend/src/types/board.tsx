@@ -1,7 +1,7 @@
 import { card } from './card'
 import { column } from './column'
 export interface board {
-    label: string
+    name: string
     ownerId: string
     // columns
     //cards

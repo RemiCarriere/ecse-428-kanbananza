@@ -1,4 +1,6 @@
 export interface column {
-    id: number
+    id: string
+    label: string
+    boardId: string
     // and other data we will get from the backend
 }
