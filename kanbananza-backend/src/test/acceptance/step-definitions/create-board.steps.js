@@ -1,5 +1,7 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
+import request from "../../support/request";
+import dbHandler from "../../support/database_handler";
 
 const feature = loadFeature(
   "src/test/acceptance/features/ID002_Create_Board.feature"
