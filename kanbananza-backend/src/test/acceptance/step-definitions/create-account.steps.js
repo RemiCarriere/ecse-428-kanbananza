@@ -1,7 +1,9 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
 import { systemShallReport } from "./background.steps";
 
-const feature = loadFeature("src/test/acceptance/features/ID001_Create_an_Account.feature");
+const feature = loadFeature(
+  "src/test/acceptance/features/ID001_Create_an_Account.feature"
+);
 
 defineFeature(feature, (test) => {
   let accountCreated = false;
@@ -16,21 +18,18 @@ defineFeature(feature, (test) => {
     then,
   }) => {
     given(
-      /^an account with email "(.*)" does not exist in the system$/, (email) => {
-
-      }
+      /^an account with email "(.*)" does not exist in the system$/,
+      (email) => {}
     );
 
     when(
-      /^the user attempts to create an account with name "(.*)", email "(.*)", and (.*) "password"$/, (name, email, pass) => {
-
-      }
+      /^the user attempts to create an account with name "(.*)", email "(.*)", and (.*) "password"$/,
+      (name, email, pass) => {}
     );
 
     then(
-      /^an account with name "(.*)", email "(.*)", and (.*) "password" shall exist in the system$/, (name, email, pass) => {
-
-      }
+      /^an account with name "(.*)", email "(.*)", and (.*) "password" shall exist in the system$/,
+      (name, email, pass) => {}
     );
 
     then(
@@ -44,9 +43,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    given(/^an account with email "(.*)" exists in the system$/, (email) => {
-
-    });
+    given(/^an account with email "(.*)" exists in the system$/, (email) => {});
 
     when(
       /^the user attempts to create an account with email "(.*)"$/,
@@ -56,9 +53,8 @@ defineFeature(feature, (test) => {
     systemShallReport(then);
 
     then(
-      /^an account with email "(.*)" shall exist in the system$/, (email) => {
-
-      }
+      /^an account with email "(.*)" shall exist in the system$/,
+      (email) => {}
     );
 
     then("the number of accounts shall remain the same", () => {});
@@ -76,14 +72,11 @@ defineFeature(feature, (test) => {
       (arg0) => {}
     );
 
-    then(/^the system shall report "Email '(.*)' is invalid'"$/, (email) => {
-
-    });
+    then(/^the system shall report "Email '(.*)' is invalid'"$/, (email) => {});
 
     then(
-      /^an account with email "(.*)" shall not exist in the system$/, (email) => {
-
-      }
+      /^an account with email "(.*)" shall not exist in the system$/,
+      (email) => {}
     );
 
     then("the number of accounts shall remain zero", () => {});
