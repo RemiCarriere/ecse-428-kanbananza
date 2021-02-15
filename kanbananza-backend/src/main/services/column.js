@@ -31,5 +31,17 @@ const createColumn = async ({ newlabel, boardId }) => {
     }
   }
 };
+const findAllColumns = async () => {
+  return Column.find().exec();
+};
 
-export default { createColumn };
+const findColumnById = async (id) => {
+  if (!(await Column.exists({ _id: id }))) {
+    throw new HttpError({
+      code: 404,
+      message: `User with id ${id} does not exist.`,
+    });
+  }
+  return Column.findOne({ _id: id }).exec();
+};
+export default { createColumn, findAllColumns, findColumnById };
