@@ -4,12 +4,13 @@ import {
     Route,
     Link
 } from "react-router-dom";
+import DisplayBoard from "../components/Board/DisplayBoard";
 import Login from './Login'
 
 const Main = () => {
 
     function Home() {
-        return <Login></Login>;
+        return <DisplayBoard />;
     }
 
     function About() {
