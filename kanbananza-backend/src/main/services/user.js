@@ -2,6 +2,7 @@ import { Error } from "mongoose";
 import HttpError from "../http_error";
 import User from "../models/user";
 import ValidationError from "../validation_error";
+import Board from "../models/board";
 
 const createUser = async ({ email, password, firstName, lastName }) => {
   if (await User.exists({ email })) {
@@ -40,7 +41,6 @@ const findUserByEmail = async ({ email }) => {
       message: `User with email '${email}' does not exist.`,
     });
   }
-
   try {
     return await User.findOne({ email }).exec();
   } catch (e) {
@@ -52,4 +52,28 @@ const findUserByEmail = async ({ email }) => {
   }
 };
 
-export default { createUser, findUserByEmail };
+const findUserById = async (id) => {
+  if (!(await User.exists({ _id: id }))) {
+    throw new HttpError({
+      code: 404,
+      message: `User with id ${id} does not exist.`,
+    });
+  }
+  return User.findOne({ _id: id }).exec();
+};
+
+const findAllUsers = async () => {
+  return User.find().exec();
+};
+
+const findAllUserBoards = async (id) => {
+  return Board.find({ owner: id }).exec();
+};
+
+export default {
+  createUser,
+  findUserByEmail,
+  findUserById,
+  findAllUsers,
+  findAllUserBoards,
+};
