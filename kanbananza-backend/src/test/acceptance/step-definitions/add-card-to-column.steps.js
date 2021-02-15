@@ -1,13 +1,9 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { systemShallReport } from "./background.steps";
+import { givenExistsUser, givenUserLoggedIn } from "./common.steps";
 
 const feature = loadFeature(
   "src/test/acceptance/features/ID005_Add_A_Card_To_A_Column.feature"
 );
-
-const givenUserLoggedIn = (given) => {
-  given("user with username Fizbin is logged in", () => {});
-};
 
 const givenUserHasOneBoard = (given) => {
   given("the user has one board", () => {});
@@ -47,6 +43,7 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
+    givenExistsUser(given);
     givenUserLoggedIn(given);
 
     givenUserHasOneBoard(given);
@@ -93,7 +90,7 @@ defineFeature(feature, (test) => {
 
     whenUserAddsCard(when);
 
-    systemShallReport(then);
+    // systemShallReport(then);
 
     then(
       /^a card with name "(.*)" shall not be included in the column with name "(.*)"$/,

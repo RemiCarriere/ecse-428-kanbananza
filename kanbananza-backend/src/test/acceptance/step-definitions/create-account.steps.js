@@ -1,5 +1,4 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { systemShallReport } from "./background.steps";
 
 const feature = loadFeature(
   "src/test/acceptance/features/ID001_Create_an_Account.feature"
@@ -50,7 +49,7 @@ defineFeature(feature, (test) => {
       (arg0) => {}
     );
 
-    systemShallReport(then);
+    then("the system shall report that the email is already in use", () => {});
 
     then(
       /^an account with email "(.*)" shall exist in the system$/,
@@ -72,7 +71,7 @@ defineFeature(feature, (test) => {
       (arg0) => {}
     );
 
-    then(/^the system shall report "Email '(.*)' is invalid'"$/, (email) => {});
+    then("the system shall report that the email is invalid", () => {});
 
     then(
       /^an account with email "(.*)" shall not exist in the system$/,

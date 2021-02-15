@@ -11,6 +11,8 @@ const connect = async () => {
   const uri = await mongod.getConnectionString();
 
   const mongooseOpts = {
+    useUnifiedTopology: true,
+    useCreateIndex: true,
     useNewUrlParser: true,
     autoReconnect: true,
     reconnectTries: Number.MAX_VALUE,

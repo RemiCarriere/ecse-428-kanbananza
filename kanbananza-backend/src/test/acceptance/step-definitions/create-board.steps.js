@@ -1,5 +1,7 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserIsLoggedIn, systemShallReport } from "./background.steps";
+import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
+import request from "../../support/request";
+import dbHandler from "../../support/database_handler";
 
 const feature = loadFeature(
   "src/test/acceptance/features/ID002_Create_Board.feature"
@@ -7,16 +9,13 @@ const feature = loadFeature(
 
 const whenUserCreatesBoardWithName = (when) => {
   when(
-    /^the logged-in user attempts to create a new board with name "(.*)"$/,
+    /^the user attempts to create a new board with name "(.*)"$/,
     (name) => {}
   );
 };
 
 const userShallHaveBoardWithName = (then) => {
-  then(
-    /^the logged-in user shall have a board with name "(.*)"$/,
-    (name) => {}
-  );
+  then(/^the user shall have a board with name "(.*)"$/, (name) => {});
 };
 
 defineFeature(feature, (test) => {
@@ -31,26 +30,21 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    givenUserIsLoggedIn(given);
+    givenExistsUser(given);
+    givenUserLoggedIn(given);
 
-    given(
-      /^the logged-in user has no existing boards with name "(.*)"$/,
-      (name) => {}
-    );
+    given(/^the user has no existing boards with name "(.*)"$/, (name) => {});
 
     whenUserCreatesBoardWithName(when);
 
     userShallHaveBoardWithName(then);
 
     then(
-      /^the logged-in user shall be authorized to view the board with name "(.*)"$/,
+      /^the user shall be authorized to view the board with name "(.*)"$/,
       (name) => {}
     );
 
-    then(
-      "the number of boards the logged-in user has shall increase by one",
-      () => {}
-    );
+    then("the number of boards the user has shall increase by one", () => {});
   });
 
   test("Unsuccessfully create a board with a valid but existing name (Error Flow)", ({
@@ -58,28 +52,26 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    givenUserIsLoggedIn(given);
+    givenExistsUser(given);
+    givenUserLoggedIn(given);
 
-    given(
-      /^the logged-in user has an existing board with name "(.*)"$/,
-      (name) => {}
-    );
+    given(/^the user has an existing board with name "(.*)"$/, (name) => {});
 
     whenUserCreatesBoardWithName(when);
 
-    systemShallReport(then);
+    then(
+      /^the system shall report that the board name "(.*)" is already in use$/,
+      (arg0) => {}
+    );
 
     userShallHaveBoardWithName(then);
 
     then(
-      /^the logged-in user shall be authorized to view the board with name "(.*)"$/,
+      /^the user shall be authorized to view the board with name "(.*)"$/,
       (name) => {}
     );
 
-    then(
-      "the number of boards the logged-in user has shall remain the same",
-      () => {}
-    );
+    then("the number of boards the user has shall remain the same", () => {});
   });
 
   test("Unsuccessfully create a board with an invalid name comprising only whitespace (Error Flow)", ({
@@ -87,22 +79,20 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    givenUserIsLoggedIn(given);
+    givenExistsUser(given);
+    givenUserLoggedIn(given);
 
-    given(/^the logged-in user has no existing boards$/, () => {});
+    given(/^the user has no existing boards$/, () => {});
 
     whenUserCreatesBoardWithName(when);
 
-    systemShallReport(then);
-
     then(
-      /^the logged-in user shall not have a board with name "(.*)"$/,
-      (name) => {}
-    );
-
-    then(
-      "the number of boards the logged-in user has shall remain zero",
+      "the system shall report that the board name cannot be empty",
       () => {}
     );
+
+    then(/^the user shall not have a board with name "(.*)"$/, (name) => {});
+
+    then("the number of boards the user has shall remain zero", () => {});
   });
 });
