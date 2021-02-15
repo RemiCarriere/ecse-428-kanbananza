@@ -43,8 +43,6 @@ defineFeature(feature, (test) => {
       async (name) => {
         const user = (await request.get("/users")).body[0];
         const userBoards = (await request.get(`/user/${user.id}/boards`)).body;
-        console.log(userBoards);
-        // const userBoardsWithName = filter((board) => board.name === name);
         for (const board of userBoards) {
           if (board.name === name) {
             await request.delete(`/board/${board.id}`);
@@ -91,7 +89,6 @@ defineFeature(feature, (test) => {
     given(/^the user has an existing board with name "(.*)"$/, async (name) => {
       const user = (await request.get("/users")).body[0];
       const userBoards = (await request.get(`/user/${user.id}/boards`)).body;
-      console.log(userBoards);
       // const userBoardsWithName = filter((board) => board.name === name);
       for (const board of userBoards) {
         if (board.name === name) {
@@ -145,7 +142,6 @@ defineFeature(feature, (test) => {
     given(/^the user has no existing boards$/, async () => {
       const user = (await request.get("/users")).body[0];
       const userBoards = (await request.get(`/user/${user.id}/boards`)).body;
-      console.log(userBoards);
       // const userBoardsWithName = filter((board) => board.name === name);
       for (const board of userBoards) {
         await request.delete(`/board/${board.id}`);
