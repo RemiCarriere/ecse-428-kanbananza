@@ -7,11 +7,18 @@ const logout = loadFeature(
   "src/test/acceptance/features/ID0030_Logout.feature"
 );
 
+var numberOfAccounts = 0;
+var errMsg = "";
+var responseStatus = "";
+
 const whenUserAttemptsLogin = (when) => {
   when(
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
-    (email, pass) => {
-      const {body} = await request.get("/user", {email: email, password: pass}).expect(200)
+    async (email, pass) => {
+      const res = await request
+      .post('/user/').send({email: email, password: pass})
+      .expect(200);
+      responseStatus = res.statusCode
     }
   );
 };
@@ -34,8 +41,10 @@ defineFeature(login, (test) => {
 
     then(
       /^the user with email "(.*)" shall be logged into the system$/,
-      (email) => {
-        const {body} = await request.get("/login", {email: email, password: pass}).expect(200)
+      async (email) => {
+        const res = await request
+        .get('/login')
+        .expect(200)
       }
     );
   });
@@ -49,12 +58,14 @@ defineFeature(login, (test) => {
 
     whenUserAttemptsLogin(when);
 
-    then("the system shall report that the password is incorrect", () => {});
+    then("the system shall report that the password is incorrect", async () => {
+      expect(responseStatus).toEqual(400)
+    });
 
     then(
       /^the user with email "(.*)" shall not be logged into the system$/,
-      (email) => {
-        const {body} = await request.get('login', {email: email, password: pass}).expect(400)
+      async (email) => {
+        const {body} = await request.get('login').expect(400)
       }
     );
   });
