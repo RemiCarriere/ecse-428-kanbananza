@@ -3,12 +3,20 @@ import HttpError from "../http_error";
 import Board from "../models/board";
 import User from "../models/user";
 import Column from "../models/column";
+import ValidationError from "../validation_error";
 
 const createBoard = async ({ name, ownerId }) => {
   if (!(await User.exists({ _id: ownerId }))) {
     throw new HttpError({
       code: 400,
       message: `User with id ${ownerId} does not exist.`,
+    });
+  }
+
+  if (await Board.exists({ owner: ownerId, name })) {
+    throw new HttpError({
+      code: 400,
+      message: `Board name already in use for user with id ${ownerId}.`,
     });
   }
 
@@ -53,6 +61,10 @@ const findAllBoardColumnsByName = async (id, name) => {
   return Column.find({ boardId: id, name }).exec();
 };
 
+const deleteBoardById = async (id) => {
+  return Board.deleteOne({ _id: id });
+};
+
 export default {
   createBoard,
   findAllBoards,
@@ -60,4 +72,5 @@ export default {
   findBoardsByName,
   findAllBoardColumns,
   findAllBoardColumnsByName,
+  deleteBoardById,
 };

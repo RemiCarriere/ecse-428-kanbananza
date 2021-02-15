@@ -6,10 +6,12 @@
     "properties": {
       "firstName": {
         "type": "string",
+        "isNotEmpty": true,
         "description": "first name of the user"
       },
       "lastName": {
         "type": "string",
+        "isNotEmpty": true,
         "description": "last name of the user"
       },
       "email": {
@@ -19,6 +21,7 @@
       },
       "password": {
         "type": "string",
+        "isNotEmpty": true,
         "description": "password of the user"
       }
     },

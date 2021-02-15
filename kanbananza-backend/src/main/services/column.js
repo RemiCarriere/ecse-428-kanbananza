@@ -4,6 +4,12 @@ import Board from "../models/board";
 import Column from "../models/column";
 
 const createColumn = async ({ label, boardId, order }) => {
+  if (await Column.exists({ board: boardId, label })) {
+    throw new HttpError({
+      code: 400,
+      message: `Column name already in use for board with id ${boardId}.`,
+    });
+  }
   try {
     return await Column.create({ label, boardId, order });
   } catch (e) {

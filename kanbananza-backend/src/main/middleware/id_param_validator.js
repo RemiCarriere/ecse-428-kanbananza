@@ -3,10 +3,7 @@ import ValidationError from "../validation_error";
 import HttpError from "../http_error";
 
 export default (req, res, next) => {
-  console.log("validating id");
-  console.log(req.params.id);
   if (req.params.id && !isValidObjectId(req.params.id)) {
-    console.log("invalid");
     return next(
       new HttpError({
         code: 400,

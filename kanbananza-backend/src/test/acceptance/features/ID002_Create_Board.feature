@@ -11,7 +11,7 @@ Feature: Create a board
   Scenario: Successfully create a board with a valid board name (Normal Flow)
     Given the user has no existing boards with name "Project Preparation"
     When the user attempts to create a new board with name "Project Preparation"
-    Then the user shall have a board with name "Project Prepation"
+    Then the user shall have a board with name "Project Preparation"
     And the user shall be authorized to view the board with name "Project Preparation"
     And the number of boards the user has shall increase by one
 
@@ -19,7 +19,7 @@ Feature: Create a board
     Given the user has an existing board with name "Project Preparation"
     When the user attempts to create a new board with name "Project Preparation"
     Then the system shall report that the board name "Project Preparation" is already in use
-    And the user shall have a board with name "Project Prepation"
+    And the user shall have a board with name "Project Preparation"
     And the user shall be authorized to view the board with name "Project Preparation"
     And the number of boards the user has shall remain the same
 

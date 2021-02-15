@@ -6,6 +6,7 @@
     "properties": {
       "label": {
         "type": "string",
+        "isNotEmpty": true,
         "description": "label of the column"
       },
       "boardId": {
