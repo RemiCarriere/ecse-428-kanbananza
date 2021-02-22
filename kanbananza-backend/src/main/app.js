@@ -42,4 +42,7 @@ app.use(`/${prefix}`, routes);
 // error-handling
 app.use(errorHandler);
 
+// authentication
+require("./middleware/passport");
+
 export default app;

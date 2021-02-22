@@ -16,9 +16,15 @@ const whenUserAttemptsLogin = (when) => {
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
     async (email, pass) => {
       const res = await request
-      .post('/user/').send({email: email, password: pass, firstName: "fdsf", lastName: "fdsjf"})
-      .expect(201);
-      responseStatus = res.statusCode
+        .post("/user/")
+        .send({
+          email: email,
+          password: pass,
+          firstName: "fdsf",
+          lastName: "fdsjf",
+        })
+        .expect(201);
+      responseStatus = res.statusCode;
     }
   );
 };
@@ -42,9 +48,7 @@ defineFeature(login, (test) => {
     then(
       /^the user with email "(.*)" shall be logged into the system$/,
       async (email) => {
-        const res = await request
-        .get('/login')
-        .expect(200)
+        const res = await request.get("/login").expect(200);
       }
     );
   });
@@ -59,13 +63,13 @@ defineFeature(login, (test) => {
     whenUserAttemptsLogin(when);
 
     then("the system shall report that the password is incorrect", async () => {
-      expect(responseStatus).toEqual(400)
+      expect(responseStatus).toEqual(400);
     });
 
     then(
       /^the user with email "(.*)" shall not be logged into the system$/,
       async (email) => {
-        const {body} = await request.get('login').expect(400)
+        const { body } = await request.get("login").expect(400);
       }
     );
   });

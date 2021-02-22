@@ -1,7 +1,8 @@
 import userService from "../services/user";
 import UserDTO from "../DTO/user";
-import auth from "../auth";
 import BoardDTO from "../DTO/board";
+import Users from "../models/user";
+const passport = require("passport");
 
 const create = async (req, res, next) => {
   try {
@@ -11,7 +12,7 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
-    res.status(201).json(UserDTO.fromDocument(user));
+    res.status(201).json({ user: user.toAuthJSON() });
   } catch (e) {
     next(e);
   }
@@ -29,15 +30,57 @@ const findByEmail = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  try {
-    const user = await userService.findUserByEmail({
-      email: req.auth.user,
+  const {
+    body: { user },
+  } = req;
+
+  if (!user.email) {
+    return res.status(422).json({
+      errors: {
+        email: "is required",
+      },
     });
-    auth.authorizer(req, user);
-    res.status(200).json(UserDTO.fromDocument(user));
-  } catch (e) {
-    next(e);
   }
+
+  if (!user.password) {
+    return res.status(422).json({
+      errors: {
+        password: "is required",
+      },
+    });
+  }
+
+  return passport.authenticate(
+    "local",
+    { session: false },
+    (err, passportUser, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (passportUser) {
+        const user = passportUser;
+        user.token = passportUser.generateJWT();
+
+        return res.status(201).json({ user: user.toAuthJSON() });
+      }
+
+      return res.status(400).json();
+    }
+  )(req, res, next);
+};
+
+const checkToken = async (req, res, next) => {
+  const {
+    payload: { id },
+  } = req;
+  return Users.findById(id).then((user) => {
+    if (!user) {
+      return res.sendStatus(400);
+    }
+
+    return res.json({ user: user.toAuthJSON() });
+  });
 };
 
 const index = async (req, res, next) => {
@@ -69,4 +112,12 @@ const selectBoards = async (req, res, next) => {
   res.status(200).json(boards.map((board) => BoardDTO.fromDocument(board)));
 };
 
-export default { create, findByEmail, login, index, select, selectBoards };
+export default {
+  create,
+  findByEmail,
+  login,
+  index,
+  select,
+  selectBoards,
+  checkToken,
+};

@@ -1,21 +1,30 @@
-import basicAuth from "express-basic-auth";
-import HttpError from "./http_error";
+const jwt = require("express-jwt");
 
-function authAll() {
-  return true;
-}
+const getTokenFromHeaders = (req) => {
+  const {
+    headers: { authorization },
+  } = req;
 
-function authorizer(req, user) {
-  const userMatches = basicAuth.safeCompare(req.auth.user, user.email);
-  const passwordMatches = basicAuth.safeCompare(
-    req.auth.password,
-    user.password
-  );
-  if (!passwordMatches || !userMatches) {
-    throw new HttpError({
-      code: 401,
-      message: "You are not authorized to view this content",
-    });
+  if (authorization && authorization.split(" ")[0] === "Token") {
+    return authorization.split(" ")[1];
   }
-}
-export default { authorizer, authAll };
+  return null;
+};
+
+const auth = {
+  required: jwt({
+    secret: "secret",
+    algorithms: ["HS256"],
+    userProperty: "payload",
+    getToken: getTokenFromHeaders,
+  }),
+  optional: jwt({
+    secret: "secret",
+    algorithms: ["HS256"],
+    userProperty: "payload",
+    getToken: getTokenFromHeaders,
+    credentialsRequired: false,
+  }),
+};
+
+module.exports = auth;

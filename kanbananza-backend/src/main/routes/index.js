@@ -6,6 +6,8 @@ import columnRoutes from "./column";
 import HttpError from "../http_error";
 
 const router = Router();
+const passport = require("passport");
+const auth = require("../auth");
 
 // root route
 router.get("/", (req, res) => res.status(200).json("root"));

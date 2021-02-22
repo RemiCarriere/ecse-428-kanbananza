@@ -8,55 +8,48 @@ const feature = loadFeature(
 
 const givenUserHasOneBoard = (given) => {
   given("the user has one board", async () => {
+    let { body } = await request.get("/users/").expect(200);
 
-    let { body } = await request
-        .get('/users/')
-        .expect(200);
-    
     userID = body[0].id;
 
     body = await request
-        .post('/board')
-        .send({name: "testBoard", ownerId: userID})
-        .expect(201);
-
+      .post("/board")
+      .send({ name: "testBoard", ownerId: userID })
+      .expect(201);
   });
 };
 
 const givenBoardIsSelected = (given) => {
   given("the user has selected that board", async () => {
-    
     const { body } = await request
-        .get('/user/' + userID + '/boards')
-        .expect(200);
+      .get("/user/" + userID + "/boards")
+      .expect(200);
 
-    selectedBoard = body[0].id;  
-
+    selectedBoard = body[0].id;
   });
 };
 
 const whenUserCreatesColumn = (when) => {
-  when(/^the user attempts to create a column with name "(.*)"$/, async (name) => {
-
-    const { body } = await request
-        .post('/column')
-        .send({label: name, boardId: selectedBoard, order: 1})
+  when(
+    /^the user attempts to create a column with name "(.*)"$/,
+    async (name) => {
+      const { body } = await request
+        .post("/column")
+        .send({ label: name, boardId: selectedBoard, order: 1 })
         .expect(201);
-  });
+    }
+  );
 };
 
 const givenBoardHasNoColumns = (given) => {
   given(/^the selected board has no columns$/, async () => {
-
     console.log(selectedBoard);
 
     const { body } = await request
-      .get('/board/' + selectedBoard + '/columns')
+      .get("/board/" + selectedBoard + "/columns")
       .expect(200);
 
     expect(body.length).toBe(0);
-    
-
   });
 };
 
@@ -75,7 +68,6 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-
     givenExistsUser(given);
     givenUserLoggedIn(given);
     givenUserHasOneBoard(given);
@@ -85,25 +77,20 @@ defineFeature(feature, (test) => {
     whenUserCreatesColumn(when);
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
-
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
-      expect(body[0].label).toBe(name);  
-
+      expect(body[0].label).toBe(name);
     });
 
     then("the board contains one column", async () => {
-
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
       expect(body.length).toBe(1);
-
     });
-
   });
 
   test("Successfully add a column with a valid name to a board with existing columns (Alternate Flow)", ({
@@ -117,43 +104,40 @@ defineFeature(feature, (test) => {
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
 
-    given('the board contains columns with names and order as following:', async (table) => {
-
-      table.forEach(async row => {
+    given(
+      "the board contains columns with names and order as following:",
+      async (table) => {
+        table.forEach(async (row) => {
           const { body } = await request
-              .post('/column')
-              .send({label: row.name, boardId: selectedBoard, order: 1})
-              .expect(201);   
-      });
-    });
+            .post("/column")
+            .send({ label: row.name, boardId: selectedBoard, order: 1 })
+            .expect(201);
+        });
+      }
+    );
 
     whenUserCreatesColumn(when);
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
-
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
-      //expect(body[0].label).toBe(name);  
-
+      //expect(body[0].label).toBe(name);
     });
 
     then(/^the board contains 4 columns$/, async () => {
-
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
       expect(body.length).toBe(4);
-
     });
 
     then(
       "the columns in the board shall have the following names and order:",
       () => {}
     );
-
   });
 
   test("Unsuccessfully add a column with an empty name (Error Flow)", ({
@@ -168,22 +152,23 @@ defineFeature(feature, (test) => {
     givenBoardHasNoColumns(given);
 
     when(
-      "the user attempts to create a column without entering a name", async () => {
-
+      "the user attempts to create a column without entering a name",
+      async () => {
         const { body } = await request
-        .post('/column')
-        .send({boardId: selectedBoard})
-        .expect(400);
+          .post("/column")
+          .send({ boardId: selectedBoard })
+          .expect(400);
       }
     );
 
-    then('the system shall report that the column name cannot be empty', () => {
-
-    });
+    then(
+      "the system shall report that the column name cannot be empty",
+      () => {}
+    );
 
     then("the number of columns in the board shall remain zero", async () => {
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
       expect(body.length).toBe(0);
@@ -204,13 +189,14 @@ defineFeature(feature, (test) => {
 
     whenUserCreatesColumn(when);
 
-    then('the system shall report that the column name cannot be empty', () => {
+    then(
+      "the system shall report that the column name cannot be empty",
+      () => {}
+    );
 
-    });
-
-    then('the number of columns in the board shall remain zero', async () => {
+    then("the number of columns in the board shall remain zero", async () => {
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
       expect(body.length).toBe(0);
@@ -228,25 +214,28 @@ defineFeature(feature, (test) => {
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
 
-    given('the board contains the columns with names and order as following:', async (table) => {
+    given(
+      "the board contains the columns with names and order as following:",
+      async (table) => {
+        table.forEach(async (row) => {
+          const { body } = await request
+            .post("/column")
+            .send({ label: row.columnName, boardId: selectedBoard, order: 1 })
+            .expect(201);
+        });
+      }
+    );
 
-      table.forEach(async row => {
-        const { body } = await request
-            .post('/column')
-            .send({label: row.columnName, boardId: selectedBoard, order: 1})
-            .expect(201);   
-      });
-    });
-    
     whenUserCreatesColumn(when);
-    
-    then(/^the system shall report that the column name "(.*)" is already in use$/, (name) => {
 
-    });
+    then(
+      /^the system shall report that the column name "(.*)" is already in use$/,
+      (name) => {}
+    );
 
     then("the number of columns in the board shall remain three", async () => {
       const { body } = await request
-        .get('/board/' + selectedBoard + '/columns')
+        .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
       expect(body.length).toBe(3);
