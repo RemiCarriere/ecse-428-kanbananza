@@ -1,4 +1,7 @@
+import config from "./config";
+
 const jwt = require("express-jwt");
+const jwtSecret = config.jwtSecret;
 
 const getTokenFromHeaders = (req) => {
   const {
@@ -13,13 +16,13 @@ const getTokenFromHeaders = (req) => {
 
 const auth = {
   required: jwt({
-    secret: "secret",
+    secret: jwtSecret,
     algorithms: ["HS256"],
     userProperty: "payload",
     getToken: getTokenFromHeaders,
   }),
   optional: jwt({
-    secret: "secret",
+    secret: jwtSecret,
     algorithms: ["HS256"],
     userProperty: "payload",
     getToken: getTokenFromHeaders,

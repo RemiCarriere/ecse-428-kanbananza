@@ -35,7 +35,6 @@ defineFeature(feature, (test) => {
       async (name, email, pass) => {
         const res = await request.get("/users/").expect(200);
         numberOfAccounts = res.body.length;
-        console.log("the number of accounts is " + numberOfAccounts);
         const { body } = await request
           .post("/user")
           .send({
@@ -52,7 +51,6 @@ defineFeature(feature, (test) => {
       /^an account with name "(.*)", email "(.*)", and (.*) "password" shall exist in the system$/,
       async (name, email, pass) => {
         const res = await request.get("/user").send({ email: email });
-        console.log(res.body);
         expect(res.body.firstName).toEqual(name);
         expect(res.body.lastName).toEqual(name);
         expect(res.body.email).toEqual(email);

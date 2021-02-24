@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import config from "../config";
 
 const { Schema } = mongoose;
 
@@ -46,7 +47,7 @@ UserSchema.methods.generateJWT = function () {
       id: this._id,
       exp: parseInt(expirationDate.getTime() / 1000, 10),
     },
-    "secret"
+    config.jwtSecret
   );
 };
 

@@ -1,5 +1,5 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
+import { givenUserLoggedIn, givenExistsUser } from "./shared-steps";
 import request from "../../support/request";
 import dbHandler from "../../support/database_handler";
 

@@ -14,3 +14,16 @@ export const givenExistsUser = (given) => {
     }
   );
 };
+export const givenUserExists = (given) => {
+   given(/^there exists a user with first name "(.*)", last name "(.*)", email "(.*)", and password "(.*)" in the system$/,
+    async (firstName, lastName, email, password) => {
+      const res  = await request
+        .post("/user")
+        .send({ email, firstName, lastName, password });
+        //console.log("creating user");
+        ///console.log(email + " " + password)
+        //console.log(res.body)
+    }
+  );
+  
+};

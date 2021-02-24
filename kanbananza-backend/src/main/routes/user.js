@@ -9,9 +9,8 @@ export default (router) => {
   router.get("/user/:id", idParamValidator, userController.index);
   router.get("/user/:id/boards", idParamValidator, userController.selectBoards);
   router.get("/users", userController.select);
-  //POST login route (optional, everyone has access)
-  router.post("/login", auth.optional, userController.login);
 
-  //GET current route (required, only authenticated users have access)
-  router.get("/current", auth.required, userController.checkToken);
+  router.post("/login", auth.optional, userController.login);
+  router.get("/login", auth.required, userController.checkToken);
+
 };

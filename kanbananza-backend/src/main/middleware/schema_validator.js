@@ -15,7 +15,9 @@ const ajv = new Ajv({
 
 addFormats(ajv, ["email", "date"]); // see https://ajv.js.org/docs/validation.html#Formats
 
-ajv.addKeyword("isNotEmpty", {
+
+ajv.addKeyword({
+  keyword: "isNotEmpty",
   type: "string",
   validate: function (schema, data) {
     return typeof data === "string" && data.trim() !== "";

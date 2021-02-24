@@ -1,7 +1,6 @@
 import userService from "../services/user";
 import UserDTO from "../DTO/user";
 import BoardDTO from "../DTO/board";
-import Users from "../models/user";
 const passport = require("passport");
 
 const create = async (req, res, next) => {
@@ -12,7 +11,7 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
-    res.status(201).json({ user: user.toAuthJSON() });
+    res.status(201).json(user.toAuthJSON());
   } catch (e) {
     next(e);
   }
@@ -30,56 +29,31 @@ const findByEmail = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const {
-    body: { user },
-  } = req;
-
-  if (!user.email) {
-    return res.status(422).json({
-      errors: {
-        email: "is required",
-      },
-    });
-  }
-
-  if (!user.password) {
-    return res.status(422).json({
-      errors: {
-        password: "is required",
-      },
-    });
-  }
-
   return passport.authenticate(
     "local",
     { session: false },
-    (err, passportUser, info) => {
-      if (err) {
-        return next(err);
-      }
-
+    ( passportUser, info) => {
       if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
-
-        return res.status(201).json({ user: user.toAuthJSON() });
+        res.status(201).json(user.toAuthJSON());
+      } else{
+        res.status(401).json(info);
       }
-
-      return res.status(400).json();
     }
   )(req, res, next);
+ 
 };
 
 const checkToken = async (req, res, next) => {
   const {
     payload: { id },
   } = req;
-  return Users.findById(id).then((user) => {
+  return userService.findUserById(id).then((user) => {
     if (!user) {
       return res.sendStatus(400);
     }
-
-    return res.json({ user: user.toAuthJSON() });
+    return res.json(user.toAuthJSON());
   });
 };
 

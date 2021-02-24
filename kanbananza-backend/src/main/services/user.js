@@ -28,7 +28,6 @@ const createUser = async ({ email, password, firstName, lastName }) => {
     });
     user.setPassword(password);
     user.save();
-    console.log(user);
     return user;
   } catch (e) {
     if (e instanceof Error.ValidationError) {

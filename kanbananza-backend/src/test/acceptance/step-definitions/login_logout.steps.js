@@ -1,30 +1,30 @@
 import request from "../../support/request";
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
+import { givenUserLoggedIn, givenUserExists } from "./shared-steps";
 
 const login = loadFeature("src/test/acceptance/features/ID0029_Login.feature");
 const logout = loadFeature(
   "src/test/acceptance/features/ID0030_Logout.feature"
 );
 
-var numberOfAccounts = 0;
 var errMsg = "";
 var responseStatus = "";
+var authHeader = "";
 
 const whenUserAttemptsLogin = (when) => {
   when(
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
     async (email, pass) => {
+      //console.log("Logging in with " +email+ ", " +pass)
       const res = await request
-        .post("/user/")
+        .post("/login")
         .send({
           email: email,
-          password: pass,
-          firstName: "fdsf",
-          lastName: "fdsjf",
+          password: pass
         })
-        .expect(201);
-      responseStatus = res.statusCode;
+        responseStatus = res.statusCode
+        errMsg = res.body.errors
+        authHeader = { "authorization":"Token " + res.body.token }
     }
   );
 };
@@ -41,14 +41,17 @@ defineFeature(login, (test) => {
     when,
     then,
   }) => {
-    givenExistsUser(given);
+    givenUserExists(given);
 
     whenUserAttemptsLogin(when);
 
     then(
       /^the user with email "(.*)" shall be logged into the system$/,
       async (email) => {
-        const res = await request.get("/login").expect(200);
+        expect(responseStatus).toEqual(201); //login succeeded
+        // Verify if token is valid
+        const res =  await request.get("/login").set(authHeader)
+        expect(res.statusCode).toEqual(200)
       }
     );
   });
@@ -58,18 +61,20 @@ defineFeature(login, (test) => {
     when,
     then,
   }) => {
-    givenExistsUser(given);
+    givenUserExists(given);
 
     whenUserAttemptsLogin(when);
 
     then("the system shall report that the password is incorrect", async () => {
-      expect(responseStatus).toEqual(400);
+      expect(errMsg).toBe("Invalid email or passwprd")
     });
 
     then(
       /^the user with email "(.*)" shall not be logged into the system$/,
       async (email) => {
-        const { body } = await request.get("login").expect(400);
+        expect(responseStatus).toEqual(401);
+        const res =  await request.get("/login").set(authHeader)
+        expect(res.statusCode).toEqual(401)
       }
     );
   });
@@ -83,11 +88,12 @@ defineFeature(logout, (test) => {
   });
 
   test("User successfully logs out of account", ({ given, when, then }) => {
-    givenExistsUser(given);
+    givenUserExists(given);
 
     givenUserLoggedIn(given);
 
-    when(/^the user attempts to logout$/, () => {});
+    when(/^the user attempts to logout$/, () => {
+    });
 
     then(
       /^the user with email "(.*)" shall be logged out of the system$/,
