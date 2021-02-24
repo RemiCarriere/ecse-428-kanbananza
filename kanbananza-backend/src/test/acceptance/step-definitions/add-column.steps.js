@@ -33,12 +33,24 @@ const whenUserCreatesColumn = (when) => {
   when(
     /^the user attempts to create a column with name "(.*)"$/,
     async (name) => {
-      const { body } = await request
+      const  res  = await request
         .post("/column")
-        .send({ label: name, boardId: selectedBoard, order: 1 })
+        .send({ label: name.trim(), boardId: selectedBoard, order: 1 })
     }
   );
 };
+const givenBoardHasFollowingColumns = (given) => {
+  given(
+    "the board contains columns with names and order as following:",
+    async (table) => {
+      table.forEach(async (row) => {
+        const res  = await request
+          .post("/column")
+          .send({ label: row.name.trim(), boardId: selectedBoard, order: 1 })
+          .expect(201);
+      });
+    }
+  );}
 
 const givenBoardHasNoColumns = (given) => {
   given(/^the selected board has no columns$/, async () => {
@@ -101,19 +113,7 @@ defineFeature(feature, (test) => {
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
-
-    given(
-      "the board contains columns with names and order as following:",
-      async (table) => {
-        table.forEach(async (row) => {
-          const { body } = await request
-            .post("/column")
-            .send({ label: row.name, boardId: selectedBoard, order: 1 })
-            .expect(201);
-        });
-      }
-    );
-
+    givenBoardHasFollowingColumns(given)
     whenUserCreatesColumn(when);
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
@@ -121,7 +121,7 @@ defineFeature(feature, (test) => {
         .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
-      //expect(body[0].label).toBe(name);
+      expect(body[3].label).toBe(name);
     });
 
     then(/^the board contains 4 columns$/, async () => {
@@ -210,19 +210,11 @@ defineFeature(feature, (test) => {
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
-
-    given(
-      "the board contains the columns with names and order as following:",
-      async (table) => {
-        table.forEach(async (row) => {
-          const { body } = await request
-            .post("/column")
-            .send({ label: row.columnName, boardId: selectedBoard, order: 1 })
-            .expect(201);
-        });
-      }
-    );
-
+    given(/^the board contains a column with name "(.*)"$/, async(name) => {
+      const a = await request
+        .post("/column")
+        .send({ label: name.trim(), boardId: selectedBoard, order: 1 })
+    });
     whenUserCreatesColumn(when);
 
     then(
@@ -230,11 +222,11 @@ defineFeature(feature, (test) => {
       (name) => {}
     );
 
-    then("the number of columns in the board shall remain three", async () => {
+    then("the number of columns in the board shall remain one", async () => {
       const { body } = await request
         .get("/board/" + selectedBoard + "/columns")
         .expect(200);
-      //expect(body.length).toBe(3);
+      expect(body.length).toBe(1);
       
     });
 
