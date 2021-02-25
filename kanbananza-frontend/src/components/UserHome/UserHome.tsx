@@ -3,45 +3,59 @@ import { checkToken, getUserBoards } from "../../api/userApi";
 import Cookies from "js-cookie";
 import { board } from "../../types/board";
 import { createBoard } from "../../api/boardApi";
+import { useHistory } from "react-router-dom";
 
+var ownerID;
 const UserHome = () => {
-  const [value, setValue] = useState("initial");
-  const [value1, setValue1] = useState<Array<board>>([]);
-  const [value3, setValue3] = useState("");
-  useEffect (() => {
-    async function initializeData(){
-      // This effect uses the `value` variable,
-      // so it "depends on" `value`.
+  const [email, setEmail] = useState("initial");
+  const [boards, setBoards] = useState<Array<board>>([]);
+  const [newBoardName, setNewBoardName] = useState("");
+  const history = useHistory();
+
+  useEffect(() => {
+    async function initializeData() {
       const loginRes = await checkToken(Cookies.get("token"));
-      setValue(loginRes.email)
-      const boardRes = await getUserBoards(loginRes._id);
-      setValue1(boardRes)
+      if (!loginRes || (loginRes && !loginRes.email)) {
+        history.push("/sign-in");
+        return;
+      }
+      setEmail(loginRes.email);
+      ownerID = loginRes._id;
+      const boardRes = await getUserBoards(ownerID);
+      setBoards(boardRes);
+    }
+    initializeData();
+  }, [email]);
+
+  function populateBoard() {
+    return boards.map((board, index) => {
+      if (board && board.name) {
+        return (
+          <div className="col-md-4" key={index}>
+            <h3>{board.name}</h3>
+            <p>Project description</p>
+          </div>
+        );
+      }
+    });
   }
-  initializeData()
-  }, [value]); // pass `value` as a dependency
 
-  function renderTableData() {
-    return value1.map((board, index)=>{
-      const projName = board.name
-       return (
-        <div className="col-md-4">
-          <h3>{projName}</h3>
-          <p>Project description</p>
-        </div>
-       )
-      })
- }
-
- async function onNewProject(event: any) {
-  if (1) {
-    try {
-      await createBoard({ ownerId: "603466d60f3f434b50600695", name: value3 });
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
+  async function onNewProject(event: any) {
+    if (newBoardName) {
+      try {
+        const a = await createBoard({ ownerId: ownerID, name: newBoardName });
+        boards.push(a);
+        setBoards(boards);
+        // Needs to be fixed to update board component dynamically
+        // if boards is added to useEffect() as dependency,
+        // it works, but we get an infinite loop
+        // https://dmitripavlutin.com/react-useeffect-infinite-loop/
+        window.location.reload(); //TODO remove this line when issue above is solved
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
-}
   return (
     <div className="home-wrapper">
       <div className="home-inner">
@@ -49,7 +63,7 @@ const UserHome = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="jumbotron">
-                <h2>{value}</h2>
+                <h2>{email}</h2>
                 <p>View your recent projects, or create a new one.</p>
                 {/* <p>
                   <a className="btn btn-primary btn-large"  onClick={onNewProject}>
@@ -57,21 +71,26 @@ const UserHome = () => {
                   </a>
                 </p> */}
                 <form className="form-inline">
-                <div className="form-group mx-sm-3 mb-2">
-               <input className="form-control" id="inputPassword2" onChange={(e) => setValue3(e.target.value)} placeholder="New Project Name"></input>
-               </div>
-              <button type="button" onClick={onNewProject} className="btn btn-primary mb-2">New Project</button>
-              </form>
-
-
-
+                  <div className="form-group mx-sm-3 mb-2">
+                    <input
+                      className="form-control"
+                      id="inputPassword2"
+                      onChange={(e) => setNewBoardName(e.target.value)}
+                      placeholder="New Project Name"
+                    ></input>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onNewProject}
+                    className="btn btn-primary mb-2"
+                  >
+                    Create Project
+                  </button>
+                </form>
               </div>
-              <div className="row">
-              {renderTableData()}
-              </div>
+              <div className="row">{populateBoard()}</div>
             </div>
           </div>
-    
         </div>
       </div>
     </div>

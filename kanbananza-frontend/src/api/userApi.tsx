@@ -1,5 +1,16 @@
 import API from "./api";
 
+export const createUser = (firstName, lastName, email, password): any => {
+  return API.post("/user", {
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    password: password,
+  })
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+};
+
 export const createLogin = (email, password): any => {
   return API.post("/login", { email: email, password: password })
     .then((res) => res.data)

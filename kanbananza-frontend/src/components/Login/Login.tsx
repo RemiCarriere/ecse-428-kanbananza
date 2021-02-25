@@ -2,8 +2,9 @@ import { useState } from "react";
 import { createLogin } from "../../api/userApi";
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
+import { propTypes } from "react-bootstrap/esm/Image";
 
-const Login = () => {
+const Login = (params) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const history = useHistory();
@@ -13,6 +14,7 @@ const Login = () => {
       const res = await createLogin(email, password);
       if (res && res.token) {
         Cookies.set("token", res.token);
+        params.setloggedIn(true);
         history.push("/home");
       }
     } catch (e) {

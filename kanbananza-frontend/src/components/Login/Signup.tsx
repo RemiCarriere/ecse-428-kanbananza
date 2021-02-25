@@ -1,15 +1,27 @@
 import { useState } from "react";
+import Cookies from "js-cookie";
+import { createUser } from "../../api/userApi";
+import { useHistory } from "react-router-dom";
 
-const Signup = () => {
+const Signup = (params) => {
   const [email, setEmail] = useState<string>("");
   const [firstname, setFirstname] = useState<string>("");
   const [lastname, setLastname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const history = useHistory();
 
-  const onLogin = () => {
-    alert("heydffdssdddddddddddddddddddddy");
-    return;
-  };
+  async function onLogin(event: any) {
+    try {
+      const res = await createUser(firstname, lastname, email, password);
+      if (res && res.token) {
+        Cookies.set("token", res.token);
+        params.setloggedIn(true);
+        history.push("/home");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
@@ -22,6 +34,7 @@ const Signup = () => {
               type="text"
               className="form-control"
               placeholder="First name"
+              onChange={(e) => setFirstname(e.target.value)}
             />
           </div>
 
@@ -31,6 +44,7 @@ const Signup = () => {
               type="text"
               className="form-control"
               placeholder="Last name"
+              onChange={(e) => setLastname(e.target.value)}
             />
           </div>
 
@@ -40,6 +54,7 @@ const Signup = () => {
               type="email"
               className="form-control"
               placeholder="Enter email"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -49,11 +64,12 @@ const Signup = () => {
               type="password"
               className="form-control"
               placeholder="Enter password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <button
-            type="submit"
+            type="button"
             onClick={onLogin}
             className="btn btn-primary btn-block"
           >

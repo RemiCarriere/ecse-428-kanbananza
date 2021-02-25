@@ -4,10 +4,11 @@ import API from "./api";
 /** template */
 
 export const createBoard = (boardData: board) => {
-  API.post("/board", { name: boardData.name, ownerId: boardData.ownerId })
-    .then((res) => {
-      console.log(res.data);
-    })
+  return API.post("/board", {
+    name: boardData.name,
+    ownerId: boardData.ownerId,
+  })
+    .then((res) => res.data)
     .catch((err) => console.log(err));
 };
 export const getAllBoards = (): any => {

@@ -5,8 +5,46 @@ import UserHome from "../components/UserHome/UserHome";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./app.css";
 import "../index.css";
+import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
 
 const Main = () => {
+  const [loggedIn, setloggedIn] = useState<boolean>(Cookies.get("token"));
+  function onLogout(event: any) {
+    Cookies.remove("token");
+    setloggedIn(false);
+  }
+  function onLogin() {
+    setloggedIn(true);
+  }
+
+  function loginLogoutLink() {
+    return loggedIn ? (
+      <li className="nav-item">
+        <Link className="nav-link" onClick={onLogout} to={"/sign-in"}>
+          Logout
+        </Link>
+      </li>
+    ) : (
+      <li className="nav-item">
+        <Link className="nav-link" to={"/sign-in"}>
+          Login
+        </Link>
+      </li>
+    );
+  }
+  function signUpLink() {
+    return loggedIn ? (
+      ""
+    ) : (
+      <li className="nav-item">
+        <Link className="nav-link" to={"/sign-up"}>
+          Sign up
+        </Link>
+      </li>
+    );
+  }
+
   return (
     <Router>
       <div className="App">
@@ -14,32 +52,28 @@ const Main = () => {
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
               <Link className="navbar-brand" to={"/"}>
-                Kanbanaza
+                Kanbananza
               </Link>
               <div
                 className="collapse navbar-collapse"
                 id="navbarTogglerDemo02"
               >
                 <ul className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <Link className="nav-link" to={"/sign-in"}>
-                      Login
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to={"/sign-up"}>
-                      Sign up
-                    </Link>
-                  </li>
+                  {loginLogoutLink()}
+                  {signUpLink()}
                 </ul>
               </div>
             </div>
           </nav>
         </div>
         <Switch>
-          <Route exact path="/" component={Login} />
-          <Route path="/sign-in" component={Login} />
-          <Route path="/sign-up" component={Signup} />
+          {/* <Route exact path="/" component={Login()}/> */}
+          <Route path="/sign-in">
+            <Login setloggedIn={setloggedIn} />
+          </Route>
+          <Route path="/sign-up">
+            <Signup setloggedIn={setloggedIn} />
+          </Route>
           <Route path="/home" component={UserHome} />
         </Switch>
       </div>
