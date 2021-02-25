@@ -20,12 +20,15 @@ const createUser = async ({ email, password, firstName, lastName }) => {
   }
 
   try {
-    return await User.create({
+    const user = await User.create({
       email,
       password,
       first_name: firstName,
       last_name: lastName,
     });
+    user.setPassword(password);
+    user.save();
+    return user;
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw HttpError.fromMongooseValidationError(e);

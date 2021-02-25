@@ -47,14 +47,10 @@ Feature: Add a Column
     And the number of columns in the board shall remain zero
 
   Scenario: Unsuccessfully add a column with the name of an existing column (Error Flow)
-    Given the board contains the columns with names and order as following:
-      | columnName | columnOrder |
-      | To Do      | 1           |
-      | Doing      | 2           |
-      | Done       | 3           |
-    When the user attempts to create a column with name "Done"
-    Then the system shall report that the column name "Done" is already in use
-    And the number of columns in the board shall remain three
+    Given the board contains a column with name "To Do"
+    When the user attempts to create a column with name "To Do"
+    Then the system shall report that the column name "To Do" is already in use
+    And the number of columns in the board shall remain one
     And the columns in the board shall have the following names and order:
       | columnName | columnOrder |
       | To Do      | 1           |

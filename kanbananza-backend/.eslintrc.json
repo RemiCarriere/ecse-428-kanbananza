@@ -9,6 +9,12 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "**/*.spec.js",
+    "**/*.test.js",
+    "**/*.steps.js",
+    "**/test/setup.js"
+  ],
   "rules": {
     "no-underscore-dangle": "off",
     "import/prefer-default-export": "warn",

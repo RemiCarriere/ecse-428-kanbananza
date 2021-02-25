@@ -1,4 +1,3 @@
-import basicAuth from "express-basic-auth";
 import auth from "../auth";
 import userController from "../controllers/user";
 import idParamValidator from "../middleware/id_param_validator";
@@ -10,9 +9,7 @@ export default (router) => {
   router.get("/user/:id", idParamValidator, userController.index);
   router.get("/user/:id/boards", idParamValidator, userController.selectBoards);
   router.get("/users", userController.select);
-  router.get(
-    "/login",
-    basicAuth({ authorizer: auth.authAll }),
-    userController.login
-  );
+
+  router.post("/login", auth.optional, userController.login);
+  router.get("/login", auth.required, userController.checkToken);
 };

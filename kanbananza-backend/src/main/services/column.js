@@ -4,7 +4,7 @@ import Board from "../models/board";
 import Column from "../models/column";
 
 const createColumn = async ({ label, boardId, order }) => {
-  if (await Column.exists({ board: boardId, label })) {
+  if (await Column.exists({ boardId, label })) {
     throw new HttpError({
       code: 400,
       message: `Column name already in use for board with id ${boardId}.`,
@@ -32,7 +32,7 @@ const findColumnById = async (id) => {
   if (!(await Column.exists({ _id: id }))) {
     throw new HttpError({
       code: 404,
-      message: `User with id ${id} does not exist.`,
+      message: `COlumn with id ${id} does not exist.`,
     });
   }
   return Column.findOne({ _id: id }).exec();

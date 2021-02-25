@@ -1,8 +1,9 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import { givenUserLoggedIn, givenExistsUser } from "./common.steps";
+import { givenUserLoggedIn, givenExistsUser } from "./shared-steps";
 import request from "../../support/request";
-import dbHandler from "../../support/database_handler";
 
+let boardCount;
+let response;
 const feature = loadFeature(
   "src/test/acceptance/features/ID002_Create_Board.feature"
 );
@@ -27,8 +28,6 @@ const userShallHaveBoardWithName = (then) => {
   });
 };
 
-let boardCount;
-let response;
 defineFeature(feature, (test) => {
   test("Successfully create a board with a valid board name (Normal Flow)", ({
     given,
@@ -96,7 +95,7 @@ defineFeature(feature, (test) => {
         }
       }
 
-      await request.post("/board").send({ name: name, ownerId: user.id });
+      await request.post("/board").send({ name, ownerId: user.id });
     });
 
     whenUserCreatesBoardWithName(when);

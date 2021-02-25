@@ -1,58 +1,84 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-import DisplayBoard from "../components/Board/DisplayBoard";
-import Login from './Login'
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Login from "../components/Login/Login";
+import Signup from "../components/Login/Signup";
+import UserHome from "../components/UserHome/UserHome";
+import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./app.css";
+import "../index.css";
+import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
 
 const Main = () => {
+  const [loggedIn, setloggedIn] = useState<boolean>(Cookies.get("token"));
+  function onLogout(event: any) {
+    Cookies.remove("token");
+    setloggedIn(false);
+  }
+  function onLogin() {
+    setloggedIn(true);
+  }
 
-    function Home() {
-        return <DisplayBoard />;
-    }
+  function loginLogoutLink() {
+    return loggedIn ? (
+      <li className="nav-item">
+        <Link className="nav-link" onClick={onLogout} to={"/sign-in"}>
+          Logout
+        </Link>
+      </li>
+    ) : (
+      <li className="nav-item">
+        <Link className="nav-link" to={"/sign-in"}>
+          Login
+        </Link>
+      </li>
+    );
+  }
+  function signUpLink() {
+    return loggedIn ? (
+      ""
+    ) : (
+      <li className="nav-item">
+        <Link className="nav-link" to={"/sign-up"}>
+          Sign up
+        </Link>
+      </li>
+    );
+  }
 
-    function About() {
-        return <h2>About</h2>;
-    }
-    function Users() {
-        return <h2>Users</h2>;
-    }
-
-
-    return (<Router>
+  return (
+    <Router>
+      <div className="App">
         <div>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link to="/users">Users</Link>
-                    </li>
+          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+            <div className="container">
+              <Link className="navbar-brand" to={"/"}>
+                Kanbananza
+              </Link>
+              <div
+                className="collapse navbar-collapse"
+                id="navbarTogglerDemo02"
+              >
+                <ul className="navbar-nav ml-auto">
+                  {loginLogoutLink()}
+                  {signUpLink()}
                 </ul>
-            </nav>
-
-            {/* A <Switch> looks through its children <Route>s and
-              renders the first one that matches the current URL. */}
-            <Switch>
-                <Route path="/about">
-                    <About />
-                </Route>
-                <Route path="/users">
-                    <Users />
-                </Route>
-                <Route path="/">
-                    <Home />
-                </Route>
-            </Switch>
+              </div>
+            </div>
+          </nav>
         </div>
+        <Switch>
+          {/* <Route exact path="/" component={Login()}/> */}
+          <Route path="/sign-in">
+            <Login setloggedIn={setloggedIn} />
+          </Route>
+          <Route path="/sign-up">
+            <Signup setloggedIn={setloggedIn} />
+          </Route>
+          <Route path="/home" component={UserHome} />
+        </Switch>
+      </div>
     </Router>
-    )
-}
+  );
+};
 
-export default Main
+export default Main;
