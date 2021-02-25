@@ -1,6 +1,7 @@
 import userService from "../services/user";
 import UserDTO from "../DTO/user";
 import BoardDTO from "../DTO/board";
+
 const passport = require("passport");
 
 const create = async (req, res, next) => {
@@ -32,17 +33,16 @@ const login = async (req, res, next) => {
   return passport.authenticate(
     "local",
     { session: false },
-    ( passportUser, info) => {
+    (passportUser, info) => {
       if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
         res.status(201).json(user.toAuthJSON());
-      } else{
+      } else {
         res.status(401).json(info);
       }
     }
   )(req, res, next);
- 
 };
 
 const checkToken = async (req, res, next) => {

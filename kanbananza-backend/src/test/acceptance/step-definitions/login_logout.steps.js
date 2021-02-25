@@ -1,5 +1,5 @@
-import request from "../../support/request";
 import { defineFeature, loadFeature } from "jest-cucumber";
+import request from "../../support/request";
 import { givenUserLoggedIn, givenUserExists } from "./shared-steps";
 
 const login = loadFeature("src/test/acceptance/features/ID0029_Login.feature");
@@ -7,24 +7,22 @@ const logout = loadFeature(
   "src/test/acceptance/features/ID0030_Logout.feature"
 );
 
-var errMsg = "";
-var responseStatus = "";
-var authHeader = "";
+let errMsg = "";
+let responseStatus = "";
+let authHeader = "";
 
 const whenUserAttemptsLogin = (when) => {
   when(
     /^the user attempts to login with email "(.*)" and password "(.*)"$/,
     async (email, pass) => {
-      //console.log("Logging in with " +email+ ", " +pass)
-      const res = await request
-        .post("/login")
-        .send({
-          email: email,
-          password: pass
-        })
-        responseStatus = res.statusCode
-        errMsg = res.body.errors
-        authHeader = { "authorization":"Token " + res.body.token }
+      // console.log("Logging in with " +email+ ", " +pass)
+      const res = await request.post("/login").send({
+        email,
+        password: pass,
+      });
+      responseStatus = res.statusCode;
+      errMsg = res.body.errors;
+      authHeader = { authorization: "Token " + res.body.token };
     }
   );
 };
@@ -48,10 +46,10 @@ defineFeature(login, (test) => {
     then(
       /^the user with email "(.*)" shall be logged into the system$/,
       async (email) => {
-        expect(responseStatus).toEqual(201); //login succeeded
+        expect(responseStatus).toEqual(201); // login succeeded
         // Verify if token is valid
-        const res =  await request.get("/login").set(authHeader)
-        expect(res.statusCode).toEqual(200)
+        const res = await request.get("/login").set(authHeader);
+        expect(res.statusCode).toEqual(200);
       }
     );
   });
@@ -66,15 +64,15 @@ defineFeature(login, (test) => {
     whenUserAttemptsLogin(when);
 
     then("the system shall report that the password is incorrect", async () => {
-      expect(errMsg).toBe("Invalid email or passwprd")
+      expect(errMsg).toBe("Invalid email or passwprd");
     });
 
     then(
       /^the user with email "(.*)" shall not be logged into the system$/,
       async (email) => {
         expect(responseStatus).toEqual(401);
-        const res =  await request.get("/login").set(authHeader)
-        expect(res.statusCode).toEqual(401)
+        const res = await request.get("/login").set(authHeader);
+        expect(res.statusCode).toEqual(401);
       }
     );
   });
@@ -92,8 +90,7 @@ defineFeature(logout, (test) => {
 
     givenUserLoggedIn(given);
 
-    when(/^the user attempts to logout$/, () => {
-    });
+    when(/^the user attempts to logout$/, () => {});
 
     then(
       /^the user with email "(.*)" shall be logged out of the system$/,

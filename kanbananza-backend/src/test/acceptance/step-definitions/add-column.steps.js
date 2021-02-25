@@ -2,6 +2,9 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import { givenUserLoggedIn, givenExistsUser } from "./shared-steps";
 import request from "../../support/request";
 
+let selectedBoard = 0;
+let userID;
+
 const feature = loadFeature(
   "src/test/acceptance/features/ID007_Add-Column.feature"
 );
@@ -33,9 +36,9 @@ const whenUserCreatesColumn = (when) => {
   when(
     /^the user attempts to create a column with name "(.*)"$/,
     async (name) => {
-      const  res  = await request
+      const res = await request
         .post("/column")
-        .send({ label: name.trim(), boardId: selectedBoard, order: 1 })
+        .send({ label: name.trim(), boardId: selectedBoard, order: 1 });
     }
   );
 };
@@ -44,17 +47,17 @@ const givenBoardHasFollowingColumns = (given) => {
     "the board contains columns with names and order as following:",
     async (table) => {
       table.forEach(async (row) => {
-        const res  = await request
+        const res = await request
           .post("/column")
           .send({ label: row.name.trim(), boardId: selectedBoard, order: 1 })
           .expect(201);
       });
     }
-  );}
+  );
+};
 
 const givenBoardHasNoColumns = (given) => {
   given(/^the selected board has no columns$/, async () => {
-
     const { body } = await request
       .get("/board/" + selectedBoard + "/columns")
       .expect(200);
@@ -62,9 +65,6 @@ const givenBoardHasNoColumns = (given) => {
     expect(body.length).toBe(0);
   });
 };
-
-let selectedBoard = 0;
-let userID;
 
 defineFeature(feature, (test) => {
   let columnCreated = false;
@@ -113,7 +113,7 @@ defineFeature(feature, (test) => {
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
-    givenBoardHasFollowingColumns(given)
+    givenBoardHasFollowingColumns(given);
     whenUserCreatesColumn(when);
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
@@ -210,10 +210,10 @@ defineFeature(feature, (test) => {
     givenUserHasOneBoard(given);
     givenBoardIsSelected(given);
     givenBoardHasNoColumns(given);
-    given(/^the board contains a column with name "(.*)"$/, async(name) => {
+    given(/^the board contains a column with name "(.*)"$/, async (name) => {
       const a = await request
         .post("/column")
-        .send({ label: name.trim(), boardId: selectedBoard, order: 1 })
+        .send({ label: name.trim(), boardId: selectedBoard, order: 1 });
     });
     whenUserCreatesColumn(when);
 
@@ -227,7 +227,6 @@ defineFeature(feature, (test) => {
         .get("/board/" + selectedBoard + "/columns")
         .expect(200);
       expect(body.length).toBe(1);
-      
     });
 
     then(

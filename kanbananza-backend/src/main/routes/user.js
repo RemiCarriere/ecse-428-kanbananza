@@ -12,5 +12,4 @@ export default (router) => {
 
   router.post("/login", auth.optional, userController.login);
   router.get("/login", auth.required, userController.checkToken);
-
 };

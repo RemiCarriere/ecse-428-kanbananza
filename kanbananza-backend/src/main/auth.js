@@ -1,6 +1,7 @@
 import config from "./config";
 
 const jwt = require("express-jwt");
+
 const jwtSecret = config.jwtSecret;
 
 const getTokenFromHeaders = (req) => {

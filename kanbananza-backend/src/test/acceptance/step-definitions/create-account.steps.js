@@ -4,9 +4,9 @@ import request from "../../support/request";
 const feature = loadFeature(
   "src/test/acceptance/features/ID001_Create_an_Account.feature"
 );
-var numberOfAccounts = 0;
-var errMsg = "";
-var responseStatus = "";
+let numberOfAccounts = 0;
+const errMsg = "";
+let responseStatus = "";
 
 defineFeature(feature, (test) => {
   let accountCreated = false;
@@ -23,10 +23,7 @@ defineFeature(feature, (test) => {
     given(
       /^an account with email "(.*)" does not exist in the system$/,
       async (email) => {
-        const { body } = await request
-          .get("/user")
-          .send({ email: email })
-          .expect(404);
+        const { body } = await request.get("/user").send({ email }).expect(404);
       }
     );
 
@@ -38,7 +35,7 @@ defineFeature(feature, (test) => {
         const { body } = await request
           .post("/user")
           .send({
-            email: email,
+            email,
             password: pass,
             firstName: name,
             lastName: name,
@@ -50,7 +47,7 @@ defineFeature(feature, (test) => {
     then(
       /^an account with name "(.*)", email "(.*)", and (.*) "password" shall exist in the system$/,
       async (name, email, pass) => {
-        const res = await request.get("/user").send({ email: email });
+        const res = await request.get("/user").send({ email });
         expect(res.body.firstName).toEqual(name);
         expect(res.body.lastName).toEqual(name);
         expect(res.body.email).toEqual(email);
@@ -75,15 +72,12 @@ defineFeature(feature, (test) => {
       /^an account with email "(.*)" exists in the system$/,
       async (email) => {
         const res = await request.post("/user").send({
-          email: email,
+          email,
           password: "123445",
           firstName: "name",
           lastName: "name",
         });
-        const { body } = await request
-          .get("/user")
-          .send({ email: email })
-          .expect(200);
+        const { body } = await request.get("/user").send({ email }).expect(200);
       }
     );
 
@@ -93,7 +87,7 @@ defineFeature(feature, (test) => {
         const res = await request
           .post("/user")
           .send({
-            email: email,
+            email,
             password: "123456",
             firstName: "test",
             lastName: "test",
@@ -115,10 +109,7 @@ defineFeature(feature, (test) => {
     then(
       /^an account with email "(.*)" shall exist in the system$/,
       async (email) => {
-        const { body } = await request
-          .get("/user")
-          .send({ email: email })
-          .expect(200);
+        const { body } = await request.get("/user").send({ email }).expect(200);
       }
     );
 
@@ -144,7 +135,7 @@ defineFeature(feature, (test) => {
         const res = await request
           .post("/user")
           .send({
-            email: email,
+            email,
             password: "123456",
             firstName: "test",
             lastName: "test",
@@ -161,10 +152,7 @@ defineFeature(feature, (test) => {
     then(
       /^an account with email "(.*)" shall not exist in the system$/,
       async (email) => {
-        const { body } = await request
-          .get("/user")
-          .send({ email: email })
-          .expect(404);
+        const { body } = await request.get("/user").send({ email }).expect(404);
       }
     );
 
