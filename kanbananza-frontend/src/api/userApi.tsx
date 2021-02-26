@@ -32,3 +32,9 @@ export const getUserBoards = (id: string): any => {
     .then((res) => res.data)
     .catch((err) => console.log(err));
 };
+
+export const getUser = (id: string): any => {
+  return API.get(`/user/${id}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+};
