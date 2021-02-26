@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { checkToken, getUserBoards } from "../../api/userApi";
+import { checkToken, getUserBoards, getUser } from "../../api/userApi";
 import Cookies from "js-cookie";
 import { board } from "../../types/board";
 import { createBoard } from "../../api/boardApi";
@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 var ownerID;
 const UserHome = () => {
-  const [email, setEmail] = useState("initial");
+  const [usrName, setUsrName] = useState("initial");
   const [boards, setBoards] = useState<Array<board>>([]);
   const [newBoardName, setNewBoardName] = useState("");
   const history = useHistory();
@@ -19,13 +19,15 @@ const UserHome = () => {
         history.push("/sign-in");
         return;
       }
-      setEmail(loginRes.email);
+
       ownerID = loginRes._id;
+      const user = await getUser(ownerID);
+      setUsrName(user.firstName + " " + user.lastName);
       const boardRes = await getUserBoards(ownerID);
       setBoards(boardRes);
     }
     initializeData();
-  }, [email]);
+  }, [usrName]);
 
   function populateBoard() {
     return boards.map((board, index) => {
@@ -63,7 +65,7 @@ const UserHome = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="jumbotron">
-                <h2>{email}</h2>
+                <h2>{usrName}</h2>
                 <p>View your recent projects, or create a new one.</p>
                 {/* <p>
                   <a className="btn btn-primary btn-large"  onClick={onNewProject}>
