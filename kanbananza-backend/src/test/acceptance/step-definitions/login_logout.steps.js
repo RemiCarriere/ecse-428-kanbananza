@@ -90,11 +90,17 @@ defineFeature(logout, (test) => {
 
     givenUserLoggedIn(given);
 
-    when(/^the user attempts to logout$/, () => {});
+    when(/^the user attempts to logout$/, () => {
+      authHeader = { authorization: "Token " + "" }; // In practice, the browser removes the token from local storage
+    });
 
     then(
       /^the user with email "(.*)" shall be logged out of the system$/,
-      (email) => {}
+      async (email) => {
+        expect(responseStatus).toEqual(401);
+        const res = await request.get("/login").set(authHeader);
+        expect(res.statusCode).toEqual(401);
+      }
     );
   });
 });
