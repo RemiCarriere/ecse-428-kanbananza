@@ -1,8 +1,7 @@
 import Users from "../models/user";
 
-const mongoose = require("mongoose");
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
+import passport from "passport";
+import LocalStrategy from "passport-local";
 
 passport.use(
   "local",

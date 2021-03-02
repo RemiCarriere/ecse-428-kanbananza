@@ -1,6 +1,6 @@
 import config from "./config";
 
-const jwt = require("express-jwt");
+import jwt from "express-jwt";
 
 const jwtSecret = config.jwtSecret;
 
