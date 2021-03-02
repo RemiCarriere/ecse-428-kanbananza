@@ -1,6 +1,5 @@
-import config from "./config";
-
 import jwt from "express-jwt";
+import config from "./config";
 
 const jwtSecret = config.jwtSecret;
 

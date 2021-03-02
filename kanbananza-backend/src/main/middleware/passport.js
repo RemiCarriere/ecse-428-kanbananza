@@ -1,7 +1,6 @@
-import Users from "../models/user";
-
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import Users from "../models/user";
 
 passport.use(
   "local",
