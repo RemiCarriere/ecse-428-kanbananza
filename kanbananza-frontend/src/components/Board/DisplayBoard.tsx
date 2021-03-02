@@ -31,7 +31,7 @@ const DisplayBoard = () => {
         <input type="text" onChange={(e) => setName(e.target.value)}></input>
         <button onClick={onCreateBoard}>Create Board</button>
         <button onClick={onViewBoard}>See Board</button>
-        {boardData && <Board></Board>}
+        {<Board></Board>}
       </div>
     </>
   );

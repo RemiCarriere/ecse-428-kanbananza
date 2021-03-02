@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
+import CardComponent from "../Card/Card";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 // use effect is similar to componentDidMount and componentDidUpdate and component will unmount
 // use effect runs after each render!!
 // each render occurs after a set state
@@ -11,14 +17,64 @@ import { board } from "../../types/board";
  * In a way, this makes the effects behave more like a part of the render result — each effect “belongs”
  * to a particular render. We will see more clearly why this is useful later on this page.
  */
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      alignItems: "center",
+      justify: "center",
+    },
+    card: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      margin: '15px',
+      color: theme.palette.text.secondary,
+    },
+  }),
+);
+
 const Board = () => {
   // will probably require props
   const [boardData, setBoardData] = useState<board | undefined>(undefined); // initialize the variable to empty string
-
+  const classes = useStyles();
   return (
     <>
-      <div>
+      <div className={classes.root}>
         <strong>placeholder for board name</strong>
+        <Grid alignItems="center" justify="center" container spacing={4}>
+          <Grid item>
+            <Paper className={classes.card}>
+              <IconButton style={{ left: '40%', padding: '0px', margin: '0px' }} aria-label="delete">
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.card}>
+              <IconButton style={{ left: '40%', padding: '0px', margin: '0px' }} aria-label="delete">
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.card}>
+              <IconButton style={{ left: '40%', padding: '0px', margin: '0px' }} aria-label="delete">
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card} {...undefined}></CardComponent>
+              <CardComponent className={classes.card}{...undefined}></CardComponent>
+            </Paper>
+          </Grid>
+        </Grid>
+
       </div>
       {/*here we will do something like boardData.columns.map(column=> <Column></Column>)*/}
       {/*same thing in the column compoenent with cards*/}
