@@ -1,4 +1,7 @@
+import mongoose from "mongoose";
 import boardService from "../services/board";
+import ValidationError from "../validation_error";
+import HttpError from "../http_error";
 
 const create = async (req, res, next) => {
   try {
@@ -6,7 +9,39 @@ const create = async (req, res, next) => {
       name: req.body.name,
       ownerId: req.body.ownerId,
     });
-    res.status(201).json(board.toDTO());
+
+    return res.status(201).json(board.toDTO());
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(HttpError.fromMongooseValidationError(e, "Invalid board information."));
+    }
+
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid board information.",
+          errors: [e],
+        })
+      );
+    }
+
+    return next(e);
+  }
+};
+
+const index = async (req, res, next) => {
+  try {
+    const board = await boardService.findBoardById(req.params.id);
+
+    if (board === null) {
+      return next(new HttpError({
+        code: 404,
+        message: `Board with id ${req.params.id} does not exist.`,
+      }));
+    }
+
+    return res.status(200).json(board.toDTO());
   } catch (e) {
     return next(e);
   }
@@ -24,15 +59,6 @@ const select = async (req, res, next) => {
     return next(e);
   }
   res.status(200).json(boards.map((board) => board.toDTO()));
-};
-
-const index = async (req, res, next) => {
-  try {
-    const board = await boardService.findBoardById(req.params.id);
-    res.status(200).json(board.toDTO());
-  } catch (e) {
-    return next(e);
-  }
 };
 
 const selectColumns = async (req, res, next) => {

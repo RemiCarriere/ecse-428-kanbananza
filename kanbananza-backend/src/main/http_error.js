@@ -20,17 +20,19 @@ class HttpError extends Error {
     this.body = body;
 
     this.errors = errors; // sub-errors
+
+    this.created = (new Date()).toISOString().slice(0, 19).replace("T", " ");
   }
 
-  static fromMongooseValidationError(e) {
+  static fromMongooseValidationError(e, message) {
     return new this({
       code: 400,
-      message: `Invalid field${Object.values(e.errors).length > 1 ? "s" : ""}.`,
+      message: message ===  undefined ? "Invalid information." : message,
       errors: Object.values(e.errors).map(
         (error) =>
           new ValidationError({
             path: error.path,
-            reason: error.message,
+            reason: error.kind,
             data: error.value,
           })
       ),

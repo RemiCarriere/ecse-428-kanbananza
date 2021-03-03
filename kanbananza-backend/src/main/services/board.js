@@ -1,5 +1,3 @@
-import { Error } from "mongoose";
-import HttpError from "../http_error";
 import Board from "../models/board";
 import User from "../models/user";
 import Column from "../models/column";
@@ -7,41 +5,25 @@ import ValidationError from "../validation_error";
 
 const createBoard = async ({ name, ownerId }) => {
   if (!(await User.exists({ _id: ownerId }))) {
-    throw new HttpError({
-      code: 400,
-      message: `User with id ${ownerId} does not exist.`,
+    throw new ValidationError({
+      path: "ownerId",
+      reason: "user does not exist",
+      data: ownerId,
     });
   }
 
   if (await Board.exists({ ownerId, name })) {
-    throw new HttpError({
-      code: 400,
-      message: `Board name already in use for user with id ${ownerId}.`,
+    throw new ValidationError({
+      path: "name",
+      reason: "board name already in use for user",
+      data: name,
     });
   }
 
-  try {
-    return Board.create({ name, ownerId });
-  } catch (e) {
-    if (e instanceof Error.ValidationError) {
-      throw new HttpError({
-        code: 400,
-        message: "Invalid field(s)",
-        body: Object.values(e.errors).map((error) => error.message),
-      });
-    } else {
-      throw e;
-    }
-  }
+  return Board.create({ name, ownerId });
 };
 
 const findBoardById = async (id) => {
-  if (!(await Board.exists({ _id: id }))) {
-    throw new HttpError({
-      code: 404,
-      message: `Board with id ${id} does not exist.`,
-    });
-  }
   return Board.findOne({ _id: id }).exec();
 };
 

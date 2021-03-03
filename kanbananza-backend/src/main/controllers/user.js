@@ -1,6 +1,8 @@
-import userService from "../services/user";
 import mongoose from "mongoose";
 import passport from "passport";
+import userService from "../services/user";
+import HttpError from "../http_error";
+import ValidationError from "../validation_error";
 
 const create = async (req, res, next) => {
   try {
@@ -13,8 +15,18 @@ const create = async (req, res, next) => {
 
     res.status(201).json(user.toDTO());
   } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid user information.",
+          errors: [e],
+        })
+      );
+    }
+
     if (e instanceof mongoose.Error.ValidationError) {
-      return next(HttpError.fromMongooseValidationError(e));
+      return next(HttpError.fromMongooseValidationError(e, "Invalid user information"));
     }
 
     return next(e);
@@ -82,12 +94,12 @@ const indexOnEmail = async (req, res, next) => {
         })
       );
     }
-    
+
     res.status(200).json(user.toDTO());
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
       return next(HttpError.fromMongooseValidationError(e));
-    } 
+    }
 
     return next(e);
   }

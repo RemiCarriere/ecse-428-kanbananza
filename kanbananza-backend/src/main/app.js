@@ -7,6 +7,9 @@ import errorHandler from "./middleware/error_handler";
 import config from "./config";
 import HttpError from "./http_error";
 
+// authentication
+import "./middleware/passport";
+
 const app = express();
 
 // wrap express.json() to handle JSON SyntaxError
@@ -41,8 +44,5 @@ app.use(`/${prefix}`, routes);
 
 // error-handling
 app.use(errorHandler);
-
-// authentication
-require("./middleware/passport");
 
 export default app;

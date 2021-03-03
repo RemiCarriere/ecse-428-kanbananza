@@ -1,4 +1,7 @@
+import mongoose from "mongoose";
 import columnService from "../services/column";
+import ValidationError from "../validation_error";
+import HttpError from "../http_error";
 
 const create = async (req, res, next) => {
   try {
@@ -7,9 +10,14 @@ const create = async (req, res, next) => {
       boardId: req.body.boardId,
       order: req.body.order,
     });
+
     res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
-    return next(e); // handle downstream
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(HttpError.fromMongooseValidationError(e, "Invalid column information."));
+    }
+
+    return next(e);
   }
 };
 
@@ -48,6 +56,16 @@ const select = async (req, res, next) => {
 const index = async (req, res, next) => {
   try {
     const column = await columnService.findColumnById(req.params.id);
+
+    if (column === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Column with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
     res.status(200).json(column.toDTO());
   } catch (e) {
     return next(e);
