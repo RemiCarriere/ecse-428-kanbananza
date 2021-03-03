@@ -70,7 +70,7 @@ const findAllUsers = async () => {
 };
 
 const findAllUserBoards = async (id) => {
-  return Board.find({ owner: id }).exec();
+  return Board.find({ ownerId: id }).exec();
 };
 
 export default {

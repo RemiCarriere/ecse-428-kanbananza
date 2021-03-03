@@ -8,4 +8,13 @@ const columnSchema = new Schema({
   order: { type: Number, required: true, min: 0 },
 });
 
+columnSchema.methods.toDTO = function () {
+  return {
+    id: this._id,
+    label: this.label,
+    boardId: this.boardId,
+    order: this.order
+  }
+};
+
 export default mongoose.model("Column", columnSchema);

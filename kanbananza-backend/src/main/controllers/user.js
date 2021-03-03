@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
-    res.status(201).json(user.toAuthJSON());
+    res.status(201).json(user.toDTO());
   } catch (e) {
     next(e);
   }
@@ -37,7 +37,7 @@ const login = async (req, res, next) => {
       if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
-        res.status(201).json(user.toAuthJSON());
+        res.status(201).json(user.toDTO());
       } else {
         res.status(401).json(info);
       }
@@ -53,7 +53,7 @@ const checkToken = async (req, res, next) => {
     if (!user) {
       return res.sendStatus(400);
     }
-    return res.json(user.toAuthJSON());
+    return res.json(user.toDTO());
   });
 };
 

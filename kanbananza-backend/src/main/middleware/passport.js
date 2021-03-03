@@ -1,6 +1,6 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import Users from "../models/user";
+import User from "../models/user";
 
 passport.use(
   "local",
@@ -10,11 +10,11 @@ passport.use(
       passwordField: "password",
     },
     (email, password, done) => {
-      Users.findOne({ email })
+      User.findOne({ email })
         .then((user) => {
-          if (!user || !user.validatePassword(password)) {
+          if (!user || !user.verifyPassword(password)) {
             return done(false, {
-              errors: "Invalid email or passwprd",
+              errors: "Invalid email or password",
             });
           }
 

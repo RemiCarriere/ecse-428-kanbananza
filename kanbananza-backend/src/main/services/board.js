@@ -13,7 +13,7 @@ const createBoard = async ({ name, ownerId }) => {
     });
   }
 
-  if (await Board.exists({ owner: ownerId, name })) {
+  if (await Board.exists({ ownerId, name })) {
     throw new HttpError({
       code: 400,
       message: `Board name already in use for user with id ${ownerId}.`,
@@ -21,7 +21,7 @@ const createBoard = async ({ name, ownerId }) => {
   }
 
   try {
-    return Board.create({ name, owner: ownerId });
+    return Board.create({ name, ownerId });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({
