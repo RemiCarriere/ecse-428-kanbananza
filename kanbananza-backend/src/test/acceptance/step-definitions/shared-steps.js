@@ -21,9 +21,6 @@ export const givenUserExists = (given) => {
       const res = await request
         .post("/user")
         .send({ email, firstName, lastName, password });
-      // console.log("creating user");
-      /// console.log(email + " " + password)
-      // console.log(res.body)
     }
   );
 };
