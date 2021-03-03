@@ -4,10 +4,10 @@
     "description": "describes properties required to create a new column and their characteristics",
     "type": "object",
     "properties": {
-      "label": {
+      "name": {
         "type": "string",
         "isNotEmpty": true,
-        "description": "label of the column"
+        "description": "name of the column"
       },
       "boardId": {
         "type": "string",
@@ -18,6 +18,6 @@
         "description": "order of the column"
       }
     },
-    "required": ["label", "boardId"]
+    "required": ["name", "boardId"]
   }
 }

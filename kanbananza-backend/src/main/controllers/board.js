@@ -8,7 +8,7 @@ const create = async (req, res, next) => {
     });
     res.status(201).json(board.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -21,7 +21,7 @@ const select = async (req, res, next) => {
       boards = await boardService.findAllBoards();
     }
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(200).json(boards.map((board) => board.toDTO()));
 };
@@ -31,7 +31,7 @@ const index = async (req, res, next) => {
     const board = await boardService.findBoardById(req.params.id);
     res.status(200).json(board.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -47,7 +47,7 @@ const selectColumns = async (req, res, next) => {
       columns = await boardService.findAllBoardColumns(req.params.id);
     }
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(200).json(columns.map((column) => column.toDTO()));
 };
@@ -56,7 +56,7 @@ const remove = async (req, res, next) => {
   try {
     await boardService.deleteBoardById(req.params.id);
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(204);
 };

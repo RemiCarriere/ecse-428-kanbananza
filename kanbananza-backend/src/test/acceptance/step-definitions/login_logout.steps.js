@@ -64,7 +64,7 @@ defineFeature(login, (test) => {
     whenUserAttemptsLogin(when);
 
     then("the system shall report that the password is incorrect", async () => {
-      expect(errMsg).toBe("Invalid email or passwprd");
+      expect(errMsg).toBe("Invalid email or password");
     });
 
     then(

@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
     });
     res.status(201).json(user.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -46,10 +46,10 @@ const checkToken = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const user = await userService.findUserById(req.params.id);
+    const user = await userService.findUserById(req.params.id); // TODO, make the is null? throw 404 http error happen here rather than at service level, service is okay with giving empty result, this  error is front facing and should be generated at controller level (for all such services)
     res.status(200).json(user.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -60,7 +60,7 @@ const indexOnEmail = async (req, res, next) => {
     });
     res.status(200).json(user.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -69,7 +69,7 @@ const select = async (req, res, next) => {
   try {
     users = await userService.findAllUsers();
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(200).json(users.map((user) => user.toDTO()));
 };
@@ -83,7 +83,7 @@ const selectBoards = async (req, res, next) => {
       boards = await userService.findAllUserBoards(req.params.id);
     }
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(200).json(boards.map((board) => board.toDTO()));
 };

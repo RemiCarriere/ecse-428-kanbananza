@@ -38,7 +38,7 @@ const whenUserCreatesColumn = (when) => {
     async (name) => {
       const res = await request
         .post("/column")
-        .send({ label: name.trim(), boardId: selectedBoard, order: 1 });
+        .send({ name: name.trim(), boardId: selectedBoard, order: 1 });
     }
   );
 };
@@ -49,7 +49,7 @@ const givenBoardHasFollowingColumns = (given) => {
       table.forEach(async (row) => {
         const res = await request
           .post("/column")
-          .send({ label: row.name.trim(), boardId: selectedBoard, order: 1 })
+          .send({ name: row.name.trim(), boardId: selectedBoard, order: 1 })
           .expect(201);
       });
     }
@@ -91,7 +91,7 @@ defineFeature(feature, (test) => {
         .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
-      expect(body[0].label).toBe(name);
+      expect(body[0].name).toBe(name);
     });
 
     then("the board contains one column", async () => {
@@ -121,7 +121,7 @@ defineFeature(feature, (test) => {
         .get("/board/" + selectedBoard + "/columns")
         .expect(200);
 
-      expect(body[3].label).toBe(name);
+      expect(body[3].name).toBe(name);
     });
 
     then(/^the board contains 4 columns$/, async () => {
@@ -213,7 +213,7 @@ defineFeature(feature, (test) => {
     given(/^the board contains a column with name "(.*)"$/, async (name) => {
       const a = await request
         .post("/column")
-        .send({ label: name.trim(), boardId: selectedBoard, order: 1 });
+        .send({ name: name.trim(), boardId: selectedBoard, order: 1 });
     });
     whenUserCreatesColumn(when);
 

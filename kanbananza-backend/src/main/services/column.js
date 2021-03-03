@@ -3,15 +3,15 @@ import HttpError from "../http_error";
 import Board from "../models/board";
 import Column from "../models/column";
 
-const createColumn = async ({ label, boardId, order }) => {
-  if (await Column.exists({ boardId, label })) {
+const createColumn = async ({ name, boardId, order }) => {
+  if (await Column.exists({ boardId, name })) {
     throw new HttpError({
       code: 400,
       message: `Column name already in use for board with id ${boardId}.`,
     });
   }
   try {
-    return await Column.create({ label, boardId, order });
+    return await Column.create({ name, boardId, order });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({
@@ -37,4 +37,14 @@ const findColumnById = async (id) => {
   }
   return Column.findOne({ _id: id }).exec();
 };
-export default { createColumn, findAllColumns, findColumnById };
+
+const findColumnsByName = async (name) => {
+  return Column.find({ name }).exec();
+};
+
+export default {
+  createColumn,
+  findColumnById,
+  findAllColumns,
+  findColumnsByName,
+};

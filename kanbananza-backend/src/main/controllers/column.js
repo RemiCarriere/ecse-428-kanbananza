@@ -3,13 +3,13 @@ import columnService from "../services/column";
 const create = async (req, res, next) => {
   try {
     const column = await columnService.createColumn({
-      label: req.body.label,
+      name: req.body.name,
       boardId: req.body.boardId,
       order: req.body.order,
     });
     res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
-    next(e); // handle downstream
+    return next(e); // handle downstream
   }
 };
 
@@ -17,12 +17,13 @@ const select = async (req, res, next) => {
   let columns = [];
   try {
     if (req.query.name !== undefined) {
-      columns = await columnService.findColumnByName(req.query.name);
+      console.log(req.query.name);
+      columns = await columnService.findColumnsByName(req.query.name);
     } else {
       columns = await columnService.findAllColumns();
     }
   } catch (e) {
-    next(e);
+    return next(e);
   }
   res.status(200).json(columns.map((column) => column.toDTO()));
 };
@@ -49,7 +50,7 @@ const index = async (req, res, next) => {
     const column = await columnService.findColumnById(req.params.id);
     res.status(200).json(column.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
