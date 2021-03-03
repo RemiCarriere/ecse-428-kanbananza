@@ -1,10 +1,11 @@
 import Card from "../models/card";
+import HttpError from "../http_error";
 
 const createCard = async ({ label, columnId, order }) => {
-  if (await Column.exists({ columnId, label })) {
+  if (await Card.exists({ columnId, label })) {
     throw new HttpError({
       code: 400,
-      message: `Card name already in use for board with id ${boardId}.`,
+      message: `Card name already in use for column with id ${columnId}.`,
     });
   }
   try {
