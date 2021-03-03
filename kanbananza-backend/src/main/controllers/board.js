@@ -1,7 +1,4 @@
 import boardService from "../services/board";
-import HttpError from "../http_error";
-import BoardDTO from "../DTO/board";
-import ColumnDTO from "../DTO/column";
 
 const create = async (req, res, next) => {
   try {

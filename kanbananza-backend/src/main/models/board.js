@@ -12,7 +12,7 @@ boardSchema.methods.toDTO = function () {
     id: this._id,
     name: this.name,
     ownerId: this.ownerId,
-  }
+  };
 };
 
 export default mongoose.model("Board", boardSchema);

@@ -78,10 +78,7 @@ const selectBoards = async (req, res, next) => {
   let boards = [];
   try {
     if (req.query.name !== undefined) {
-      boards = userService.findUserBoardsByName(
-        req.params.id,
-        req.query.name
-      );
+      boards = userService.findUserBoardsByName(req.params.id, req.query.name);
     } else {
       boards = await userService.findAllUserBoards(req.params.id);
     }

@@ -13,8 +13,8 @@ columnSchema.methods.toDTO = function () {
     id: this._id,
     label: this.label,
     boardId: this.boardId,
-    order: this.order
-  }
+    order: this.order,
+  };
 };
 
 export default mongoose.model("Column", columnSchema);
