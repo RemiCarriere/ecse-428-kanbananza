@@ -73,10 +73,15 @@ const findAllUserBoards = async (id) => {
   return Board.find({ ownerId: id }).exec();
 };
 
+const findUserBoardsByName = async (id, name) => {
+  return Board.find({ ownerId: id, name }).exec();
+};
+
 export default {
   createUser,
   findUserByEmail,
   findUserById,
   findAllUsers,
   findAllUserBoards,
+  findUserBoardsByName,
 };

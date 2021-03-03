@@ -1,6 +1,4 @@
 import userService from "../services/user";
-import UserDTO from "../DTO/user";
-import BoardDTO from "../DTO/board";
 
 const passport = require("passport");
 
@@ -13,17 +11,6 @@ const create = async (req, res, next) => {
       password: req.body.password,
     });
     res.status(201).json(user.toDTO());
-  } catch (e) {
-    next(e);
-  }
-};
-
-const findByEmail = async (req, res, next) => {
-  try {
-    const user = await userService.findUserByEmail({
-      email: req.body.email,
-    });
-    res.status(200).json(UserDTO.fromDocument(user));
   } catch (e) {
     next(e);
   }
@@ -60,7 +47,18 @@ const checkToken = async (req, res, next) => {
 const index = async (req, res, next) => {
   try {
     const user = await userService.findUserById(req.params.id);
-    res.status(200).json(UserDTO.fromDocument(user));
+    res.status(200).json(user.toDTO());
+  } catch (e) {
+    next(e);
+  }
+};
+
+const indexOnEmail = async (req, res, next) => {
+  try {
+    const user = await userService.findUserByEmail({
+      email: req.body.email,
+    });
+    res.status(200).json(user.toDTO());
   } catch (e) {
     next(e);
   }
@@ -73,24 +71,31 @@ const select = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(200).json(users.map((user) => UserDTO.fromDocument(user)));
+  res.status(200).json(users.map((user) => user.toDTO()));
 };
 
 const selectBoards = async (req, res, next) => {
   let boards = [];
   try {
-    boards = await userService.findAllUserBoards(req.params.id);
+    if (req.query.name !== undefined) {
+      boards = userService.findUserBoardsByName(
+        req.params.id,
+        req.query.name
+      );
+    } else {
+      boards = await userService.findAllUserBoards(req.params.id);
+    }
   } catch (e) {
     next(e);
   }
-  res.status(200).json(boards.map((board) => BoardDTO.fromDocument(board)));
+  res.status(200).json(boards.map((board) => board.toDTO()));
 };
 
 export default {
   create,
-  findByEmail,
   login,
   index,
+  indexOnEmail,
   select,
   selectBoards,
   checkToken,
