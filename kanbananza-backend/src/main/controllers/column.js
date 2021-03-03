@@ -14,7 +14,9 @@ const create = async (req, res, next) => {
     res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
-      return next(HttpError.fromMongooseValidationError(e, "Invalid column information."));
+      return next(
+        HttpError.fromMongooseValidationError(e, "Invalid column information.")
+      );
     }
 
     return next(e);

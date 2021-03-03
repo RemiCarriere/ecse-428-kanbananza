@@ -4,7 +4,7 @@ import Board from "../models/board";
 
 const createUser = async ({ email, password, firstName, lastName }) => {
   if (await User.exists({ email })) {
-    throw new  ValidationError({
+    throw new ValidationError({
       path: "email",
       reason: "email already in use",
       data: email,
@@ -22,7 +22,6 @@ const createUser = async ({ email, password, firstName, lastName }) => {
   user.save();
 
   return user;
-
 };
 const findUserByEmail = async ({ email }) => {
   return User.findOne({ email }).exec();

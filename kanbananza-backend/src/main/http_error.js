@@ -12,6 +12,7 @@ class HttpError extends Error {
    */
   constructor({ code = DEFAULT_CODE, message, body, errors = undefined }) {
     super();
+    this.name = "HttpError";
     this.id = uuidv4();
     this.code = code.toString() in http.STATUS_CODES ? code : DEFAULT_CODE;
     this.reasonPhrase = http.STATUS_CODES[this.code];
@@ -21,13 +22,13 @@ class HttpError extends Error {
 
     this.errors = errors; // sub-errors
 
-    this.created = (new Date()).toISOString().slice(0, 19).replace("T", " ");
+    this.created = new Date().toISOString().slice(0, 19).replace("T", " ");
   }
 
   static fromMongooseValidationError(e, message) {
     return new this({
       code: 400,
-      message: message ===  undefined ? "Invalid information." : message,
+      message: message === undefined ? "Invalid information." : message,
       errors: Object.values(e.errors).map(
         (error) =>
           new ValidationError({

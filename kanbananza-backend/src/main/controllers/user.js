@@ -26,7 +26,9 @@ const create = async (req, res, next) => {
     }
 
     if (e instanceof mongoose.Error.ValidationError) {
-      return next(HttpError.fromMongooseValidationError(e, "Invalid user information"));
+      return next(
+        HttpError.fromMongooseValidationError(e, "Invalid user information")
+      );
     }
 
     return next(e);

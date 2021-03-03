@@ -13,7 +13,9 @@ const create = async (req, res, next) => {
     return res.status(201).json(board.toDTO());
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
-      return next(HttpError.fromMongooseValidationError(e, "Invalid board information."));
+      return next(
+        HttpError.fromMongooseValidationError(e, "Invalid board information.")
+      );
     }
 
     if (e instanceof ValidationError) {
@@ -35,10 +37,12 @@ const index = async (req, res, next) => {
     const board = await boardService.findBoardById(req.params.id);
 
     if (board === null) {
-      return next(new HttpError({
-        code: 404,
-        message: `Board with id ${req.params.id} does not exist.`,
-      }));
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Board with id ${req.params.id} does not exist.`,
+        })
+      );
     }
 
     return res.status(200).json(board.toDTO());
