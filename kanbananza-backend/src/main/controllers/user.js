@@ -1,6 +1,6 @@
 import userService from "../services/user";
-
-const passport = require("passport");
+import mongoose from "mongoose";
+import passport from "passport";
 
 const create = async (req, res, next) => {
   try {
@@ -10,8 +10,13 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
+
     res.status(201).json(user.toDTO());
   } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(HttpError.fromMongooseValidationError(e));
+    }
+
     return next(e);
   }
 };
@@ -46,7 +51,17 @@ const checkToken = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const user = await userService.findUserById(req.params.id); // TODO, make the is null? throw 404 http error happen here rather than at service level, service is okay with giving empty result, this  error is front facing and should be generated at controller level (for all such services)
+    const user = await userService.findUserById(req.params.id);
+
+    if (user === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `User with id '${req.params.id}' does not exist.`,
+        })
+      );
+    }
+
     res.status(200).json(user.toDTO());
   } catch (e) {
     return next(e);
@@ -56,10 +71,24 @@ const index = async (req, res, next) => {
 const indexOnEmail = async (req, res, next) => {
   try {
     const user = await userService.findUserByEmail({
-      email: req.body.email,
+      email: req.params.email,
     });
+
+    if (user === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `User with email '${req.params.email}' does not exist.`,
+        })
+      );
+    }
+    
     res.status(200).json(user.toDTO());
   } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(HttpError.fromMongooseValidationError(e));
+    } 
+
     return next(e);
   }
 };
