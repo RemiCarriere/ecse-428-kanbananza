@@ -9,5 +9,6 @@ export default (router) => {
     columnController.create
   );
   router.get("/columns", columnController.select);
+  // router.get("/columns/:id/cards", columnController.selectCards);
   router.get("/column/:id", idParamValidator, columnController.index);
 };

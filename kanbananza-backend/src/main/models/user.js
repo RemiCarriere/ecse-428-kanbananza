@@ -5,7 +5,7 @@ import config from "../config";
 
 const { Schema } = mongoose;
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
   email: {
     type: String,
     unique: true,
@@ -18,25 +18,25 @@ const UserSchema = new Schema({
   last_name: { type: String, required: true, maxLength: 100 },
 });
 
-UserSchema.virtual("name").get(function () {
+userSchema.virtual("name").get(function () {
   return this.last_name + ", " + this.first_name;
 });
 
-UserSchema.methods.setPassword = function (password) {
+userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
 };
 
-UserSchema.methods.validatePassword = function (password) {
+userSchema.methods.verifyPassword = function (password) {
   const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
   return this.hash === hash;
 };
 
-UserSchema.methods.generateJWT = function () {
+userSchema.methods.generateJWT = function () {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
@@ -51,12 +51,14 @@ UserSchema.methods.generateJWT = function () {
   );
 };
 
-UserSchema.methods.toAuthJSON = function () {
+userSchema.methods.toDTO = function () {
   return {
-    _id: this._id,
+    id: this._id,
+    firstName: this.first_name,
+    lastName: this.last_name,
     email: this.email,
     token: this.generateJWT(),
   };
 };
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("User", userSchema);
