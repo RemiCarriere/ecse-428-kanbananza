@@ -1,26 +1,16 @@
 import Card from "../models/card";
 import HttpError from "../http_error";
+import ValidationError from "../validation_error";
 
 const createCard = async ({ name, columnId, order }) => {
   if (await Card.exists({ columnId, name })) {
-    throw new HttpError({
-      code: 400,
-      message: `Card name already in use for column with id ${columnId}.`,
+    throw new ValidationError({
+      path: "name",
+      reason: "card name already in use for column.",
+      data: name,
     });
   }
-  try {
-    return await Card.create({ name, columnId, order });
-  } catch (e) {
-    if (e instanceof Error.ValidationError) {
-      throw new HttpError({
-        code: 400,
-        message: "Invalid field(s)",
-        body: Object.values(e.errors).map((error) => error.message),
-      });
-    } else {
-      throw e;
-    }
-  }
+  return Card.create({ name, columnId, order });
 };
 
 const findAllCards = async () => {
