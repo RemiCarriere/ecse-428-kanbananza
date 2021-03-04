@@ -11,4 +11,6 @@ export default (router) => {
   router.get("/columns", columnController.select);
   // router.get("/columns/:id/cards", columnController.selectCards);
   router.get("/column/:id", idParamValidator, columnController.index);
+  router.put("/column/:id", idParamValidator, validateSchema("createColumn"), columnController.update); // see https://stackoverflow.com/a/34400076
+  router.patch("/column/:id", idParamValidator, columnController.update);
 };

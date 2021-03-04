@@ -1,5 +1,7 @@
 import Column from "../models/column";
 import ValidationError from "../validation_error";
+import {isValidObjectId} from "mongoose";
+import {isValidMongooseObjectId} from "../utils/validators";
 
 const createColumn = async ({ name, boardId, order }) => {
   if (await Column.exists({ boardId, name })) {
@@ -7,6 +9,14 @@ const createColumn = async ({ name, boardId, order }) => {
       path: "name",
       reason: "column name already in use for board",
       data: name,
+    });
+  }
+
+  if (!isValidObjectId(boardId)) {
+    throw new ValidationError({
+      path: "boardId",
+      reason: "board ID is invalid",
+      data: boadId,
     });
   }
 
@@ -24,9 +34,22 @@ const findColumnsByName = async (name) => {
   return Column.find({ name }).exec();
 };
 
+const updateColumnById = async (id, updatedInfo) => {
+  if (updatedInfo.boardId !== undefined && !isValidMongooseObjectId(updatedInfo.boardId)) {
+    throw new ValidationError({
+      path: "boardId",
+      reason: "board ID is invalid",
+      data: updatedInfo.boardId,
+    });
+  }
+
+  return Column.findOneAndUpdate({ _id: id }, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+};
+
 export default {
   createColumn,
   findColumnById,
   findAllColumns,
   findColumnsByName,
+  updateColumnById,
 };

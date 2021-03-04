@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import columnService from "../services/column";
-import ValidationError from "../validation_error";
 import HttpError from "../http_error";
+import ValidationError from "../validation_error";
 
 const create = async (req, res, next) => {
   try {
@@ -67,10 +67,51 @@ const index = async (req, res, next) => {
       );
     }
 
-    res.status(200).json(column.toDTO());
+    return res.status(200).json(column.toDTO());
   } catch (e) {
     return next(e);
   }
 };
 
-export default { create, select, index };
+const update = async (req, res, next) => {
+  try {
+    let column;
+
+    column = await columnService.findColumnById(req.params.id);
+
+    if (column === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Column with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    const updatedInfo = {
+      name: req.body.name !== undefined ? req.body.name : column.name,
+      boardId:
+        req.body.boardId !== undefined ? req.body.boardId : column.boardId,
+      order: req.body.order !== undefined ? req.body.order : column.order,
+    };
+
+    console.log("service call");
+    column = await columnService.updateColumnById(req.params.id, updatedInfo);
+
+    return res.status(200).json(column.toDTO());
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid column information.",
+          errors: [e],
+        })
+      );
+    }
+    
+    return next(e);
+  }
+};
+
+export default { create, index, select, update };
