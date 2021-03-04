@@ -51,7 +51,7 @@ export const validateSchema = (schemaName) => {
       return next(
         new HttpError({
           code: 400,
-          message: `Invalid field${ajv.errors.length > 1 ? "s" : ""}.`,
+          message: `Invalid information.`,
           errors: validationErrors,
         })
       );

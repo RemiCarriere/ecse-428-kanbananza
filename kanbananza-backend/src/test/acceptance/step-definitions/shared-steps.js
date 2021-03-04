@@ -14,6 +14,7 @@ export const givenExistsUser = (given) => {
     }
   );
 };
+
 export const givenUserExists = (given) => {
   given(
     /^there exists a user with first name "(.*)", last name "(.*)", email "(.*)", and password "(.*)" in the system$/,

@@ -1,7 +1,8 @@
 import HttpError from "../http_error";
 
 export default (err, req, res, next) => {
-  // console.error(err.stack);
+  if (process.env.NODE_ENV !== "test") console.error(err.stack);
+
   let httpError;
 
   if (err instanceof HttpError) {
@@ -15,6 +16,10 @@ export default (err, req, res, next) => {
     httpError = new HttpError({
       message: err.message,
     });
+  }
+
+  if (process.env.NODE_ENV === "production" && httpError.code === 500) {
+    delete httpError.message; // scrub internal error messages
   }
 
   res.status(httpError.code).json(httpError.serialize());
