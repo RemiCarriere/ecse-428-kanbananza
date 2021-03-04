@@ -1,6 +1,5 @@
 import HttpError from "../http_error";
 import cardService from "../services/card";
-import CardDTO from "../DTO/card";
 
 const create = async (req, res, next) => {
   try {
