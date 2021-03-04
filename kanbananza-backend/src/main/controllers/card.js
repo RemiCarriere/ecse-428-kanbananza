@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import HttpError from "../http_error";
 import cardService from "../services/card";
 
@@ -8,28 +9,47 @@ const create = async (req, res, next) => {
       columnId: req.body.columnId,
       order: req.body.order,
     });
-    res.status(201).json(CardDTO.fromDocument(card)); // convert to dto
+    res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
-    next(e); // handle downstream
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(
+        HttpError.fromMongooseValidationError(e, "Invalid card information.")
+      );
+    }
+    return next(e);
   }
 };
 
 const select = async (req, res, next) => {
   let cards = [];
   try {
-    cards = await cardService.findAllCards();
+    if (req.query.name !== undefined) {
+      cards = await cardService.findCardsByName(req.query.name);
+    } else {
+      cards = await cardService.findAllCards();
+    }
   } catch (e) {
-    next(e);
+    return next(e);
   }
-  res.status(200).json(cards.map((card) => CardDTO.fromDocument(card)));
+  res.status(200).json(cards.map((card) => card.toDTO()));
 };
 
 const index = async (req, res, next) => {
   try {
     const card = await cardService.findCardById(req.params.id);
-    res.status(200).json(CardDTO.fromDocument(card));
+
+    if (card === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Card with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    res.status(200).json(card.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
