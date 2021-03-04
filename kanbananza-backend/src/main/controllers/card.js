@@ -5,8 +5,8 @@ import CardDTO from "../DTO/card";
 const create = async (req, res, next) => {
   try {
     const card = await cardService.createCard({
-      label: req.body.label,
-      column: req.body.column,
+      name: req.body.name,
+      columnId: req.body.columnId,
       order: req.body.order,
     });
     res.status(201).json(CardDTO.fromDocument(card)); // convert to dto

@@ -1,15 +1,15 @@
 import Card from "../models/card";
 import HttpError from "../http_error";
 
-const createCard = async ({ label, columnId, order }) => {
-  if (await Card.exists({ columnId, label })) {
+const createCard = async ({ name, columnId, order }) => {
+  if (await Card.exists({ columnId, name })) {
     throw new HttpError({
       code: 400,
       message: `Card name already in use for column with id ${columnId}.`,
     });
   }
   try {
-    return await Card.create({ label, columnId, order });
+    return await Card.create({ name, columnId, order });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       throw new HttpError({

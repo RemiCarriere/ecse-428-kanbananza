@@ -4,10 +4,10 @@
     "description": "describes properties required to create a new card and their characteristics",
     "type": "object",
     "properties": {
-      "label": {
+      "name": {
         "type": "string",
         "isNotEmpty": true,
-        "description": "label of the card"
+        "description": "name of the card"
       },
       "columnId": {
         "type": "string",
@@ -18,6 +18,6 @@
         "description": "order of the card"
       }
     },
-    "required": ["label", "columnId"]
+    "required": ["name", "columnId"]
   }
 }
