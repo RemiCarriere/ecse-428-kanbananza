@@ -6,7 +6,7 @@ const createCard = async ({ name, columnId, order }) => {
   if (await Card.exists({ columnId, name })) {
     throw new ValidationError({
       path: "name",
-      reason: "card name already in use for column.",
+      reason: "card name already in use for column",
       data: name,
     });
   }
@@ -18,12 +18,6 @@ const findAllCards = async () => {
 };
 
 const findCardById = async (id) => {
-  if (!(await Card.exists({ _id: id }))) {
-    throw new HttpError({
-      code: 404,
-      message: `Card with id ${id} does not exist.`,
-    });
-  }
   return Card.findOne({ _id: id }).exec();
 };
 
