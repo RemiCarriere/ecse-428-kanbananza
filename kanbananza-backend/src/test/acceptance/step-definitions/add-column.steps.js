@@ -11,7 +11,7 @@ const feature = loadFeature(
 
 const givenUserHasOneBoard = (given) => {
   given("the user has one board", async () => {
-    let { body } = await request.get("/users/").expect(200);
+    let { body } = await request.get("/users").expect(200);
 
     userID = body[0].id;
 
@@ -59,7 +59,7 @@ const givenBoardHasFollowingColumns = (given) => {
 const givenBoardHasNoColumns = (given) => {
   given(/^the selected board has no columns$/, async () => {
     const { body } = await request
-      .get("/board/" + selectedBoard + "/columns")
+      .get(`/board/${selectedBoard}/columns`)
       .expect(200);
 
     expect(body.length).toBe(0);
@@ -88,7 +88,7 @@ defineFeature(feature, (test) => {
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body[0].name).toBe(name);
@@ -96,7 +96,7 @@ defineFeature(feature, (test) => {
 
     then("the board contains one column", async () => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body.length).toBe(1);
@@ -118,7 +118,7 @@ defineFeature(feature, (test) => {
 
     then(/^the board contains a column with name "(.*)"$/, async (name) => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body[3].name).toBe(name);
@@ -126,7 +126,7 @@ defineFeature(feature, (test) => {
 
     then(/^the board contains 4 columns$/, async () => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body.length).toBe(4);
@@ -166,7 +166,7 @@ defineFeature(feature, (test) => {
 
     then("the number of columns in the board shall remain zero", async () => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body.length).toBe(0);
@@ -193,7 +193,7 @@ defineFeature(feature, (test) => {
 
     then("the number of columns in the board shall remain zero", async () => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
 
       expect(body.length).toBe(0);
@@ -224,7 +224,7 @@ defineFeature(feature, (test) => {
 
     then("the number of columns in the board shall remain one", async () => {
       const { body } = await request
-        .get("/board/" + selectedBoard + "/columns")
+        .get(`/board/${selectedBoard}/columns`)
         .expect(200);
       expect(body.length).toBe(1);
     });

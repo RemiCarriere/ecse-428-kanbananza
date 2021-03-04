@@ -27,7 +27,6 @@ const select = async (req, res, next) => {
   let columns = [];
   try {
     if (req.query.name !== undefined) {
-      console.log(req.query.name);
       columns = await columnService.findColumnsByName(req.query.name);
     } else {
       columns = await columnService.findAllColumns();

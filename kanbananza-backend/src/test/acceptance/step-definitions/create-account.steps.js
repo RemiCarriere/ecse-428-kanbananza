@@ -47,7 +47,7 @@ defineFeature(feature, (test) => {
     then(
       /^an account with name "(.*)", email "(.*)", and (.*) "password" shall exist in the system$/,
       async (name, email, pass) => {
-        const res = await request.get("/user").send({ email });
+        const res = await request.get(`/user/email/${email}`);
         expect(res.body.firstName).toEqual(name);
         expect(res.body.lastName).toEqual(name);
         expect(res.body.email).toEqual(email);

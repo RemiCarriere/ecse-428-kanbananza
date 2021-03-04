@@ -53,7 +53,9 @@ userSchema.methods.generateJWT = function () {
 
 userSchema.methods.toDTO = function () {
   return {
-    _id: this._id,
+    id: this._id,
+    firstName: this.first_name,
+    lastName: this.last_name,
     email: this.email,
     token: this.generateJWT(),
   };
