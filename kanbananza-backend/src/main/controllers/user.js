@@ -1,8 +1,8 @@
+import mongoose from "mongoose";
+import passport from "passport";
 import userService from "../services/user";
-import UserDTO from "../DTO/user";
-import BoardDTO from "../DTO/board";
-
-const passport = require("passport");
+import HttpError from "../http_error";
+import ValidationError from "../validation_error";
 
 const create = async (req, res, next) => {
   try {
@@ -12,20 +12,26 @@ const create = async (req, res, next) => {
       lastName: req.body.lastName,
       password: req.body.password,
     });
-    res.status(201).json(user.toAuthJSON());
-  } catch (e) {
-    next(e);
-  }
-};
 
-const findByEmail = async (req, res, next) => {
-  try {
-    const user = await userService.findUserByEmail({
-      email: req.body.email,
-    });
-    res.status(200).json(UserDTO.fromDocument(user));
+    res.status(201).json(user.toDTO());
   } catch (e) {
-    next(e);
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid user information.",
+          errors: [e],
+        })
+      );
+    }
+
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(
+        HttpError.fromMongooseValidationError(e, "Invalid user information")
+      );
+    }
+
+    return next(e);
   }
 };
 
@@ -37,7 +43,7 @@ const login = async (req, res, next) => {
       if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
-        res.status(201).json(user.toAuthJSON());
+        res.status(201).json(user.toDTO());
       } else {
         res.status(401).json(info);
       }
@@ -53,16 +59,51 @@ const checkToken = async (req, res, next) => {
     if (!user) {
       return res.sendStatus(400);
     }
-    return res.json(user.toAuthJSON());
+    return res.json(user.toDTO());
   });
 };
 
 const index = async (req, res, next) => {
   try {
     const user = await userService.findUserById(req.params.id);
-    res.status(200).json(UserDTO.fromDocument(user));
+
+    if (user === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `User with id '${req.params.id}' does not exist.`,
+        })
+      );
+    }
+
+    res.status(200).json(user.toDTO());
   } catch (e) {
-    next(e);
+    return next(e);
+  }
+};
+
+const indexOnEmail = async (req, res, next) => {
+  try {
+    const user = await userService.findUserByEmail({
+      email: req.params.email,
+    });
+
+    if (user === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `User with email '${req.params.email}' does not exist.`,
+        })
+      );
+    }
+
+    res.status(200).json(user.toDTO());
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return next(HttpError.fromMongooseValidationError(e));
+    }
+
+    return next(e);
   }
 };
 
@@ -71,26 +112,30 @@ const select = async (req, res, next) => {
   try {
     users = await userService.findAllUsers();
   } catch (e) {
-    next(e);
+    return next(e);
   }
-  res.status(200).json(users.map((user) => UserDTO.fromDocument(user)));
+  res.status(200).json(users.map((user) => user.toDTO()));
 };
 
 const selectBoards = async (req, res, next) => {
   let boards = [];
   try {
-    boards = await userService.findAllUserBoards(req.params.id);
+    if (req.query.name !== undefined) {
+      boards = userService.findUserBoardsByName(req.params.id, req.query.name);
+    } else {
+      boards = await userService.findAllUserBoards(req.params.id);
+    }
   } catch (e) {
-    next(e);
+    return next(e);
   }
-  res.status(200).json(boards.map((board) => BoardDTO.fromDocument(board)));
+  res.status(200).json(boards.map((board) => board.toDTO()));
 };
 
 export default {
   create,
-  findByEmail,
   login,
   index,
+  indexOnEmail,
   select,
   selectBoards,
   checkToken,

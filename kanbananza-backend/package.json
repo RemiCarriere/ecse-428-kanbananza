@@ -1,10 +1,9 @@
 {
   "name": "kanbananza-backend",
   "version": "1.0.0",
-  "description": " ",
+  "description": "",
   "main": "src/main/index.js",
   "scripts": {
-    "pre-commit": "eslint . || prettier --write .",
     "start": "NODE_ENV=production babel-node src/main/index.js",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/main/index.js",
     "test": "jest --runInBand",
@@ -12,8 +11,10 @@
     "test:acceptance": "jest --runInBand src/test/acceptance",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
+    "format": "npm run format:fix",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint": "npm run lint:fix",
     "clean": "rm -rf node_modules",
     "clean:build": "rm -rf dist",
     "transpile": "babel ./src --out-dir dist",
