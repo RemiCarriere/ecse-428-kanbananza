@@ -13,12 +13,15 @@ const create = async (req, res, next) => {
 
     res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
-    if (e instanceof mongoose.Error.ValidationError) {
+    if (e instanceof ValidationError) {
       return next(
-        HttpError.fromMongooseValidationError(e, "Invalid column information.")
+        new HttpError({
+          code: 400,
+          message: "Invalid card information.",
+          errors: [e],
+        })
       );
     }
-
     return next(e);
   }
 };

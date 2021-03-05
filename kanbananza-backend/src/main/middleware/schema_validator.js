@@ -6,6 +6,7 @@ import ValidationError from "../validation_error";
 const userSchemas = require("../controllers/schemas/user.json");
 const boardSchemas = require("../controllers/schemas/board.json");
 const columnSchemas = require("../controllers/schemas/column.json");
+const cardSchemas = require("../controllers/schemas/card.json");
 
 const ajv = new Ajv({
   allErrors: true,
@@ -28,6 +29,7 @@ ajv.addKeyword({
 ajv.addSchema(userSchemas.create, "createUser");
 ajv.addSchema(boardSchemas.create, "createBoard");
 ajv.addSchema(columnSchemas.create, "createColumn");
+ajv.addSchema(cardSchemas.create, "createCard");
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});
