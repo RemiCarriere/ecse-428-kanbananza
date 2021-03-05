@@ -2,7 +2,7 @@ import Router from "express";
 import userRoutes from "./user";
 import boardRoutes from "./board";
 import columnRoutes from "./column";
-import cardRoutes from "./card"
+import cardRoutes from "./card";
 
 import HttpError from "../http_error";
 
