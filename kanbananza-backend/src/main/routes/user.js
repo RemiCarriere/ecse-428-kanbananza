@@ -7,7 +7,11 @@ export default (router) => {
   router.post("/users?", validateSchema("userSchema"), userController.create);
   router.get("/users?/email/:email", userController.indexOnEmail); // see https://stackoverflow.com/a/20386425
   router.get("/users?/:id", idParamValidator, userController.index);
-  router.get("/users?/:id/boards", idParamValidator, userController.selectBoards);
+  router.get(
+    "/users?/:id/boards",
+    idParamValidator,
+    userController.selectBoards
+  );
   router.get("/users", userController.select);
 
   router.post("/login", auth.optional, userController.login);
