@@ -109,7 +109,7 @@ defineFeature(feature, (test) => {
 
     then(
       /^the card with name "(.*)" has description (.*)$/,
-      (arg0, arg1, table) => {}
+      (arg0, arg1) => {}
     );
   });
 });

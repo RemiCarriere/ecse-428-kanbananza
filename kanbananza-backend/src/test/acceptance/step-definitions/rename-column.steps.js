@@ -21,18 +21,16 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has three columns ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to update column (.*) with name (.*)$/,
+      /^the user attempts to update column "(.*)" with name "(.*)"$/,
       (arg0, arg1) => {}
     );
 
-    then(/^the board contains a column with name (.*)$/, (arg0, table) => {});
-
-    then("the board will look as follows", (table) => {});
+    then("the board will look as follows:", (table) => {});
   });
 
   test.skip("Rename column to an already existing name (Alternate Flow)", ({
@@ -47,16 +45,18 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has three columns ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to update column (.*) with name (.*) that already exists$/,
-      (arg0, arg1, table) => {}
+      /^the user attempts to update column "(.*)" with name "(.*)"$/,
+      (arg0, arg1) => {}
     );
 
-    then("the board remains the same", () => {});
+    then(/^the system shall report "(.*)"$/, (arg0) => {});
+
+    then("the board will look as follows:", (table) => {});
   });
 
   test.skip("Rename a column to empty name (Error Flow)", ({
@@ -71,15 +71,17 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has three columns ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to rename the column with column with (.*) to empty name$/,
+      /^the user attempts to update column "(.*)" with name ""$/,
       (arg0) => {}
     );
 
-    then(/^a message "(.*)" is issued$/, (arg0) => {});
+    then(/^the system shall report "(.*)"$/, (arg0) => {});
+
+    then("the board will look as follows:", (table) => {});
   });
 });
