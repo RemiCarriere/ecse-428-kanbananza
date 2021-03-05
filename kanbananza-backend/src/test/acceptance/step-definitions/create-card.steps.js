@@ -55,7 +55,7 @@ const givenColumnHasNoTaskWithName = (given) => {
     /^the column with name "(.*)" does not include an existing card with name (.*)$/,
     async (colName, cardName) => {
       //delete card must be implemented to do this correctly, for now, just check there are no cards with name
-      const res = await request.get(`/columns/${colID}/cards`);
+      const res = await request.get(`/column/${colID}/cards`);
       expect(res.body.filter((card) => card.name === cardName).length).toBe(0);
       numCards = res.body.length;
     }
@@ -80,7 +80,7 @@ const thenCardShallBeInColumn = (then) => {
   then(
     /^one card with name "(.*)" shall be included in the column with name "(.*)"$/,
     async (cardName, colName) => {
-      const res = await request.get(`/columns/${colID}/cards`);
+      const res = await request.get(`/column/${colID}/cards`);
       expect(res.body.filter((card) => card.name === cardName).length).toBe(1);
     }
   );
@@ -90,7 +90,7 @@ const thenNumCardIncreaseByOne = (then) => {
   then(
     /^the number of cards included in the column with name "(.*)" shall increase by one$/,
     async (colName) => {
-      const res = await request.get(`/columns/${colID}/cards`);
+      const res = await request.get(`/column/${colID}/cards`);
       expect(res.body.length).toBe(numCards + 1);
     }
   );
@@ -143,7 +143,7 @@ defineFeature(feature, (test) => {
         const res = await request
           .post("/card")
           .send({ name: cardName, columnId: colID, order: 1 });
-        const res1 = await request.get(`/columns/${colID}/cards`);
+        const res1 = await request.get(`/column/${colID}/cards`);
         numCards = res1.body.length;
       }
     );
@@ -153,7 +153,7 @@ defineFeature(feature, (test) => {
     then(
       /^two cards with name "(.*)" shall be included in the column with name "(.*)"$/,
       async (cardName, colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.filter((card) => card.name === cardName).length).toBe(
           2
         );
@@ -182,7 +182,7 @@ defineFeature(feature, (test) => {
     given(
       /^the column with name "(.*)" includes no existing cards$/,
       async (colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.length).toBe(0);
       }
     );
@@ -196,7 +196,7 @@ defineFeature(feature, (test) => {
     and(
       /^a card with name "(.*)" shall not be included in the column with name "(.*)"$/,
       async (cardName, colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.filter((card) => card.name === cardName).length).toBe(
           0
         );
@@ -206,7 +206,7 @@ defineFeature(feature, (test) => {
     and(
       /^the number of cards included in the column with name "(.*)" shall remain zero$/,
       async (colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.length).toBe(0);
       }
     );

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import HttpError from "../http_error";
 import cardService from "../services/card";
 import ValidationError from "../validation_error";

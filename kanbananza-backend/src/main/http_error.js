@@ -22,7 +22,7 @@ class HttpError extends Error {
 
     this.errors = errors; // sub-errors
 
-    this.created = new Date().toISOString().slice(0, 19).replace("T", " ");
+    this.timestamp = new Date().toISOString().slice(0, 19);
   }
 
   static fromMongooseValidationError(e, message) {

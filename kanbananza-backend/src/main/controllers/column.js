@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import columnService from "../services/column";
 import cardService from "../services/card";
 import ValidationError from "../validation_error";
@@ -12,7 +11,7 @@ const create = async (req, res, next) => {
       order: req.body.order,
     });
 
-    res.status(201).json(column.toDTO()); // convert to dto
+    return res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
       return next(
@@ -38,7 +37,7 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(columns.map((column) => column.toDTO()));
+  return res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
 const selectCards = async (req, res, next) => {
@@ -55,7 +54,8 @@ const selectCards = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(200).json(cards.map((card) => card.toDTO()));
+
+  return res.status(200).json(cards.map((card) => card.toDTO()));
 };
 
 const index = async (req, res, next) => {
@@ -71,10 +71,50 @@ const index = async (req, res, next) => {
       );
     }
 
-    res.status(200).json(column.toDTO());
+    return res.status(200).json(column.toDTO());
   } catch (e) {
     return next(e);
   }
 };
 
-export default { create, select, index, selectCards };
+const update = async (req, res, next) => {
+  try {
+    let column;
+
+    column = await columnService.findColumnById(req.params.id);
+
+    if (column === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Column with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    const updatedInfo = {
+      name: req.body.name !== undefined ? req.body.name : column.name,
+      boardId:
+        req.body.boardId !== undefined ? req.body.boardId : column.boardId,
+      order: req.body.order !== undefined ? req.body.order : column.order,
+    };
+
+    column = await columnService.updateColumnById(req.params.id, updatedInfo);
+
+    return res.status(200).json(column.toDTO());
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid column information.",
+          errors: [e],
+        })
+      );
+    }
+
+    return next(e);
+  }
+};
+
+export default { create, index, select, selectCards, update };
