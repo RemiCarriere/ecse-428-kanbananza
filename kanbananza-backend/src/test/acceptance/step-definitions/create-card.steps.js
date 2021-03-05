@@ -20,14 +20,12 @@ defineFeature(feature, (test) => {
     and,
   }) => {
     given("user with username Fizbin is logged in", async () => {
-      await request
-        .post("/user")
-        .send({
-          email: "fiz@bin.com",
-          firstName: "fiz",
-          lastName: "bin",
-          password: "password",
-        });
+      await request.post("/user").send({
+        email: "fiz@bin.com",
+        firstName: "fiz",
+        lastName: "bin",
+        password: "password",
+      });
       const res = await request
         .post("/login")
         .send({ email: "fiz@bin.com", password: "password" });
