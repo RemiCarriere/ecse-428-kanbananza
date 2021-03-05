@@ -54,7 +54,7 @@ defineFeature(feature, (test) => {
       /^the column with name "(.*)" does not include an existing card with name (.*)$/,
       async (colName, cardName) => {
         //delete card must be implemented to do this correctly, for now, just check there are no cards with name
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.filter((card) => card.name === cardName).length).toBe(
           0
         );
@@ -74,7 +74,7 @@ defineFeature(feature, (test) => {
     then(
       /^one card with name (.*) shall be included in the column with name "(.*)"$/,
       async (cardName, colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.filter((card) => card.name === cardName).length).toBe(
           1
         );
@@ -84,7 +84,7 @@ defineFeature(feature, (test) => {
     and(
       /^the number of cards included in the column with name "(.*)" shall increase by one$/,
       async (colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.length).toBe(numCards + 1);
       }
     );

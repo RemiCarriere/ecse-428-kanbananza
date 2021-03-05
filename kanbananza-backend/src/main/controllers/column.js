@@ -11,7 +11,7 @@ const create = async (req, res, next) => {
       order: req.body.order,
     });
 
-    res.status(201).json(column.toDTO()); // convert to dto
+    return res.status(201).json(column.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
       return next(
@@ -37,7 +37,7 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(columns.map((column) => column.toDTO()));
+  return res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
 const selectCards = async (req, res, next) => {
@@ -54,7 +54,8 @@ const selectCards = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(200).json(cards.map((card) => card.toDTO()));
+
+  return res.status(200).json(cards.map((card) => card.toDTO()));
 };
 
 const index = async (req, res, next) => {
