@@ -1,0 +1,23 @@
+{
+  "create": {
+    "title": "new card",
+    "description": "describes properties required to create a new card and their characteristics",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "isNotEmpty": true,
+        "description": "name of the card"
+      },
+      "columnId": {
+        "type": "string",
+        "description": "id of the column of the card"
+      },
+      "order": {
+        "type": "integer",
+        "description": "order of the card"
+      }
+    },
+    "required": ["name", "columnId"]
+  }
+}

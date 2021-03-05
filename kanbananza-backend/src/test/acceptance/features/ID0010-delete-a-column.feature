@@ -5,35 +5,30 @@ Background:
 Given user with username Fizbin is logged in
 Given the user owns one board
 Given the user has selected that board
-Given the selected board has three columns ordered as follow
+Given the selected board has three columns ordered as follows:
 | columnName | columnOrder |
 | To Do      | 1           |
 | Doing      | 2           |
 | Done       | 3           |
 
 
-Scenario: Delete a column from the board (Normal Flow)
+Scenario Outline: Delete a column from the board (Normal Flow)
 When the user attempts to delete column with name <columnName>
+Then the board will only contain two columns
+Examples:
 | columnName | 
 | To Do      | 
 | Doing	     | 
 | Done       | 
 
-Then the board will only contain two columns
-
 
 Scenario: Delete a column from a board with one column (Alternate Flow)
-When the user attempts to the only column of a board with one <column>
-| column     | order       |
-| One        | 1           |
-
+Given the selected board has only one column with name "TODO"
+When the user attempts to delete column with name "TODO"
 Then a warning "are you sure you want to procede with this operation? A board without columns will be deleted" will be issued
 
 Scenario: Delete column that does not exist (Error Flow)
-When the user attempts to delete a <column> that does not exist 
-| column		 |
-| Unknown   	 |
-
+When the user attempts to delete column with name "non existant name"
 Then an error "The column does not exist" is issued
 
 

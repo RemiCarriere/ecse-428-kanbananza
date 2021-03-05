@@ -9,30 +9,6 @@ let responseStatus = "";
 
 //TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test.skip("Delete a column from the board (Normal Flow)", ({
-    given,
-    when,
-    then,
-  }) => {
-    given("user with username Fizbin is logged in", () => {});
-
-    given("the user owns one board", () => {});
-
-    given("the user has selected that board", () => {});
-
-    given(
-      "the selected board has three columns ordered as follow",
-      (table) => {}
-    );
-
-    when(
-      /^the user attempts to delete column with name (.*)$/,
-      (arg0, table) => {}
-    );
-
-    then("the board will only contain two columns", () => {});
-  });
-
   test.skip("Delete a column from a board with one column (Alternate Flow)", ({
     given,
     when,
@@ -45,14 +21,16 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has three columns ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
-    when(
-      /^the user attempts to the only column of a board with one (.*)$/,
-      (arg0, table) => {}
+    given(
+      /^the selected board has only one column with name "(.*)"$/,
+      (arg0) => {}
     );
+
+    when(/^the user attempts to delete column with name "(.*)"$/, (arg0) => {});
 
     then(/^a warning "(.*)" will be issued$/, (arg0) => {});
   });
@@ -69,15 +47,33 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has three columns ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
-    when(
-      /^the user attempts to delete a (.*) that does not exist$/,
-      (arg0, table) => {}
-    );
+    when(/^the user attempts to delete column with name "(.*)"$/, (arg0) => {});
 
     then(/^an error "(.*)" is issued$/, (arg0) => {});
+  });
+
+  test.skip("Delete a column from the board (Normal Flow)", ({
+    given,
+    when,
+    then,
+  }) => {
+    given("user with username Fizbin is logged in", () => {});
+
+    given("the user owns one board", () => {});
+
+    given("the user has selected that board", () => {});
+
+    given(
+      "the selected board has three columns ordered as follows:",
+      (table) => {}
+    );
+
+    when(/^the user attempts to delete column with name (.*)$/, (arg0) => {});
+
+    then("the board will only contain two columns", () => {});
   });
 });

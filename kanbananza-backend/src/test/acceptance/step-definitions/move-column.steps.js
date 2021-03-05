@@ -7,8 +7,9 @@ const feature = loadFeature(
 const errMsg = "";
 let responseStatus = "";
 
+//TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test.skip("Move the card in the board (Normal Flow)", ({
+  test.skip("Move the column in the board (Normal Flow)", ({
     given,
     when,
     then,
@@ -20,19 +21,19 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one with two cards ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to swap card with index (.*) with card at index (.*)$/,
-      (arg0, arg1, table) => {}
+      /^the user attempts to move column with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
     );
 
-    then("the board will look as follow", (table) => {});
+    then("the board columns will look as follows:", (table) => {});
   });
 
-  test.skip("Move a card to the same position (Alternate Flow)", ({
+  test.skip("Move a column to the same position (Alternate Flow)", ({
     given,
     when,
     then,
@@ -44,19 +45,23 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one with two cards ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to the user attempts to swap card with index (.*) with card at index (.*)$/,
-      (arg0, arg1, table) => {}
+      /^the user attempts to move column with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
     );
 
-    then("the board is unchanged", (table) => {});
+    then("the board columns will look as follows:", (table) => {});
   });
 
-  test.skip("M (Error Flow)", ({ given, when, then }) => {
+  test.skip("Move a non-existent column (Error Flow)", ({
+    given,
+    when,
+    then,
+  }) => {
     given("user with username Fizbin is logged in", () => {});
 
     given("the user owns one board", () => {});
@@ -64,15 +69,17 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one with two cards ordered as follow",
+      "the selected board has three columns ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to delete a (.*) that does not exist$/,
-      (arg0, table) => {}
+      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
     );
 
-    then(/^an error "(.*)" is issued$/, (arg0) => {});
+    then(/^the system shall report "(.*)"$/, (arg0) => {});
+
+    then("the board columns will look as follows:", (table) => {});
   });
 });
