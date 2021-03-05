@@ -3,13 +3,6 @@ import HttpError from "../http_error";
 import ValidationError from "../validation_error";
 
 const createCard = async ({ name, columnId, order }) => {
-  if (await Card.exists({ columnId, name })) {
-    throw new ValidationError({
-      path: "name",
-      reason: "card name already in use for column",
-      data: name,
-    });
-  }
   return Card.create({ name, columnId, order });
 };
 

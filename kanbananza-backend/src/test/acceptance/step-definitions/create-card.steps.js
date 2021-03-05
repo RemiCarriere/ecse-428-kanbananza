@@ -4,12 +4,97 @@ import request from "../../support/request";
 const feature = loadFeature(
   "src/test/acceptance/features/ID005_Add_A_Card_To_A_Column.feature"
 );
-const errMsg = "";
+let errMsg = "";
 let responseStatus = "";
 let userID = "";
 let selectedBoard = "";
 let colID = "";
 let numCards = 0;
+
+const givenFizBinLoggedIn = (given) => {
+  given("user with username Fizbin is logged in", async () => {
+    await request.post("/user").send({
+      email: "fiz@bin.com",
+      firstName: "fiz",
+      lastName: "bin",
+      password: "password",
+    });
+    const res = await request
+      .post("/login")
+      .send({ email: "fiz@bin.com", password: "password" });
+    userID = res.body.id;
+  });
+};
+
+const givenUserHasOneBoard = (given) => {
+  given("the user has one board", async () => {
+    const res = await request
+      .post("/board")
+      .send({ ownerId: userID, name: "test-board-name" });
+    selectedBoard = res.body.id;
+  });
+};
+
+const givenBoardSelected = (given) => {
+  given("the user has selected that board", () => {
+    selectedBoard = selectedBoard; //rendundant step for our implementation
+  });
+};
+
+const givenBoardHasColumnWithName = (given) => {
+  given(/^the board has one column with name "(.*)"$/, async (colName) => {
+    const res = await request
+      .post("/column")
+      .send({ name: colName, boardId: selectedBoard, order: 1 });
+    colID = res.body.id;
+  });
+};
+
+const givenColumnHasNoTaskWithName = (given) => {
+  given(
+    /^the column with name "(.*)" does not include an existing card with name (.*)$/,
+    async (colName, cardName) => {
+      //delete card must be implemented to do this correctly, for now, just check there are no cards with name
+      const res = await request.get(`/column/${colID}/cards`);
+      expect(res.body.filter((card) => card.name === cardName).length).toBe(0);
+      numCards = res.body.length;
+    }
+  );
+};
+
+const whenUserAttemptsToAddCard = (when) => {
+  when(
+    /^the user attempts to add a card with name "(.*)" to the column with name "(.*)"$/,
+    async (cardName, colName) => {
+      const res = await request
+        .post("/card")
+        .send({ name: cardName, columnId: colID, order: 1 });
+      if (res.body.errors) {
+        errMsg = res.body.errors[0].reason;
+      }
+    }
+  );
+};
+
+const thenCardShallBeInColumn = (then) => {
+  then(
+    /^one card with name "(.*)" shall be included in the column with name "(.*)"$/,
+    async (cardName, colName) => {
+      const res = await request.get(`/column/${colID}/cards`);
+      expect(res.body.filter((card) => card.name === cardName).length).toBe(1);
+    }
+  );
+};
+
+const thenNumCardIncreaseByOne = (then) => {
+  then(
+    /^the number of cards included in the column with name "(.*)" shall increase by one$/,
+    async (colName) => {
+      const res = await request.get(`/column/${colID}/cards`);
+      expect(res.body.length).toBe(numCards + 1);
+    }
+  );
+};
 
 //TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
@@ -19,80 +104,24 @@ defineFeature(feature, (test) => {
     then,
     and,
   }) => {
-    given("user with username Fizbin is logged in", async () => {
-      await request.post("/user").send({
-        email: "fiz@bin.com",
-        firstName: "fiz",
-        lastName: "bin",
-        password: "password",
-      });
-      const res = await request
-        .post("/login")
-        .send({ email: "fiz@bin.com", password: "password" });
-      userID = res.body.id;
-    });
+    givenFizBinLoggedIn(given);
 
-    given("the user has one board", async () => {
-      const res = await request
-        .post("/board")
-        .send({ ownerId: userID, name: "test-board-name" });
-      selectedBoard = res.body.id;
-    });
+    givenUserHasOneBoard(given);
 
-    given("the user has selected that board", () => {
-      selectedBoard = selectedBoard; //rendundant step for our implementation
-    });
+    givenBoardSelected(given);
 
-    given(/^the board has one column with name "(.*)"$/, async (colName) => {
-      const res = await request
-        .post("/column")
-        .send({ name: colName, boardId: selectedBoard, order: 1 });
-      colID = res.body.id;
-    });
+    givenBoardHasColumnWithName(given);
 
-    given(
-      /^the column with name "(.*)" does not include an existing card with name (.*)$/,
-      async (colName, cardName) => {
-        //delete card must be implemented to do this correctly, for now, just check there are no cards with name
-        const res = await request.get(`/column/${colID}/cards`);
-        expect(res.body.filter((card) => card.name === cardName).length).toBe(
-          0
-        );
-        numCards = res.body.length;
-      }
-    );
+    givenColumnHasNoTaskWithName(given);
 
-    when(
-      /^the user attempts to add a card with name (.*) to the column with name "(.*)"$/,
-      async (cardName, colName) => {
-        const res = await request
-          .post("/card")
-          .send({ name: cardName, columnId: colID, order: 1 });
-      }
-    );
 
-    then(
-      /^one card with name (.*) shall be included in the column with name "(.*)"$/,
-      async (cardName, colName) => {
-        const res = await request.get(`/column/${colID}/cards`);
-        expect(res.body.filter((card) => card.name === cardName).length).toBe(
-          1
-        );
-      }
-    );
+    whenUserAttemptsToAddCard(when);
 
-    and(
-      /^the number of cards included in the column with name "(.*)" shall increase by one$/,
-      async (colName) => {
-        const res = await request.get(`/column/${colID}/cards`);
-        expect(res.body.length).toBe(numCards + 1);
-      }
-    );
+    thenCardShallBeInColumn(then);
 
-    and(
-      "the number of cards in the board shall increase by one",
-      (table) => {}
-    );
+    thenNumCardIncreaseByOne(and);
+
+    and("the number of cards in the board shall increase by one", () => {});
   });
 
   test("Successfully add a card with a valid but existing name to an existing column (Alternate Flow)", ({
@@ -101,33 +130,38 @@ defineFeature(feature, (test) => {
     then,
     and,
   }) => {
-    given("user with username Fizbin is logged in", () => {});
+    givenFizBinLoggedIn(given);
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given);
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given);
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given);
 
     given(
       /^the column with name "(.*)" includes an existing card with name "(.*)"$/,
-      (arg0, arg1) => {}
+      async (colName, cardName) => {
+        const res = await request
+          .post("/card")
+          .send({ name: cardName, columnId: colID, order: 1 });
+        const res1 = await request.get(`/column/${colID}/cards`);
+        numCards = res1.body.length;
+      }
     );
 
-    when(
-      /^the user attempts to add a card with name "(.*)" to the column with name "(.*)"$/,
-      (arg0, arg1) => {}
-    );
+    whenUserAttemptsToAddCard(when);
 
     then(
       /^two cards with name "(.*)" shall be included in the column with name "(.*)"$/,
-      (arg0, arg1) => {}
+      async (cardName, colName) => {
+        const res = await request.get(`/column/${colID}/cards`);
+        expect(res.body.filter((card) => card.name === cardName).length).toBe(
+          2
+        );
+      }
     );
 
-    and(
-      /^the number of cards included in the column with name "(.*)" shall increase by one$/,
-      (arg0) => {}
-    );
+    thenNumCardIncreaseByOne(and);
 
     and("the number of cards in the board shall increase by one", () => {});
   });
@@ -138,34 +172,44 @@ defineFeature(feature, (test) => {
     then,
     and,
   }) => {
-    given("user with username Fizbin is logged in", () => {});
+    givenFizBinLoggedIn(given);
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given);
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given);
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given);
 
     given(
       /^the column with name "(.*)" includes no existing cards$/,
-      (arg0) => {}
+      async (colName) => {
+        const res = await request.get(`/column/${colID}/cards`);
+        expect(res.body.length).toBe(0);
+      }
     );
 
-    when(
-      /^the user attempts to add a card with name "(.*)" to the column with name "(.*)"$/,
-      (arg0, arg1) => {}
-    );
+    whenUserAttemptsToAddCard(when);
 
-    then(/^the system shall report "(.*)"$/, (arg0) => {});
+    then(/^the system shall report "(.*)"$/, (errorMessage) => {
+      expect(errMsg).toBe('should pass "isNotEmpty" keyword validation');
+    });
 
     and(
       /^a card with name "(.*)" shall not be included in the column with name "(.*)"$/,
-      (arg0, arg1) => {}
+      async (cardName, colName) => {
+        const res = await request.get(`/columns/${colID}/cards`);
+        expect(res.body.filter((card) => card.name === cardName).length).toBe(
+          0
+        );
+      }
     );
 
     and(
       /^the number of cards included in the column with name "(.*)" shall remain zero$/,
-      (arg0) => {}
+      async (colName) => {
+        const res = await request.get(`/column/${colID}/cards`);
+        expect(res.body.length).toBe(0);
+      }
     );
 
     and("the number of cards in the board shall remain the same", () => {});
