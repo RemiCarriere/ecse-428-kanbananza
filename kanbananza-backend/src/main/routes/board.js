@@ -3,13 +3,13 @@ import { validateSchema } from "../middleware/schema_validator";
 import idParamValidator from "../middleware/id_param_validator";
 
 export default (router) => {
-  router.post("/board", validateSchema("boardSchema"), boardController.create);
+  router.post("/boards?", validateSchema("boardSchema"), boardController.create);
   router.get("/boards", boardController.select);
-  router.get("/board/:id", idParamValidator, boardController.index);
+  router.get("/boards?/:id", idParamValidator, boardController.index);
   router.get(
-    "/board/:id/columns",
+    "/boards?/:id/columns",
     idParamValidator,
     boardController.selectColumns
   );
-  router.delete("/board/:id", idParamValidator, boardController.remove);
+  router.delete("/boards?/:id", idParamValidator, boardController.remove);
 };
