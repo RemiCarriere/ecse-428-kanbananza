@@ -95,7 +95,6 @@ const update = async (req, res, next) => {
       order: req.body.order !== undefined ? req.body.order : column.order,
     };
 
-    console.log("service call");
     column = await columnService.updateColumnById(req.params.id, updatedInfo);
 
     return res.status(200).json(column.toDTO());
@@ -109,7 +108,7 @@ const update = async (req, res, next) => {
         })
       );
     }
-    
+
     return next(e);
   }
 };

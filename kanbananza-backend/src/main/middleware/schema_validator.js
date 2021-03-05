@@ -3,9 +3,9 @@ import addFormats from "ajv-formats";
 import HttpError from "../http_error";
 import ValidationError from "../validation_error";
 
-const userSchemas = require("../controllers/schemas/user.json");
-const boardSchemas = require("../controllers/schemas/board.json");
-const columnSchemas = require("../controllers/schemas/column.json");
+const userSchema = require("../controllers/schemas/user.json");
+const boardSchema = require("../controllers/schemas/board.json");
+const columnSchema = require("../controllers/schemas/column.json");
 
 const ajv = new Ajv({
   allErrors: true,
@@ -25,9 +25,9 @@ ajv.addKeyword({
 });
 
 // register schemas
-ajv.addSchema(userSchemas.create, "createUser");
-ajv.addSchema(boardSchemas.create, "createBoard");
-ajv.addSchema(columnSchemas.create, "createColumn");
+ajv.addSchema(userSchema, "userSchema");
+ajv.addSchema(boardSchema, "boardSchema");
+ajv.addSchema(columnSchema, "columnSchema");
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});
@@ -47,11 +47,17 @@ export const validateSchema = (schemaName) => {
             data: e.data,
           })
       );
+      
+      const result = schemaName.match(/(.*)Schema/);
+      let resourceName;
+      if (result.length == 2) {
+        resourceName = schemaName.match(/([a-z]+)Schema/)[1];
+      }
 
       return next(
         new HttpError({
           code: 400,
-          message: `Invalid information.`,
+          message: `Invalid ${resourceName !== undefined ? resourceName + " " : ""}information.`,
           errors: validationErrors,
         })
       );

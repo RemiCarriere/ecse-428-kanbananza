@@ -1,23 +1,20 @@
 {
-  "create": {
-    "title": "new column",
-    "description": "describes properties required to create a new column and their characteristics",
-    "type": "object",
-    "properties": {
-      "name": {
-        "type": "string",
-        "isNotEmpty": true,
-        "description": "name of the column"
-      },
-      "boardId": {
-        "type": "string",
-        "description": "id of the board of the column"
-      },
-      "order": {
-        "type": "integer",
-        "description": "order of the column"
-      }
+  "description": "all modelled properties of a column",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "isNotEmpty": true,
+      "description": "name of the column"
     },
-    "required": ["name", "boardId"]
-  }
+    "boardId": {
+      "type": "string",
+      "description": "id of the board of the column"
+    },
+    "order": {
+      "type": "integer",
+      "description": "order of the column"
+    }
+  },
+  "required": ["name", "boardId"]
 }
