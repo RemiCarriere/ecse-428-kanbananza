@@ -2,7 +2,7 @@ import Board from "../models/board";
 import User from "../models/user";
 import Column from "../models/column";
 import ValidationError from "../validation_error";
-import {isValidMongooseObjectId} from "../utils/validators";
+import { isValidMongooseObjectId } from "../utils/validators";
 
 const createBoard = async ({ name, ownerId }) => {
   if (!isValidMongooseObjectId(ownerId)) {
