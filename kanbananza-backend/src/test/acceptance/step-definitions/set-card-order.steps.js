@@ -21,16 +21,16 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one column with two cards ordered as follow",
+      "the selected board has one with two cards ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to swap card with index (.*) with card at index (.*)$/,
-      (arg0, arg1, table) => {}
+      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
     );
 
-    then("the board will look as follow", (table) => {});
+    then("the board will look as follows:", (table) => {});
   });
 
   test.skip("Move a card to the same position (Alternate Flow)", ({
@@ -45,19 +45,19 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one column with two cards ordered as follow",
+      "the selected board has one with two cards ordered as follows:",
       (table) => {}
     );
 
     when(
-      /^the user attempts to the user attempts to swap card with index (.*) with card at index (.*)$/,
-      (arg0, arg1, table) => {}
+      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
     );
 
-    then("the board is unchanged", (table) => {});
+    then("the board will look as follows:", (table) => {});
   });
 
-  test.skip("Move a card outside the board (Error Flow)", ({
+  test.skip("Move a non-existent card (Error Flow)", ({
     given,
     when,
     then,
@@ -69,12 +69,15 @@ defineFeature(feature, (test) => {
     given("the user has selected that board", () => {});
 
     given(
-      "the selected board has one column with two cards ordered as follow",
+      "the selected board has one with two cards ordered as follows:",
       (table) => {}
     );
 
-    when("the user attempts to move a card outside the board", () => {});
+    when(
+      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
+      (arg0, arg1) => {}
+    );
 
-    then(/^an error "(.*)" is issued$/, (arg0) => {});
+    then(/^the system shall report "(.*)"$/, (arg0) => {});
   });
 });

@@ -1,7 +1,14 @@
 import request from "../../support/request";
 
 export const givenUserLoggedIn = (given) => {
-  given(/^the user with email "(.*)" is logged into the system$/, (arg0) => {});
+  given(
+    /^the user with email "(.*)" is logged into the system$/,
+    async (email) => {
+      const res = await request
+        .post("/login")
+        .send({ email, password: "foobar" });
+    }
+  );
 };
 
 export const givenExistsUser = (given) => {

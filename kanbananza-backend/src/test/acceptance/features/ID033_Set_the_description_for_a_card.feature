@@ -7,11 +7,12 @@ Given the user has selected that board
 Given the board has one column with name "Doing"
 Given that column has one and only one card with name "Project Presentation"
 
-Scenario: Set a valid description for a card with no description (Normal Flow)
+Scenario Outline: Set a valid description for a card with no description (Normal Flow)
 Given the card with name "Project Presentation" does not have a description
 When the user sets the description of the card with name "Project Presentation" to "<description>"
 Then the card with name "Project Presentation" has description "<description>"
 
+Examples:
 | description |
 | word        |
 | some words  |

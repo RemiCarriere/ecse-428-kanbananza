@@ -11,11 +11,12 @@ Feature: Add a Column
     Given the user has selected that board
     Given the selected board has no columns
 
-  Scenario: Successfully add a column with a valid name to an empty board (Normal Flow)
+  Scenario Outline: Successfully add a column with a valid name to an empty board (Normal Flow)
     When the user attempts to create a column with name "<name>"
     Then the board contains a column with name "<name>"
     And the board contains one column
 
+    Examples:
       | name       |
       | normalName |
       | space name |
