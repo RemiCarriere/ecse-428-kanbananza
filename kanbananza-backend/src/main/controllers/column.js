@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import columnService from "../services/column";
+import cardService from "../services/card";
 import ValidationError from "../validation_error";
 import HttpError from "../http_error";
 
@@ -40,22 +41,22 @@ const select = async (req, res, next) => {
   res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
-// const selectCards = async (req, res, next) => {
-//   let cards = [];
-//   try {
-//     if (req.query.name !== undefined) {
-//       cards = await cardService.findColumnCardsByName(
-//         req.params.id,
-//         req.query.name
-//       );
-//     } else {
-//       cards = await cardService.findAllColumnCards(req.params.id);
-//     }
-//   } catch (e) {
-//     next(e);
-//   }
-//   res.status(200).json(cards.map((card) => card.toDTO()));
-// };
+const selectCards = async (req, res, next) => {
+  let cards = [];
+  try {
+    if (req.query.name !== undefined) {
+      cards = await cardService.findColumnCardsByName(
+        req.params.id,
+        req.query.name
+      );
+    } else {
+      cards = await cardService.findAllColumnCards(req.params.id);
+    }
+  } catch (e) {
+    next(e);
+  }
+  res.status(200).json(cards.map((card) => card.toDTO()));
+};
 
 const index = async (req, res, next) => {
   try {
@@ -76,4 +77,4 @@ const index = async (req, res, next) => {
   }
 };
 
-export default { create, select, index };
+export default { create, select, index, selectCards };
