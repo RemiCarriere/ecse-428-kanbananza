@@ -2,6 +2,7 @@ import Router from "express";
 import userRoutes from "./user";
 import boardRoutes from "./board";
 import columnRoutes from "./column";
+import cardRoutes from "./card"
 
 import HttpError from "../http_error";
 
@@ -14,6 +15,7 @@ router.get("/", (req, res) => res.status(200).json("root"));
 userRoutes(router);
 boardRoutes(router);
 columnRoutes(router);
+cardRoutes(router);
 
 // default route handler middleware
 router.use("*", (req, res, next) => {

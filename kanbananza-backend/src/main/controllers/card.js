@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import HttpError from "../http_error";
 import cardService from "../services/card";
+import ValidationError from "../validation_error";
 
 const create = async (req, res, next) => {
   try {
@@ -11,9 +12,13 @@ const create = async (req, res, next) => {
     });
     res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
-    if (e instanceof mongoose.Error.ValidationError) {
+    if (e instanceof ValidationError) {
       return next(
-        HttpError.fromMongooseValidationError(e, "Invalid card information.")
+        new HttpError({
+          code: 400,
+          message: "Invalid card information.",
+          errors: [e],
+        })
       );
     }
     return next(e);
