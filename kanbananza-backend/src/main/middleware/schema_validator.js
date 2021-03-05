@@ -47,17 +47,19 @@ export const validateSchema = (schemaName) => {
             data: e.data,
           })
       );
-      
+
       const result = schemaName.match(/(.*)Schema/);
       let resourceName;
-      if (result.length == 2) {
+      if (result.length === 2) {
         resourceName = schemaName.match(/([a-z]+)Schema/)[1];
       }
 
       return next(
         new HttpError({
           code: 400,
-          message: `Invalid ${resourceName !== undefined ? resourceName + " " : ""}information.`,
+          message: `Invalid ${
+            resourceName !== undefined ? resourceName + " " : ""
+          }information.`,
           errors: validationErrors,
         })
       );

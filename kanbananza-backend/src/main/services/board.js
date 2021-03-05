@@ -2,12 +2,21 @@ import Board from "../models/board";
 import User from "../models/user";
 import Column from "../models/column";
 import ValidationError from "../validation_error";
+import {isValidMongooseObjectId} from "../utils/validators";
 
 const createBoard = async ({ name, ownerId }) => {
+  if (!isValidMongooseObjectId(ownerId)) {
+    throw new ValidationError({
+      path: "ownerId",
+      reason: "owner ID is invalid",
+      data: ownerId,
+    });
+  }
+
   if (!(await User.exists({ _id: ownerId }))) {
     throw new ValidationError({
       path: "ownerId",
-      reason: "user does not exist",
+      reason: "owner does not exist",
       data: ownerId,
     });
   }
@@ -15,7 +24,7 @@ const createBoard = async ({ name, ownerId }) => {
   if (await Board.exists({ ownerId, name })) {
     throw new ValidationError({
       path: "name",
-      reason: "board name already in use for user",
+      reason: "board name already in use for owner",
       data: name,
     });
   }

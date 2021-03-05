@@ -1,22 +1,21 @@
 import Column from "../models/column";
 import ValidationError from "../validation_error";
-import {isValidObjectId} from "mongoose";
-import {isValidMongooseObjectId} from "../utils/validators";
+import { isValidMongooseObjectId } from "../utils/validators";
 
 const createColumn = async ({ name, boardId, order }) => {
+  if (!isValidMongooseObjectId(boardId)) {
+    throw new ValidationError({
+      path: "boardId",
+      reason: "board ID is invalid",
+      data: boardId,
+    });
+  }
+
   if (await Column.exists({ boardId, name })) {
     throw new ValidationError({
       path: "name",
       reason: "column name already in use for board",
       data: name,
-    });
-  }
-
-  if (!isValidObjectId(boardId)) {
-    throw new ValidationError({
-      path: "boardId",
-      reason: "board ID is invalid",
-      data: boadId,
     });
   }
 
@@ -35,7 +34,10 @@ const findColumnsByName = async (name) => {
 };
 
 const updateColumnById = async (id, updatedInfo) => {
-  if (updatedInfo.boardId !== undefined && !isValidMongooseObjectId(updatedInfo.boardId)) {
+  if (
+    updatedInfo.boardId !== undefined &&
+    !isValidMongooseObjectId(updatedInfo.boardId)
+  ) {
     throw new ValidationError({
       path: "boardId",
       reason: "board ID is invalid",

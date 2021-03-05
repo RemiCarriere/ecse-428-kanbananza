@@ -1,6 +1,6 @@
 import ValidationError from "../validation_error";
 import HttpError from "../http_error";
-import {isValidMongooseObjectId} from "../utils/validators";
+import { isValidMongooseObjectId } from "../utils/validators";
 
 export default (req, res, next) => {
   if (req.params.id && !isValidMongooseObjectId(req.params.id)) {
