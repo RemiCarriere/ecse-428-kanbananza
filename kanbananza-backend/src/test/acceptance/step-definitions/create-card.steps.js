@@ -114,7 +114,6 @@ defineFeature(feature, (test) => {
 
     givenColumnHasNoTaskWithName(given);
 
-
     whenUserAttemptsToAddCard(when);
 
     thenCardShallBeInColumn(then);
@@ -197,7 +196,7 @@ defineFeature(feature, (test) => {
     and(
       /^a card with name "(.*)" shall not be included in the column with name "(.*)"$/,
       async (cardName, colName) => {
-        const res = await request.get(`/columns/${colID}/cards`);
+        const res = await request.get(`/column/${colID}/cards`);
         expect(res.body.filter((card) => card.name === cardName).length).toBe(
           0
         );
