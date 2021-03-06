@@ -77,6 +77,23 @@ const update = async (req, res, next) => {
       );
     }
 
+    if (req.body.order !== undefined) {
+      const cards = cardService.findCardsWithLargerOrder(req.params.id);
+      let myCard;
+      let lastIncreasedOrder = req.body.order;
+      let i;
+      for (i = 0; i < cards.length; i += 1) {
+        myCard = cards[i];
+
+        if (myCard.order > lastIncreasedOrder) {
+          break;
+        }
+
+        cardService.updateCardById(req.params.id, { order: myCard.order + 1 });
+        lastIncreasedOrder += 1;
+      }
+    }
+
     const updatedInfo = {
       name: req.body.name !== undefined ? req.body.name : card.name,
       columnId:
