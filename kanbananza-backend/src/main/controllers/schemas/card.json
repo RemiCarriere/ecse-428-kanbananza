@@ -14,6 +14,14 @@
     "order": {
       "type": "integer",
       "description": "order of the card"
+    },
+    "description": {
+      "type": "string",
+      "description": "description of the card"
+    },
+    "priority": {
+      "type": "string",
+      "description": "priority of the card"
     }
   },
   "required": ["name", "columnId"]

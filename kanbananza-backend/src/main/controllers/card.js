@@ -8,8 +8,10 @@ const create = async (req, res, next) => {
       name: req.body.name,
       columnId: req.body.columnId,
       order: req.body.order,
+      description: req.body.description,
+      priority: req.body.priority,
     });
-
+    console.log(card);
     return res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
@@ -80,6 +82,12 @@ const update = async (req, res, next) => {
       columnId:
         req.body.columnId !== undefined ? req.body.columnId : card.columnId,
       order: req.body.order !== undefined ? req.body.order : card.order,
+      description:
+        req.body.description !== undefined
+          ? req.body.description
+          : card.description,
+      priority:
+        req.body.priority !== undefined ? req.body.priority : card.priority,
     };
 
     card = await cardService.updateCardById(req.params.id, updatedInfo);

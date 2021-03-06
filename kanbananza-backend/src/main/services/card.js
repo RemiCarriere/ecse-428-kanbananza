@@ -2,7 +2,7 @@ import Card from "../models/card";
 import ValidationError from "../validation_error";
 import { isValidMongooseObjectId } from "../utils/validators";
 
-const createCard = async ({ name, columnId, order }) => {
+const createCard = async ({ name, columnId, order, description, priority }) => {
   const cardsOfColumn = await Card.find({ columnId });
 
   cardsOfColumn.forEach((card) => {
@@ -15,7 +15,7 @@ const createCard = async ({ name, columnId, order }) => {
     }
   });
 
-  return Card.create({ name, columnId, order });
+  return Card.create({ name, columnId, order, description, priority });
 };
 
 const findAllCards = async () => {
