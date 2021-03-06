@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { board } from "../../types/board";
 import { createBoard, getBoardById, getAllBoards } from "../../api/boardApi";
 import Board from "./Board";
+import { useHistory } from "react-router-dom";
 
 const DisplayBoard = () => {
   const [name, setName] = useState<string | undefined>(undefined);
   const [boardData, setBoardData] = useState<board | undefined>(undefined);
-
+  const history = useHistory()
+  console.log(history.location.state)
   const onCreateBoard = () => {
     if (name) {
       try {
@@ -31,7 +33,7 @@ const DisplayBoard = () => {
         <input type="text" onChange={(e) => setName(e.target.value)}></input>
         <button onClick={onCreateBoard}>Create Board</button>
         <button onClick={onViewBoard}>See Board</button>
-        {boardData && <Board></Board>}
+        {<Board></Board>}
       </div>
     </>
   );

@@ -2,11 +2,14 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "../components/Login/Login";
 import Signup from "../components/Login/Signup";
 import UserHome from "../components/UserHome/UserHome";
+import DisplayBoard from "../components/Board/DisplayBoard"
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./app.css";
 import "../index.css";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
+import Board from "../components/Board/Board";
+import CreateCard from "../components/Card/CreateCard";
 
 const Main = () => {
   const [loggedIn, setloggedIn] = useState<boolean>(Cookies.get("token"));
@@ -26,23 +29,23 @@ const Main = () => {
         </Link>
       </li>
     ) : (
-      <li className="nav-item">
-        <Link className="nav-link" to={"/sign-in"}>
-          Login
+        <li className="nav-item">
+          <Link className="nav-link" to={"/sign-in"}>
+            Login
         </Link>
-      </li>
-    );
+        </li>
+      );
   }
   function signUpLink() {
     return loggedIn ? (
       ""
     ) : (
-      <li className="nav-item">
-        <Link className="nav-link" to={"/sign-up"}>
-          Sign up
+        <li className="nav-item">
+          <Link className="nav-link" to={"/sign-up"}>
+            Sign up
         </Link>
-      </li>
-    );
+        </li>
+      );
   }
 
   return (
@@ -75,6 +78,8 @@ const Main = () => {
             <Signup setloggedIn={setloggedIn} />
           </Route>
           <Route path="/home" component={UserHome} />
+          <Route path="/board" component={Board} />
+          <Route path='/createCard' component={CreateCard} />
         </Switch>
       </div>
     </Router>
