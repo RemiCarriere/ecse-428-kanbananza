@@ -12,7 +12,7 @@ open terminal and navigate to project root
 
 navigate to backend
 
-install deps with 
+install deps with
 
 `npm install`
 

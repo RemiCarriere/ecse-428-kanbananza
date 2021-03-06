@@ -7,8 +7,8 @@ import { useHistory } from "react-router-dom";
 const DisplayBoard = () => {
   const [name, setName] = useState<string | undefined>(undefined);
   const [boardData, setBoardData] = useState<board | undefined>(undefined);
-  const history = useHistory()
-  console.log(history.location.state)
+  const history = useHistory();
+  console.log(history.location.state);
   const onCreateBoard = () => {
     if (name) {
       try {
