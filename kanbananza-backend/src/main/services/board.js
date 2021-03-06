@@ -3,6 +3,7 @@ import User from "../models/user";
 import Column from "../models/column";
 import ValidationError from "../validation_error";
 import { isValidMongooseObjectId } from "../utils/validators";
+import columnService from "./column";
 
 const createBoard = async ({ name, ownerId }) => {
   if (!isValidMongooseObjectId(ownerId)) {
@@ -33,7 +34,7 @@ const createBoard = async ({ name, ownerId }) => {
 };
 
 const findBoardById = async (id) => {
-  return Board.findOne({ _id: id }).exec();
+  return Board.findById(id).exec();
 };
 
 const findAllBoards = async () => {
@@ -53,7 +54,10 @@ const findAllBoardColumnsByName = async (id, name) => {
 };
 
 const deleteBoardById = async (id) => {
-  return Board.deleteOne({ _id: id });
+  (await Column.find({ boardId: id })).map((column) => {
+    columnService.deleteColumnById(column._id);
+  }); // cascade
+  return Board.findByIdAndDelete(id);
 };
 
 export default {

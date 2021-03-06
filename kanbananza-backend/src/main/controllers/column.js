@@ -117,4 +117,20 @@ const update = async (req, res, next) => {
   }
 };
 
-export default { create, index, select, selectCards, update };
+const remove = async (req, res, next) => {
+  try {
+    const column = columnService.findColumnById(req.params.id);
+
+    if (column === null) {
+      return next(new HttpError({code:  404, message: `Column with id ${req.params.id} does not exist.`}));
+    }
+
+    columnService.deleteColumnById(req.params.id);
+
+    return res.status(204);
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export default { create, index, select, selectCards, update, remove };

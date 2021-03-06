@@ -1,4 +1,5 @@
 import Column from "../models/column";
+import Card from "../models/card";
 import ValidationError from "../validation_error";
 import { isValidMongooseObjectId } from "../utils/validators";
 
@@ -26,7 +27,7 @@ const findAllColumns = async () => {
 };
 
 const findColumnById = async (id) => {
-  return Column.findOne({ _id: id }).exec();
+  return Column.findById(id).exec();
 };
 
 const findColumnsByName = async (name) => {
@@ -45,7 +46,12 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
-  return Column.findOneAndUpdate({ _id: id }, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+};
+
+const deleteColumnById = async (id) => {
+  await Card.deleteMany({columnId: id}); // cascade
+  return Column.findByIdAndDelete(id);
 };
 
 export default {
@@ -54,4 +60,5 @@ export default {
   findAllColumns,
   findColumnsByName,
   updateColumnById,
+  deleteColumnById
 };
