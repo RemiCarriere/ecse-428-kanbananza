@@ -1,8 +1,19 @@
 import Card from "../models/card";
-import HttpError from "../http_error";
 import ValidationError from "../validation_error";
 
 const createCard = async ({ name, columnId, order }) => {
+  const cardsOfColumn = await Card.find({ columnId });
+
+  cardsOfColumn.forEach((card) => {
+    if (card.order === order) {
+      throw new ValidationError({
+        path: "order",
+        data: order,
+        reason: "card order already in use for column",
+      });
+    }
+  });
+
   return Card.create({ name, columnId, order });
 };
 

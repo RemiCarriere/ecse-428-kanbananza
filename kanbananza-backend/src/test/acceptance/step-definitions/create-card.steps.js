@@ -142,7 +142,7 @@ defineFeature(feature, (test) => {
       async (colName, cardName) => {
         const res = await request
           .post("/card")
-          .send({ name: cardName, columnId: colID, order: 1 });
+          .send({ name: cardName, columnId: colID, order: 0 }); // order must be unique within column
         const res1 = await request.get(`/column/${colID}/cards`);
         numCards = res1.body.length;
       }
