@@ -38,9 +38,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // app routes
-const prefix = config.api.prefix ? config.api.prefix + "/" : "";
+const basePath = config.api.basePath ? config.api.basePath + "/" : "";
 
-app.use(`/${prefix}`, routes);
+app.use(`/${basePath}`, routes);
 
 // error-handling
 app.use(errorHandler);
