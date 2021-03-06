@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { checkToken, getUserBoards, getUser } from "../../api/userApi";
+import { checkToken, getUserBoards } from "../../api/userApi";
 import Cookies from "js-cookie";
 import { board } from "../../types/board";
 import { createBoard } from "../../api/boardApi";
@@ -20,8 +20,9 @@ const UserHome = () => {
         history.push("/sign-in");
         return;
       }
+      ownerID = loginRes.id;
       setUsrName(loginRes.firstName + " " + loginRes.lastName);
-      const boardRes = await getUserBoards(loginRes.id);
+      const boardRes = await getUserBoards(ownerID);
       setBoards(boardRes);
     }
     initializeData();
