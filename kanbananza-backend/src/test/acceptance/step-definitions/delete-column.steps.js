@@ -53,22 +53,6 @@ const givenBoardHasFollowingColumns = (given) => {
     }
   );
 };
-// const givenBoardHasFollowingColumns = (given) => {
-//   given(
-//     "the selected board has three columns ordered as follows:",
-//      async (table) => {
-//       const res = await request
-//       .post("/column")
-//       .send({ name: "To Do", boardId: selectedBoard, order: 1 });
-//       await request
-//       .post("/column")
-//       .send({ name: "Doing", boardId: selectedBoard, order: 2 });
-//       await request
-//       .post("/column")
-//       .send({ name: "Done", boardId: selectedBoard, order: 3 });
-//     }
-//   );
-// };
 
 const whenUserAttemptsToDeleteColumn = (when) => {
   when(/^the user attempts to delete column with name "(.*)"$/, async (colName) => {
