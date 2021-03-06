@@ -60,4 +60,44 @@ const index = async (req, res, next) => {
   }
 };
 
-export default { create, select, index };
+const update = async (req, res, next) => {
+  try {
+    let card;
+
+    card = await cardService.findCardById(req.params.id);
+
+    if (card === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Card with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    const updatedInfo = {
+      name: req.body.name !== undefined ? req.body.name : card.name,
+      columnId:
+        req.body.columnId !== undefined ? req.body.columnId : card.columnId,
+      order: req.body.order !== undefined ? req.body.order : card.order,
+    };
+
+    card = await cardService.updateCardById(req.params.id, updatedInfo);
+
+    return res.status(200).json(card.toDTO());
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid card information.",
+          errors: [e],
+        })
+      );
+    }
+
+    return next(e);
+  }
+};
+
+export default { create, select, index, update };

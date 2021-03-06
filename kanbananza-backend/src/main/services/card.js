@@ -1,5 +1,6 @@
 import Card from "../models/card";
 import ValidationError from "../validation_error";
+import { isValidMongooseObjectId } from "../utils/validators";
 
 const createCard = async ({ name, columnId, order }) => {
   const cardsOfColumn = await Card.find({ columnId });
@@ -29,4 +30,19 @@ const findCardsByName = async (name) => {
   return Card.find({ name }).exec();
 };
 
-export default { createCard, findAllCards, findCardById, findCardsByName };
+const updateCardById = async (id, updatedInfo) => {
+  if (
+    updatedInfo.columnId !== undefined &&
+    !isValidMongooseObjectId(updatedInfo.columnId)
+  ) {
+    throw new ValidationError({
+      path: "columnId",
+      reason: "column ID is invalid",
+      data: updatedInfo.columnId,
+    });
+  }
+
+  return Card.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+};
+
+export default { createCard, findAllCards, findCardById, findCardsByName, updateCardById };
