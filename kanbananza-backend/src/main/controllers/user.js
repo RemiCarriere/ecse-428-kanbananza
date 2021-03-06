@@ -37,9 +37,8 @@ const login = async (req, res, next) => {
         const user = passportUser;
         user.token = passportUser.generateJWT();
         return res.status(201).json(user.toDTO());
-      } 
-        return res.status(401).json(info);
-      
+      }
+      return res.status(401).json(info);
     }
   )(req, res, next);
 };
@@ -107,7 +106,7 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  
+
   return res.status(200).json(users.map((user) => user.toDTO()));
 };
 

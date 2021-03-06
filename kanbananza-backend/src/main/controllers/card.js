@@ -34,7 +34,7 @@ const select = async (req, res, next) => {
     } else {
       cards = await cardService.findAllCards();
     }
-    
+
     return res.status(200).json(cards.map((card) => card.toDTO()));
   } catch (e) {
     return next(e);
