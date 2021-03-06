@@ -62,3 +62,20 @@ jobs:
         run: npm i
       - run: npm run lint:check -- --quiet # report errors only
       - run: npm run format:check
+
+  validate-spec:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./kanbananza-backend
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install dependency
+        run: npm install ibm-openapi-validator --save-dev
+      - run: npm run validate:spec
+

@@ -7,7 +7,7 @@
             "name": "GitHub repository",
             "url": "https://github.com/RemiCarriere/ecse-428-kanbananza"
         },
-        "version": "1.0.0",
+        "version": "1.0.0"
     },
     "servers": [
         {
@@ -65,22 +65,28 @@
                         "type": "string"
                     }
                 }
+            },
+            "Column": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "order": {
+                        "type": "integer"
+                    },
+                    "boardId": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "parameters": {
             "idParam": {
                 "name": "id",
+                "description": "The ID of the record",
                 "in": "path",
                 "required": true,
-                "schema": {
-                    "type": "string"
-                }
-            },
-            "boardNameParam": {
-                "name": "name",
-                "in": "query",
-                "description": "The name by which to filter the boards from the system",
-                "required": false,
                 "schema": {
                     "type": "string"
                 }
@@ -94,13 +100,31 @@
                     "type": "string"
                 }
             },
+            "boardNameParam": {
+                "name": "name",
+                "in": "query",
+                "description": "The name by which to filter the boards from the system",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "columnNameParam": {
+                "name": "name",
+                "in": "query",
+                "description": "The name by which to filter the columns from the system",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "limitParam": {
                 "name": "limit",
                 "in": "query",
                 "description": "The maximum number of records to return",
                 "required": false,
                 "schema": {
-                    "type": "integer",
+                    "type": "integer"
                 }
             },
             "offsetParam": {
@@ -146,7 +170,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 },
                 "parameters": [
@@ -170,12 +194,17 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             }
         },
         "/users/{id}": {
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/idParam"
+                }
+            ],
             "get": {
                 "description": "Returns an existing user from the system based on ID",
                 "operationId": "getUser",
@@ -191,7 +220,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             },
@@ -210,7 +239,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             },
@@ -229,12 +258,23 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             }
         },
         "/users/email/{email}": {
+            "parameters": [
+                {
+                    "name": "email",
+                    "description": "The email of the user",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
             "get": {
                 "description": "Returns an existing user from the system based on email",
                 "operationId": "getUserByEmail",
@@ -250,12 +290,17 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             }
         },
         "/users/{id}/boards": {
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/idParam"
+                }
+            ],
             "get": {
                 "description": "Returns the boards from the system based on the ID of their existing owner user",
                 "operationId": "getUserBoards",
@@ -274,7 +319,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 },
                 "parameters": [
@@ -303,7 +348,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 },
                 "parameters": [
@@ -327,12 +372,17 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             }
         },
         "/boards/{id}": {
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/idParam"
+                }
+            ],
             "get": {
                 "description": "Returns an existing board from the system based on ID",
                 "operationId": "getBoard",
@@ -364,7 +414,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             },
@@ -383,7 +433,7 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             },
@@ -395,12 +445,17 @@
                         "description": "No-content response indicating succesful deletion of the board"
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 }
             }
         },
         "/boards/{id}/columns": {
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/idParam"
+                }
+            ],
             "get": {
                 "description": "Returns the columns from the system based on the ID of their existing board",
                 "operationId": "getBoardColumns",
@@ -419,21 +474,67 @@
                         }
                     },
                     "default": {
-                        "$ref": "#/components/response/HttpError"
+                        "$ref": "#/components/responses/HttpError"
                     }
                 },
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/columnNameParam"
-                    },
-                    {
-                        "$ref": "#/components/parameters/columnOrderParam"
                     }
                 ]
             }
         },
         "/columns": {
-            
+            "get": {
+                "description": "Returns columns from the system that the user has access to",
+                "operationId": "getColumns",
+                "responses": {
+                    "200": {
+                        "description": "A list of existing columns",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Column"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/HttpError"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/columnNameParam"
+                    }
+                ]
+            },
+            "post": {
+                "description": "Creates a column in the system with form data",
+                "operationId": "postColumn",
+                "responses": {
+                    "201": {
+                        "description": "The created column",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Column"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/HttpError"
+                    }
+                }
+            }
         }
+                
+
+            
+        
     }
 }
