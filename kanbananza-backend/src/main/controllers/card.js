@@ -9,7 +9,8 @@ const create = async (req, res, next) => {
       columnId: req.body.columnId,
       order: req.body.order,
     });
-    res.status(201).json(card.toDTO()); // convert to dto
+
+    return res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
       return next(
@@ -20,6 +21,7 @@ const create = async (req, res, next) => {
         })
       );
     }
+
     return next(e);
   }
 };
@@ -32,10 +34,11 @@ const select = async (req, res, next) => {
     } else {
       cards = await cardService.findAllCards();
     }
+
+    return res.status(200).json(cards.map((card) => card.toDTO()));
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(cards.map((card) => card.toDTO()));
 };
 
 const index = async (req, res, next) => {
@@ -51,7 +54,7 @@ const index = async (req, res, next) => {
       );
     }
 
-    res.status(200).json(card.toDTO());
+    return res.status(200).json(card.toDTO());
   } catch (e) {
     return next(e);
   }

@@ -1,4 +1,5 @@
 import Column from "../models/column";
+import Card from "../models/card";
 import ValidationError from "../validation_error";
 import { isValidMongooseObjectId } from "../utils/validators";
 
@@ -21,16 +22,25 @@ const createColumn = async ({ name, boardId, order }) => {
 
   return Column.create({ name, boardId, order });
 };
+
 const findAllColumns = async () => {
   return Column.find().exec();
 };
 
 const findColumnById = async (id) => {
-  return Column.findOne({ _id: id }).exec();
+  return Column.findById(id).exec();
 };
 
 const findColumnsByName = async (name) => {
   return Column.find({ name }).exec();
+};
+
+const findAllColumnCards = async (id) => {
+  return Card.find({ columnId: id }).exec();
+};
+
+const findColumnCardsByName = async (id, name) => {
+  return Card.find({ columnId: id, name }).exec();
 };
 
 const updateColumnById = async (id, updatedInfo) => {
@@ -45,13 +55,21 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
-  return Column.findOneAndUpdate({ _id: id }, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+};
+
+const deleteColumnById = async (id) => {
+  await Card.deleteMany({ columnId: id }); // cascade
+  return Column.findByIdAndDelete(id);
 };
 
 export default {
   createColumn,
-  findColumnById,
   findAllColumns,
+  findColumnById,
   findColumnsByName,
+  findAllColumnCards,
+  findColumnCardsByName,
   updateColumnById,
+  deleteColumnById,
 };

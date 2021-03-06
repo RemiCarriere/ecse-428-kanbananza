@@ -3,7 +3,7 @@ import HttpError from "../http_error";
 import { isValidMongooseObjectId } from "../utils/validators";
 
 export default (req, res, next) => {
-  if (req.params.id && !isValidMongooseObjectId(req.params.id)) {
+  if (req.params.id === undefined || !isValidMongooseObjectId(req.params.id)) {
     return next(
       new HttpError({
         code: 400,
@@ -18,5 +18,5 @@ export default (req, res, next) => {
       })
     );
   }
-  next();
+  return next();
 };

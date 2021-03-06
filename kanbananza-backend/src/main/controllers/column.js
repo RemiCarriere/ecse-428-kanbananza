@@ -37,6 +37,7 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
+
   return res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
@@ -44,12 +45,12 @@ const selectCards = async (req, res, next) => {
   let cards = [];
   try {
     if (req.query.name !== undefined) {
-      cards = await cardService.findColumnCardsByName(
+      cards = await columnService.findColumnCardsByName(
         req.params.id,
         req.query.name
       );
     } else {
-      cards = await cardService.findAllColumnCards(req.params.id);
+      cards = await columnService.findAllColumnCards(req.params.id);
     }
   } catch (e) {
     next(e);
@@ -117,4 +118,25 @@ const update = async (req, res, next) => {
   }
 };
 
-export default { create, index, select, selectCards, update };
+const remove = async (req, res, next) => {
+  try {
+    const column = columnService.findColumnById(req.params.id);
+
+    if (column === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Column with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    columnService.deleteColumnById(req.params.id);
+
+    return res.sendStatus(204);
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export default { create, index, select, selectCards, update, remove };

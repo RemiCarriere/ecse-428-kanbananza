@@ -26,7 +26,8 @@
     "camelcase": "warn",
     "global-require": "off",
     "no-unused-vars": "warn",
-    "arrow-body-style": "off"
+    "arrow-body-style": "off",
+    "func-names": "off"
   },
   "overrides": [
     {
