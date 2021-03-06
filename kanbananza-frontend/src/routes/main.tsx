@@ -8,6 +8,8 @@ import "./app.css";
 import "../index.css";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
+import Board from "../components/Board/Board";
+import CreateCard from "../components/Card/CreateCard";
 
 const Main = () => {
   const [loggedIn, setloggedIn] = useState<boolean>(Cookies.get("token"));
@@ -76,7 +78,8 @@ const Main = () => {
             <Signup setloggedIn={setloggedIn} />
           </Route>
           <Route path="/home" component={UserHome} />
-          <Route path="/board" component={DisplayBoard} />
+          <Route path="/board" component={Board} />
+          <Route path='/createCard' component={CreateCard} />
         </Switch>
       </div>
     </Router>

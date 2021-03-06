@@ -6,6 +6,10 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import { useHistory } from 'react-router-dom'
+import { getAllBoards, getBoardColumns, getBoardById } from '../../api/boardApi'
+import Column from './Column/Column'
+import { createColumn } from '../../api/columnApi'
 // use effect is similar to componentDidMount and componentDidUpdate and component will unmount
 // use effect runs after each render!!
 // each render occurs after a set state
@@ -37,11 +41,42 @@ const useStyles = makeStyles((theme: Theme) =>
 const Board = () => {
   // will probably require props
   const [boardData, setBoardData] = useState<board | undefined>(undefined); // initialize the variable to empty string
+  const [columnName, setColumnName] = useState<string>("")
   const classes = useStyles();
+  const history = useHistory();
+  useEffect(() => {
+    if (history.location.state) {
+      setBoardData(history.location.state.board)
+    }
+  }, [])
+
+  const getColumns = () => {
+    var cols = [];
+    if (boardData) {
+      console.log('I get here')
+      cols = getBoardColumns(boardData.id)
+    }
+    console.log(cols)
+  }
+  const onAddColumn = () => {
+    if (columnName && boardData) {
+      createColumn({ name: columnName, boardId: boardData.id, order: 1 })
+    } else {
+      console.log("empty name")
+    }
+  }
+  const onCreateCard = () => {
+    const columnList = getColumns()
+    history.push({ pathname: '/createCard', state: { columnList: columnList, boardData: boardData } })
+  }
+
   return (
     <>
       <div className={classes.root}>
-        <strong>placeholder for board name</strong>
+        <input type="text" onChange={(e) => setColumnName(e.target.value)}></input>
+        <button onClick={onAddColumn}>Add Column</button>
+        <button onClick={onCreateCard}>Create Card</button>
+        <div><strong>placeholder for board name</strong></div>
         <Grid alignItems="center" justify="center" container spacing={4}>
           <Grid item>
             <Paper className={classes.card}>

@@ -23,7 +23,7 @@ const Login = (params) => {
   }
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-wrapper">s
       <div className="auth-inner">
         <form>
           <h3>Sign In</h3>
