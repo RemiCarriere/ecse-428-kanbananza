@@ -27,7 +27,7 @@ export const getBoardColumns = (id: string): any => {
   return API.get(`/board/${id}/columns`)
     .then((res) => res.data)
     .catch((err) => {
-      console.log('an error happened')
-      console.log(err)
-    })
-}; 
+      console.log("an error happened");
+      console.log(err);
+    });
+};
