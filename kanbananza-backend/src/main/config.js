@@ -23,7 +23,7 @@ export default {
   jwtSecret: process.env.JWT_SECRET,
   jwtAlgorithm: process.env.JWT_ALGO,
 
-  basePath: {
-    prefix: "",
+  api: {
+    basePath: "",
   },
 };
