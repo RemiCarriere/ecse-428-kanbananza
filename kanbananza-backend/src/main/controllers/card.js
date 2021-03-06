@@ -78,7 +78,10 @@ const update = async (req, res, next) => {
     }
 
     if (req.body.order !== undefined) {
-      const cards = await cardService.findCardsWithLargerOrder(req.params.id, req.body.order);
+      const cards = await cardService.findCardsWithLargerOrder(
+        req.params.id,
+        req.body.order
+      );
       let myCard;
       let lastIncreasedOrder = req.body.order;
       for (const card of cards) {
