@@ -44,13 +44,11 @@ const givenBoardSelected = (given) => {
 const givenBoardHasFollowingColumns = (given) => {
   given("the selected board has three columns ordered as follows:", (table) => {
     table.forEach(async (row) => {
-      const res = await request
-        .post("/column")
-        .send({
-          name: row.columnName,
-          boardId: selectedBoard,
-          order: parseInt(row.columnOrder),
-        });
+      const res = await request.post("/column").send({
+        name: row.columnName,
+        boardId: selectedBoard,
+        order: parseInt(row.columnOrder),
+      });
     });
   });
 };
