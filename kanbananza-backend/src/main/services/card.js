@@ -14,12 +14,8 @@ const findCardById = async (id) => {
   return Card.findOne({ _id: id }).exec();
 };
 
-const findAllColumnCards = async (id) => {
-  return Card.find({ columnId: id }).exec();
+const findCardsByName = async (name) => {
+  return Card.find({ name }).exec();
 };
 
-// const findCardsByName = async (name) => {
-//   return Card.find({name}).exec();
-// }
-
-export default { createCard, findAllCards, findCardById, findAllColumnCards };
+export default { createCard, findAllCards, findCardById, findCardsByName };

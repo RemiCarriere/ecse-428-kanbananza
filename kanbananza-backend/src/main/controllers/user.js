@@ -13,7 +13,7 @@ const create = async (req, res, next) => {
       password: req.body.password,
     });
 
-    res.status(201).json(user.toDTO());
+    return res.status(201).json(user.toDTO());
   } catch (e) {
     if (e instanceof ValidationError) {
       return next(
@@ -36,10 +36,10 @@ const login = async (req, res, next) => {
       if (passportUser) {
         const user = passportUser;
         user.token = passportUser.generateJWT();
-        res.status(201).json(user.toDTO());
-      } else {
-        res.status(401).json(info);
-      }
+        return res.status(201).json(user.toDTO());
+      } 
+        return res.status(401).json(info);
+      
     }
   )(req, res, next);
 };
@@ -69,7 +69,7 @@ const index = async (req, res, next) => {
       );
     }
 
-    res.status(200).json(user.toDTO());
+    return res.status(200).json(user.toDTO());
   } catch (e) {
     return next(e);
   }
@@ -90,7 +90,7 @@ const indexOnEmail = async (req, res, next) => {
       );
     }
 
-    res.status(200).json(user.toDTO());
+    return res.status(200).json(user.toDTO());
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
       return next(HttpError.fromMongooseValidationError(e));
@@ -107,7 +107,8 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(users.map((user) => user.toDTO()));
+  
+  return res.status(200).json(users.map((user) => user.toDTO()));
 };
 
 const selectBoards = async (req, res, next) => {
@@ -121,7 +122,7 @@ const selectBoards = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(boards.map((board) => board.toDTO()));
+  return res.status(200).json(boards.map((board) => board.toDTO()));
 };
 
 export default {

@@ -62,7 +62,7 @@ const select = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(boards.map((board) => board.toDTO()));
+  return res.status(200).json(boards.map((board) => board.toDTO()));
 };
 
 const selectColumns = async (req, res, next) => {
@@ -79,7 +79,7 @@ const selectColumns = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(200).json(columns.map((column) => column.toDTO()));
+  return res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
 const remove = async (req, res, next) => {
@@ -88,7 +88,7 @@ const remove = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-  res.status(204);
+  return res.sendStatus(204);
 };
 
 export default { create, select, index, selectColumns, remove };

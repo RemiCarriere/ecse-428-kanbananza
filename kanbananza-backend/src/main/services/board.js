@@ -33,12 +33,12 @@ const createBoard = async ({ name, ownerId }) => {
   return Board.create({ name, ownerId });
 };
 
-const findBoardById = async (id) => {
-  return Board.findById(id).exec();
-};
-
 const findAllBoards = async () => {
   return Board.find().exec();
+};
+
+const findBoardById = async (id) => {
+  return Board.findById(id).exec();
 };
 
 const findBoardsByName = async (name) => {
@@ -49,12 +49,12 @@ const findAllBoardColumns = async (id) => {
   return Column.find({ boardId: id }).exec();
 };
 
-const findAllBoardColumnsByName = async (id, name) => {
+const findBoardColumnsByName = async (id, name) => {
   return Column.find({ boardId: id, name }).exec();
 };
 
 const deleteBoardById = async (id) => {
-  (await Column.find({ boardId: id })).map((column) => {
+  (await Column.find({ boardId: id })).forEach((column) => {
     columnService.deleteColumnById(column._id);
   }); // cascade
   return Board.findByIdAndDelete(id);
@@ -66,6 +66,6 @@ export default {
   findBoardById,
   findBoardsByName,
   findAllBoardColumns,
-  findAllBoardColumnsByName,
+  findBoardColumnsByName,
   deleteBoardById,
 };

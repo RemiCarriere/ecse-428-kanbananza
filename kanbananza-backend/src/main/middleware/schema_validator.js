@@ -66,6 +66,7 @@ export const validateSchema = (schemaName) => {
         })
       );
     }
-    next();
+    
+    return next();
   };
 };

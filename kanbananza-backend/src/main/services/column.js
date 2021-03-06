@@ -22,6 +22,7 @@ const createColumn = async ({ name, boardId, order }) => {
 
   return Column.create({ name, boardId, order });
 };
+
 const findAllColumns = async () => {
   return Column.find().exec();
 };
@@ -32,6 +33,14 @@ const findColumnById = async (id) => {
 
 const findColumnsByName = async (name) => {
   return Column.find({ name }).exec();
+};
+
+const findAllColumnCards = async (id) => {
+  return Card.find({ columnId: id }).exec();
+};
+
+const findColumnCardsByName = async (id, name) => {
+  return Card.find({ columnId: id, name }).exec();
 };
 
 const updateColumnById = async (id, updatedInfo) => {
@@ -50,15 +59,17 @@ const updateColumnById = async (id, updatedInfo) => {
 };
 
 const deleteColumnById = async (id) => {
-  await Card.deleteMany({columnId: id}); // cascade
+  await Card.deleteMany({ columnId: id }); // cascade
   return Column.findByIdAndDelete(id);
 };
 
 export default {
   createColumn,
-  findColumnById,
   findAllColumns,
+  findColumnById,
   findColumnsByName,
+  findAllColumnCards,
+  findColumnCardsByName,
   updateColumnById,
-  deleteColumnById
+  deleteColumnById,
 };
