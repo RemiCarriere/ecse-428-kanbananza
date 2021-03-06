@@ -4,7 +4,7 @@ import idParamValidator from "../middleware/id_param_validator";
 
 export default (router) => {
   router.post("/cards?", validateSchema("cardSchema"), cardController.create);
-  router.get("/cards",idParamValidator, cardController.select);
+  router.get("/cards", idParamValidator, cardController.select);
   router.get("/cards?/:id", idParamValidator, cardController.index);
   router.put(
     "/cards?/:id",

@@ -45,4 +45,10 @@ const updateCardById = async (id, updatedInfo) => {
   return Card.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
-export default { createCard, findAllCards, findCardById, findCardsByName, updateCardById };
+export default {
+  createCard,
+  findAllCards,
+  findCardById,
+  findCardsByName,
+  updateCardById,
+};
