@@ -21,7 +21,11 @@ Then the board will have the following columns:
 Scenario: Delete column that does not exist (Error Flow)
 When the user attempts to delete column with name "non existant name"
 Then an error "The column does not exist" is issued
-
+Then the board will have the following columns:
+| columnName | columnOrder |
+| To Do      | 1           |
+| Doing      | 2           |
+| Done       | 3           |
 
 
 

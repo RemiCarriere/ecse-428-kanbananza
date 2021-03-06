@@ -5,11 +5,8 @@ const feature = loadFeature(
   "src/test/acceptance/features/ID0010-delete-a-column.feature"
 );
 let errMsg = "";
-let responseStatus = "";
 let userID = "";
 let selectedBoard = "";
-let colID = "";
-let numCards = 0;
 
 const givenFizBinLoggedIn = (given) => {
   given("user with username Fizbin is logged in", async () => {
@@ -45,64 +42,80 @@ const givenBoardHasFollowingColumns = (given) => {
   given(
     "the selected board has three columns ordered as follows:",
     async (table) => {
-      for(const row of table){
-        await request
-        .post("/column")
-        .send({ name: row.columnName, boardId: selectedBoard, order: parseInt(row.columnOrder) });
+      for (const row of table) {
+        await request.post("/column").send({
+          name: row.columnName,
+          boardId: selectedBoard,
+          order: parseInt(row.columnOrder),
+        });
       }
     }
   );
 };
 
 const whenUserAttemptsToDeleteColumn = (when) => {
-  when(/^the user attempts to delete column with name "(.*)"$/, async (colName) => {
-    
-  });
+  when(
+    /^the user attempts to delete column with name "(.*)"$/,
+    async (colName) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      let colId = res.body.filter((column) => column.name === colName)[0];
+      if (colId) {
+        colId = colId.id;
+      } else {
+        colId = "non-existent column";
+      }
+      const res1 = await request.delete(`/column/${colId}`);
+      if (res1.body) {
+        errMsg = res1.body.errors;
+      }
+    }
+  );
 };
 
 defineFeature(feature, (test) => {
+  test("Delete column that does not exist (Error Flow)", ({
+    given,
+    when,
+    then,
+  }) => {
+    givenFizBinLoggedIn(given);
 
+    givenUserHasOneBoard(given);
 
-test.skip('Delete column that does not exist (Error Flow)', ({ given, when, then }) => {
-    given('user with username Fizbin is logged in', () => {
+    givenBoardSelected(given);
 
+    givenBoardHasFollowingColumns(given);
+
+    whenUserAttemptsToDeleteColumn(when);
+
+    then(/^an error "(.*)" is issued$/, (error) => {
+      expect(errMsg).not.toBe("");
     });
 
-    given('the user has one board', () => {
-
+    then("the board will have the following columns:", async (table) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      expect(res.body.length).toBe(table.length);
     });
-
-    given('the user has selected that board', () => {
-
-    });
-
-    given('the selected board has three columns ordered as follows:', (table) => {
-
-    });
-
-    whenUserAttemptsToDeleteColumn(when)
-
-    then(/^an error "(.*)" is issued$/, (arg0) => {
-
-    });
-});
-
-
-test('Delete a column from the board (Normal Flow)', ({ given, when, then }) => {
-  givenFizBinLoggedIn(given);
-
-  givenUserHasOneBoard(given);
-
-  givenBoardSelected(given);
-
-  givenBoardHasFollowingColumns(given)
-
-  whenUserAttemptsToDeleteColumn(when)
-
-  then('the board will have the following columns:', async (table) => {
-    const res = await request
-    .get(`/board/${selectedBoard}/columns`) 
-    console.log(res.body)
   });
-});
+
+  test("Delete a column from the board (Normal Flow)", ({
+    given,
+    when,
+    then,
+  }) => {
+    givenFizBinLoggedIn(given);
+
+    givenUserHasOneBoard(given);
+
+    givenBoardSelected(given);
+
+    givenBoardHasFollowingColumns(given);
+
+    whenUserAttemptsToDeleteColumn(when);
+
+    then("the board will have the following columns:", async (table) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      expect(res.body.length).toBe(table.length);
+    });
+  });
 });
