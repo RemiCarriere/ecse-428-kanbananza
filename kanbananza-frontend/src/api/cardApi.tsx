@@ -6,3 +6,15 @@ export const createCard = (cardData): any => {
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
+
+export const getAllCards = (): any => {
+  return API.get('/cards')
+    .then((res) => res.data)
+    .catch((err) => console.log(err))
+}
+
+export const getColumnCards = (columnId: string): any => { // what is this ? mark
+  return API.get(`/cards?/${columnId}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err))
+}
