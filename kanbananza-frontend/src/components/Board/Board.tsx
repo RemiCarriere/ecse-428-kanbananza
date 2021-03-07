@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
 import CardComponent from "../Card/Card";
+import CreateCardComponent from "../Card/CreateCard";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -43,9 +44,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Board = () => {
+const Board = (props) => {
+  const [modalShow, setModalShow] = React.useState(false);
   // will probably require props
-  const [boardData, setBoardData] = useState<board | undefined>(undefined); // initialize the variable to empty string
+  const [boardData, setBoardData] = useState<board>({
+    id: "",
+    name: "",
+    ownerId: "",
+  });
   const [columnName, setColumnName] = useState<string>("");
   const [columnList, setColumnList] = useState<column[]>([])
 
@@ -72,6 +78,7 @@ const Board = () => {
       console.log("empty name");
     }
   };
+<<<<<<< HEAD
   const onCreateCard = () => {
     if (columnList.length) {
       history.push({
@@ -80,6 +87,13 @@ const Board = () => {
       });
     } else {
       console.log('Could not create card, board date is missing')
+=======
+  const boardName = () => {
+    if (boardData) {
+      return boardData.name;
+    } else {
+      return "Something went wrong";
+>>>>>>> 0e1349701a31f9616d4a1021279304b8a5e2c4ad
     }
   };
 
@@ -91,10 +105,14 @@ const Board = () => {
           onChange={(e) => setColumnName(e.target.value)}
         ></input>
         <button onClick={onAddColumn}>Add Column</button>
-        <button onClick={onCreateCard}>Create Card</button>
+        <button onClick={() => setModalShow(true)}>Create Card</button>
         <div>
-          <strong>placeholder for board name</strong>
+          <strong>{boardData.name}</strong>
         </div>
+        <CreateCardComponent
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
         <Grid alignItems="center" justify="center" container spacing={4}>
           {console.log(columnList)}
           {columnList.length && columnList.map((col) => { return <Grid item><Column boardId={col.boardId} id={col.id} order={col.order} name={col.name} /></Grid> })}
