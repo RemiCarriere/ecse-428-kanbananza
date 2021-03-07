@@ -123,23 +123,15 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged in", () => {});
+    givenFizBinLoggedIn(given);
+    givenUserHasOneBoard(given);
+    givenBoardSelected(given);
 
-    given("the user owns one board", () => {});
+    givenBoardHasFollowingCards(given);
 
-    given("the user has selected that board", () => {});
+    whenUserAttemptsToMoveCard(when);
 
-    given(
-      "the selected board has one with two cards ordered as follows:",
-      (table) => {}
-    );
-
-    when(
-      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
-      (arg0, arg1) => {}
-    );
-
-    then("the board will look as follows:", (table) => {});
+    thenBoardLooksAsFollows(then);
   });
 
   test.skip("Move a card to the same position (Alternate Flow)", ({
@@ -147,23 +139,14 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged in", () => {});
+    givenFizBinLoggedIn(given);
+    givenUserHasOneBoard(given);
+    givenBoardSelected(given);
 
-    given("the user owns one board", () => {});
+    givenBoardHasFollowingCards(given);
 
-    given("the user has selected that board", () => {});
-
-    given(
-      "the selected board has one with two cards ordered as follows:",
-      (table) => {}
-    );
-
-    when(
-      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
-      (arg0, arg1) => {}
-    );
-
-    then("the board will look as follows:", (table) => {});
+    whenUserAttemptsToMoveCard(when);
+    thenBoardLooksAsFollows(then);
   });
 
   test.skip("Move a non-existent card (Error Flow)", ({
@@ -171,22 +154,14 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged in", () => {});
+    givenFizBinLoggedIn(given);
+    givenUserHasOneBoard(given);
+    givenBoardSelected(given);
 
-    given("the user owns one board", () => {});
+    givenBoardHasFollowingCards(given);
 
-    given("the user has selected that board", () => {});
+    whenUserAttemptsToMoveCard(when);
 
-    given(
-      "the selected board has one with two cards ordered as follows:",
-      (table) => {}
-    );
-
-    when(
-      /^the user attempts to move card with name "(.*)" to index (\d+)$/,
-      (arg0, arg1) => {}
-    );
-
-    then(/^the system shall report "(.*)"$/, (arg0) => {});
+    thenSystemShallReport(then);
   });
 });
