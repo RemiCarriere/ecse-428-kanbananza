@@ -93,11 +93,11 @@ const update = async (req, res, next) => {
       );
     }
 
-    const updatedInfo = {
-      name: req.body.name !== undefined ? req.body.name : column.name,
-      boardId:
-        req.body.boardId !== undefined ? req.body.boardId : column.boardId,
-      order: req.body.order !== undefined ? req.body.order : column.order,
+    // prettier-ignore
+    const updatedInfo = { // see https://www.kevinpeters.net/adding-object-properties-conditionally-with-es-6
+      ...(req.body.name !== undefined && {name: req.body.name}),
+      ...(req.body.boardId !== undefined && {boardId: req.body.boardId}),
+      ...(req.body.order !== undefined && {order: req.body.order})
     };
 
     column = await columnService.updateColumnById(req.params.id, updatedInfo);

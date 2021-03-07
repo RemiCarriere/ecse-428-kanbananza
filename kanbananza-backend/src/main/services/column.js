@@ -55,11 +55,17 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
+  const newBoardId =
+    updatedInfo.boardId !== undefined
+      ? updatedInfo.boardId
+      : (await findColumnById(id)).boardId;
+
   if (
-    await Column.exists({
-      boardId: updatedInfo.boardId,
+    updatedInfo.name !== undefined &&
+    (await Column.exists({
+      boardId: newBoardId,
       name: updatedInfo.name,
-    })
+    }))
   ) {
     throw new ValidationError({
       path: "name",
