@@ -467,7 +467,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Column"
+                    "$ref": "#/components/schema/Column"
                   }
                 }
               }
