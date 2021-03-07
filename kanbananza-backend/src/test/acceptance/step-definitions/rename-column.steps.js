@@ -86,6 +86,11 @@ const thenBoardLooksAsFollows = (then) => {
 
 const thenSystemShallReport = (then) => {
   then(/^the system shall report "(.*)"$/, async (msg) => {
+    if (msg === "column name cannot be empty") {
+      msg = 'should pass "isNotEmpty" keyword validation';
+    } else if (msg === "column name already in use") {
+      msg = "column name already in use for board";
+    }
     expect(errMsg).toBe(msg);
   });
 };
@@ -110,7 +115,7 @@ defineFeature(feature, (test) => {
   });
 
   //TODO: remove.skip once endpoint is fixed
-  test.skip("Rename column to an already existing name (Alternate Flow)", ({
+  test("Rename column to an already existing name (Alternate Flow)", ({
     given,
     when,
     then,
@@ -131,7 +136,7 @@ defineFeature(feature, (test) => {
   });
 
   //TODO: remove.skip once endpoint is fixed
-  test.skip("Rename a column to empty name (Error Flow)", ({
+  test("Rename a column to empty name (Error Flow)", ({
     given,
     when,
     then,
