@@ -4,7 +4,7 @@ import idParamValidator from "../middleware/id_param_validator";
 import { validateSchema } from "../middleware/schema_validator";
 
 export default (router) => {
-  router.post("/users?", validateSchema("userSchema"), userController.create);
+  router.post("/users?", validateSchema("completeUser"), userController.create);
   router.get("/users?/email/:email", userController.indexOnEmail); // see https://stackoverflow.com/a/20386425
   router.get("/users?/:id", idParamValidator, userController.index);
   router.get(
