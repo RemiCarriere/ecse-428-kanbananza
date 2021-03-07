@@ -112,72 +112,109 @@ const thenCardShallHaveThatDescription = (then) => {
   );
 };
 
+//TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test("Set a valid description for a card with an existing description (Alternate Flow)", ({
+  test.skip("Set a valid description for a card with an existing description (Alternate Flow)", ({
     given,
     when,
     then,
   }) => {
-    givenFizBinLoggedIn(given); //Remy
+    given("user with username Fizbin is logged into the system", () => {});
 
-    givenUserHasOneBoard(given); //Remy
+    given("the user has one board", () => {});
 
-    givenBoardSelected(given); // Remy
+    given("the user has selected that board", () => {});
 
-    givenBoardHasColumnWithName(given); // Remy
+    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
 
-    givenColumnHasOneCardWithName(given); //I implemented this
+    given(
+      /^that column has one and only one card with name "(.*)"$/,
+      (arg0) => {}
+    );
 
-    givenCardShallHaveThatDescription(given); // I implemented this
+    given(
+      /^the card with name "(.*)" has a description "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    whenUserSetsDescriptionOfCard(when); // I implemented this
+    when(
+      /^the user sets the description of the card with name "(.*)" to "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    thenCardShallHaveThatDescription(then); //I implemented this
+    then(
+      /^the card with name "(.*)" has description "(.*)"$/,
+      (arg0, arg1) => {}
+    );
   });
 
-  test("Set the description for a card with no description to whitespace (Error Flow)", ({
+  test.skip("Set the description for a card with no description to whitespace (Error Flow)", ({
     given,
     when,
     then,
   }) => {
-    givenFizBinLoggedIn(given); //Took it from previous files
+    given("user with username Fizbin is logged into the system", () => {});
 
-    givenUserHasOneBoard(given); //Took it from previous files
+    given("the user has one board", () => {});
 
-    givenBoardSelected(given); //Took it from previous files
+    given("the user has selected that board", () => {});
 
-    givenBoardHasColumnWithName(given); //Took it from previous files
+    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
 
-    givenColumnHasOneCardWithName(given); //I implemented this
+    given(
+      /^that column has one and only one card with name "(.*)"$/,
+      (arg0) => {}
+    );
 
-    givenCardShallHaveThatDescription(given);
+    given(
+      /^the card with name "(.*)" has a description "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    whenUserSetsDescriptionOfCard(when);
+    when(
+      /^the user sets the description of the card with name "(.*)" to "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    then(/^a message "(.*)" is issued$/, (arg0) => {}); //Do that part.
+    then(/^a message "(.*)" is issued$/, (arg0) => {});
 
-    thenCardShallHaveThatDescription(then); //I implemented this
+    then(
+      /^the card with name "(.*)" has description "(.*)"$/,
+      (arg0, arg1) => {}
+    );
   });
 
-  test("Set a valid description for a card with no description (Normal Flow)", ({
+  test.skip("Set a valid description for a card with no description (Normal Flow)", ({
     given,
     when,
     then,
   }) => {
-    givenFizBinLoggedIn(given);
+    given("user with username Fizbin is logged into the system", () => {});
 
-    givenUserHasOneBoard(given);
+    given("the user has one board", () => {});
 
-    givenBoardSelected(given);
+    given("the user has selected that board", () => {});
 
-    givenBoardHasColumnWithName(given);
+    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
 
-    givenColumnHasOneCardWithName(given); //I implemented this
+    given(
+      /^that column has one and only one card with name "(.*)"$/,
+      (arg0) => {}
+    );
 
-    givenCardHasNullDescription(given); //I implemented this. Check for errors.
+    given(
+      /^the card with name "(.*)" does not have a description$/,
+      (arg0) => {}
+    );
 
-    whenUserSetsDescriptionOfCard(when); // I implemented this. Check for errors.
+    when(
+      /^the user sets the description of the card with name "(.*)" to (.*)$/,
+      (arg0, arg1) => {}
+    );
 
-    thenCardShallHaveThatDescription(then); //I implemented this. Check for errors.
+    then(
+      /^the card with name "(.*)" has description (.*)$/,
+      (arg0, arg1) => {}
+    );
   });
 });
