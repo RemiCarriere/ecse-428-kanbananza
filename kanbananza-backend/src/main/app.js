@@ -1,11 +1,14 @@
 import cors from "cors";
 import morgan from "morgan";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+
 import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
+import HttpError from "./http_error";
+
 
 import config from "./config";
-import HttpError from "./http_error";
 
 // authentication
 import "./middleware/passport";
@@ -37,9 +40,13 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // log requests
 }
 
-// app routes
-const basePath = config.api.basePath ? config.api.basePath + "/" : "";
+// documentation route
+const openAPIDocument = require("../../docs/openapi.json");
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+
+// api routes
+const basePath = config.api.basePath ? config.api.basePath + "/" : "";
 app.use(`/${basePath}`, routes);
 
 // error-handling

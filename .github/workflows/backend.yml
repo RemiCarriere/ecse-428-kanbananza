@@ -65,14 +65,11 @@ jobs:
       - name: Lint OpenAPI spec
         run: npm run lint:spec
       - name: Lint source code
-        if: ${{ always() }}
+        if: ${{ always() }} # run all checks
         run: npm run lint:check -- --quiet # report errors only
       - name: Check formatting of source code
-        if: ${{ always() }}
+        if: ${{ always() }} # run all checks
         run: npm run format:check
-      # - name: Fail check on any step failure
-      #   if: ${{ failure() }}
-      #   run: throw "at least one code quality check step failed"
 
   validate-spec:
     runs-on: ubuntu-latest
