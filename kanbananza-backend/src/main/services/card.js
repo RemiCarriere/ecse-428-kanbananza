@@ -30,6 +30,12 @@ const findCardsByName = async (name) => {
   return Card.find({ name }).exec();
 };
 
+const findCardsWithLargerOrder = async (colId, order) => {
+  return Card.find({ columnId: colId, order: { $gte: order } })
+    .sort("order")
+    .exec();
+};
+
 const updateCardById = async (id, updatedInfo) => {
   if (
     updatedInfo.columnId !== undefined &&
@@ -51,4 +57,5 @@ export default {
   findCardById,
   findCardsByName,
   updateCardById,
+  findCardsWithLargerOrder,
 };
