@@ -82,11 +82,11 @@ const update = async (req, res, next) => {
         req.params.id,
         req.body.order
       );
-      let myCard;
       let lastIncreasedOrder = req.body.order;
-      for (const card of cards) {
+      let i = 0;
+      let myCard;
+      for (i = 0; i < cards.length; i += 1) {
         myCard = cards[i];
-
         if (myCard.order > lastIncreasedOrder) {
           break;
         }
