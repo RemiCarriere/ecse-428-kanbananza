@@ -55,11 +55,16 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
-  if (await Column.exists({ boardId: updatedInfo.boardId, name: updatedInfo.name })) {
+  if (
+    await Column.exists({
+      boardId: updatedInfo.boardId,
+      name: updatedInfo.name,
+    })
+  ) {
     throw new ValidationError({
       path: "name",
       reason: "column name already in use for board",
-      data: updatedInfo.name ,
+      data: updatedInfo.name,
     });
   }
 
