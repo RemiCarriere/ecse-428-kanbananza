@@ -41,24 +41,29 @@ const givenBoardSelected = (given) => {
 
 const givenBoardHasFollowingCards = (given) => {
   given(
-    "the selected board has one with two cards ordered as follows",
+    "the selected board has one with two cards ordered as follows:",
     async (table) => {
-  
-      let res = await request.post("/column").send({
-        name: "TODO",
-        boardId: selectedBoard,
-        order: 1,
-      }).expect(201);
+      let res = await request
+        .post("/column")
+        .send({
+          name: "TODO",
+          boardId: selectedBoard,
+          order: 1,
+        })
+        .expect(201);
 
       columnId = res.body.id;
 
       for (const row of table) {
-        await request.post("/cards?").send({
-          name: row.Cards,
-          columnId: columnId,
-          order: row.CardIndex,
-          description: "test card"
-        }).expect(201);
+        await request
+          .post("/cards?")
+          .send({
+            name: row.Cards,
+            columnId: columnId,
+            order: row.CardIndex,
+            description: "test card",
+          })
+          .expect(201);
       }
     }
   );
@@ -75,9 +80,10 @@ const whenUserAttemptsToMoveCard = (when) => {
       } else {
         cardId = "non-existent column";
       }
-      res = await request.put(`/cards?/${cardId}`)
-      .send({ order: index })
-      .expect(201);
+      res = await request
+        .put(`/cards?/${cardId}`)
+        .send({ order: index })
+        .expect(201);
 
       if (res.body.errors) {
         errMsg = res.body.errors[0].reason;
@@ -87,32 +93,26 @@ const whenUserAttemptsToMoveCard = (when) => {
 };
 
 const thenBoardLooksAsFollows = (then) => {
-  then(
-    "the board will look as follows:",
-    async (table) => {
-      let res = await request.get(`/columns?/${columnId}/cards`);
-      for (const row of table) {
-        let ord = res.body.filter((card) => card.name === row.Cards)[0];
+  then("the board will look as follows:", async (table) => {
+    let res = await request.get(`/columns?/${columnId}/cards`);
+    for (const row of table) {
+      let ord = res.body.filter((card) => card.name === row.Cards)[0];
 
-        if (ord) {
-          ord = ord.order;
-        } else {
-          ord = -1;
-        }
-
-        expect(ord).toBe(row.CardIndex)
+      if (ord) {
+        ord = ord.order;
+      } else {
+        ord = -1;
       }
+
+      expect(ord).toBe(row.CardIndex);
     }
-  );
+  });
 };
 
 const thenSystemShallReport = (then) => {
-  then(
-    /^the system shall report "(.*)"$/,
-    async(msg) => {  
-      expect(errMsg).toBe(msg);
-    }
-  );
+  then(/^the system shall report "(.*)"$/, async (msg) => {
+    expect(errMsg).toBe(msg);
+  });
 };
 
 //TODO: Implement the step definitions and remove .skip

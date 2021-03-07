@@ -48,7 +48,7 @@ const givenBoardHasFollowingColumns = (given) => {
         await request.post("/column").send({
           name: row.columnName,
           boardId: selectedBoard,
-          order: parseInt(row.columnOrder)
+          order: parseInt(row.columnOrder),
         });
       }
     }
@@ -66,9 +66,10 @@ const whenUserAttemptsToUpdateColumn = (when) => {
       } else {
         colId = "non-existent column";
       }
-      res = await request.put(`/columns/${colId}`)
-      .send({ name: newName })
-      .expect(201);
+      res = await request
+        .put(`/columns/${colId}`)
+        .send({ name: newName })
+        .expect(201);
 
       if (res.body.errors) {
         errMsg = res.body.errors[0].reason;
@@ -78,24 +79,18 @@ const whenUserAttemptsToUpdateColumn = (when) => {
 };
 
 const thenBoardLooksAsFollows = (then) => {
-  then(
-    "the board will look as follows:",
-    async (table) => {
-      const cols = await request.get(`/board/${selectedBoard}/columns`);
-      for (const row of table) {
-        expect(row.columnName).toBe(cols[row.columnOrder].name)
-      }
+  then("the board will look as follows:", async (table) => {
+    const cols = await request.get(`/board/${selectedBoard}/columns`);
+    for (const row of table) {
+      expect(row.columnName).toBe(cols[row.columnOrder].name);
     }
-  );
+  });
 };
 
 const thenSystemShallReport = (then) => {
-  then(
-    /^the system shall report "(.*)"$/,
-    async(msg) => {  
-      expect(errMsg).toBe(msg);
-    }
-  );
+  then(/^the system shall report "(.*)"$/, async (msg) => {
+    expect(errMsg).toBe(msg);
+  });
 };
 
 //TODO: Implement the step definitions and remove .skip
@@ -123,7 +118,6 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-
     givenFizBinLoggedIn(given);
 
     givenUserHasOneBoard(given);
