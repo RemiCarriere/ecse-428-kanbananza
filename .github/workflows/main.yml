@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-fe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "kanbananza" #Must be unique in Heroku
+          heroku_email: "remi.carriere@mail.mcgill.ca"
+          appdir: "kanbananza-frontend" # <- This will point to the api folder in your project
+  deploy-be:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "kanbananza-backend" #Must be unique in Heroku
+          heroku_email: "remi.carriere@mail.mcgill.ca"
+          appdir: "kanbananza-backend" # <- This will point to the api folder in your project
