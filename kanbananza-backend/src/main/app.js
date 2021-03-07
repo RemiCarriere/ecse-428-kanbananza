@@ -7,7 +7,6 @@ import routes from "./routes";
 import errorHandler from "./middleware/error_handler";
 import HttpError from "./http_error";
 
-
 import config from "./config";
 
 // authentication
@@ -43,7 +42,7 @@ if (process.env.NODE_ENV === "development") {
 // documentation route
 const openAPIDocument = require("../../docs/openapi.json");
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
 
 // api routes
 const basePath = config.api.basePath ? config.api.basePath + "/" : "";
