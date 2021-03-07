@@ -14,6 +14,7 @@ import {
 } from "../../api/boardApi";
 import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
+import { column } from "../../types/column";
 // use effect is similar to componentDidMount and componentDidUpdate and component will unmount
 // use effect runs after each render!!
 // each render occurs after a set state
@@ -46,21 +47,23 @@ const Board = () => {
   // will probably require props
   const [boardData, setBoardData] = useState<board | undefined>(undefined); // initialize the variable to empty string
   const [columnName, setColumnName] = useState<string>("");
+  const [columnList, setColumnList] = useState<column[]>([])
+
   const classes = useStyles();
   const history = useHistory();
   useEffect(() => {
-    if (history.location.state) {
+    if (history.location.state.board) {
       setBoardData(history.location.state.board);
     }
-  }, []);
-
-  const getColumns = () => {
+    if (boardData)
+      setColumnList(getColumns(history.location.state.board.id))
+  }, [boardData])
+  const getColumns = (boardId: string): column[] => {
     var cols = [];
-    if (boardData) {
-      console.log("I get here");
-      cols = getBoardColumns(boardData.id);
-    }
-    console.log(cols);
+    console.log("I get here");
+    cols = getBoardColumns(boardId);
+    console.log(cols)
+    return cols
   };
   const onAddColumn = () => {
     if (columnName && boardData) {
@@ -70,11 +73,14 @@ const Board = () => {
     }
   };
   const onCreateCard = () => {
-    const columnList = getColumns();
-    history.push({
-      pathname: "/createCard",
-      state: { columnList: columnList, boardData: boardData },
-    });
+    if (columnList.length) {
+      history.push({
+        pathname: "/createCard",
+        state: { columnList: columnList, boardData: boardData },
+      });
+    } else {
+      console.log('Could not create card, board date is missing')
+    }
   };
 
   return (
@@ -90,72 +96,8 @@ const Board = () => {
           <strong>placeholder for board name</strong>
         </div>
         <Grid alignItems="center" justify="center" container spacing={4}>
-          <Grid item>
-            <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
-          </Grid>
+          {console.log(columnList)}
+          {columnList.length && columnList.map((col) => { return <Grid item><Column boardId={col.boardId} id={col.id} order={col.order} name={col.name} /></Grid> })}
         </Grid>
       </div>
       {/*here we will do something like boardData.columns.map(column=> <Column></Column>)*/}
@@ -165,3 +107,70 @@ const Board = () => {
 };
 
 export default Board;
+
+/**
+ * <Paper className={classes.card}>
+              <IconButton
+                style={{ left: "40%", padding: "0px", margin: "0px" }}
+                aria-label="delete"
+              >
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.card}>
+              <IconButton
+                style={{ left: "40%", padding: "0px", margin: "0px" }}
+                aria-label="delete"
+              >
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.card}>
+              <IconButton
+                style={{ left: "40%", padding: "0px", margin: "0px" }}
+                aria-label="delete"
+              >
+                <HighlightOffIcon />
+              </IconButton>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+              <CardComponent
+                className={classes.card}
+                {...undefined}
+              ></CardComponent>
+            </Paper>
+ */
