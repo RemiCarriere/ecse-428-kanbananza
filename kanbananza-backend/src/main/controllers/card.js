@@ -11,6 +11,7 @@ const create = async (req, res, next) => {
       description: req.body.description,
       priority: req.body.priority,
     });
+
     return res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
