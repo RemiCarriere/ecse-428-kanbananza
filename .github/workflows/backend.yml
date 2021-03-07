@@ -63,17 +63,16 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Lint OpenAPI spec
-        continue-on-error: true
         run: npm run lint:spec
       - name: Lint source code
+        if: ${{ always() }}
         run: npm run lint:check -- --quiet # report errors only
-        continue-on-error: true
       - name: Check formatting of source code
+        if: ${{ always() }}
         run: npm run format:check
-        continue-on-error: true
-      - name: Fail check on any step failure
-        if: ${{ failure() }}
-        run: throw "at least one code quality check step failed"
+      # - name: Fail check on any step failure
+      #   if: ${{ failure() }}
+      #   run: throw "at least one code quality check step failed"
 
   validate-spec:
     runs-on: ubuntu-latest
