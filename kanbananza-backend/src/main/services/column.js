@@ -55,6 +55,14 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
+  if (await Column.exists({ boardId: updatedInfo.boardId, name: updatedInfo.name })) {
+    throw new ValidationError({
+      path: "name",
+      reason: "column name already in use for board",
+      data: updatedInfo.name ,
+    });
+  }
+
   return Column.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
