@@ -55,9 +55,12 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
+  const newBoardId = updatedInfo.boardId !== undefined ? updatedInfo.boardId : (await findColumnById(id)).boardId; 
+
   if (
+    updatedInfo.name !== undefined &&
     await Column.exists({
-      boardId: updatedInfo.boardId,
+      boardId: newBoardId,
       name: updatedInfo.name,
     })
   ) {
