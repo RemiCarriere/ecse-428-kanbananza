@@ -57,8 +57,7 @@ const givenBoardHasFollowingCards = (given) => {
           name: row.Cards,
           columnId: columnId,
           order: row.CardIndex,
-          description: "test card",
-          priority: 1
+          description: "test card"
         }).expect(201);
       }
     }
