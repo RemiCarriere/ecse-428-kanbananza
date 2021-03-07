@@ -35,7 +35,7 @@ const givenUserHasOneBoard = (given) => {
 };
 
 const givenBoardSelected = (given) => {
-  given("the user has selected that board", async() => {
+  given("the user has selected that board", async () => {
     selectedBoard = selectedBoard; //rendundant step for our implementation
   });
 };
@@ -49,18 +49,15 @@ const givenBoardHasColumnWithName = (given) => {
   });
 };
 
-
 const givenColumnHasOneCardWithName = (given) => {
   given(
     /^that column has one and only one card with name "(.*)"$/,
-    async(colName, name) => {
-      const { body } = await request
-      .get(`/column/${colID}/cards`)
-      .expect(200);
+    async (colName, name) => {
+      const { body } = await request.get(`/column/${colID}/cards`).expect(200);
 
-    expect(body[0].name).toBe(name);
-    
-    });
+      expect(body[0].name).toBe(name);
+    }
+  );
 };
 
 const givenCardShallHaveThatPriority = (given) => {
@@ -68,10 +65,10 @@ const givenCardShallHaveThatPriority = (given) => {
     /^the card with name "(.*)" has priority "(.*)"$/,
     async (cardName, cardPriority) => {
       const { body } = await request
-      .get(`/column/${colID}/cards/`) //I think this has an error
-      .expect(200);
+        .get(`/column/${colID}/cards/`) //I think this has an error
+        .expect(200);
 
-    expect(body[0].priority).toBe(cardPriority); 
+      expect(body[0].priority).toBe(cardPriority);
     }
   );
 };
@@ -81,8 +78,8 @@ const whenUserSetsPriorityOfCard = (when) => {
     /^the user sets the priority of the card with name "(.*)" to (.*)$/,
     async (cardName, cardPriority) => {
       const res = await request
-      .put("/card") //should you use put here? How do you get the specific card with cardName??
-      .set({priority: cardPriority});
+        .put("/card") //should you use put here? How do you get the specific card with cardName??
+        .set({ priority: cardPriority });
     }
   );
 };
@@ -93,89 +90,70 @@ const thenCardShallHaveThatPriority = (then) => {
     /^the card with name "(.*)" has priority "(.*)"$/,
     async (cardName, cardPriority) => {
       const { body } = await request
-      .get(`/column/${colID}/cards/`) //I think this has an error
-      .expect(200);
+        .get(`/column/${colID}/cards/`) //I think this has an error
+        .expect(200);
 
-    expect(body[0].priority).toBe(cardPriority); 
+      expect(body[0].priority).toBe(cardPriority);
     }
   );
 };
 
-
-const givenCardHasNullPriority = (given) => { //Check that, could have an error here 
+const givenCardHasNullPriority = (given) => {
+  //Check that, could have an error here
   given(
     /^the card with name "(.*)" does not have a priority set$/,
     async (cardName, NULL) => {
       const { body } = await request
-      .get(`/column/${colID}/cards/`) //I think this has an error
-      .expect(200);
+        .get(`/column/${colID}/cards/`) //I think this has an error
+        .expect(200);
 
-    expect(body[0].priority).toBe(NULL); 
+      expect(body[0].priority).toBe(NULL);
     }
   );
 };
 //TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test.skip("Set a priority for a card with an existing priority (Alternate Flow)", ({
+  test("Set a priority for a card with an existing priority (Alternate Flow)", ({
     given,
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged into the system", () => {});
+    givenFizBinLoggedIn(given); //Remy
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given); //Remy
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given); // Remy
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given); // Remy
 
-    given(
-      /^that column has one and only one card with name "(.*)"$/,
-      (arg0) => {}
-    );
+    givenColumnHasOneCardWithName(given); //I implemented this
 
-    given(
-      /^the card with name "(.*)" has priority "(.*)"$/,
-      (arg0, arg1) => {}
-    );
+    givenCardShallHaveThatPriority(given); // I implemented this
 
-    when(
-      /^the user sets the priority of card with name "(.*)" to "(.*)"$/,
-      (arg0, arg1) => {}
-    );
+    whenUserSetsPriorityOfCard(when); // I implemented this.
 
-    then(/^the card with name "(.*)" has priority "(.*)"$/, (arg0, arg1) => {});
+    thenCardShallHaveThatPriority(then); //I implemented this
   });
 
-  test.skip("Set a priority for a card with no priority (Normal Flow)", ({
+  test("Set a priority for a card with no priority (Normal Flow)", ({
     given,
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged into the system", () => {});
+    givenFizBinLoggedIn(given); //Remy
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given); //Remy
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given); // Remy
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given); // Remy
 
-    given(
-      /^that column has one and only one card with name "(.*)"$/,
-      (arg0) => {}
-    );
+    givenColumnHasOneCardWithName(given); //I implemented this
 
-    given(
-      /^the card with name "(.*)" does not have a priority set$/,
-      (arg0) => {}
-    );
+    givenCardHasNullPriority(given); //I implemented this
 
-    when(
-      /^the user sets the priority of the card with name "(.*)" to (.*)$/,
-      (arg0, arg1) => {}
-    );
+    whenUserSetsPriorityOfCard(when); // I implemented this.
 
-    then(/^the card with name "(.*)" has priority (.*)$/, (arg0, arg1) => {});
+    thenCardShallHaveThatPriority(then); //I implemented this
   });
 });
-
