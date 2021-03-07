@@ -12,9 +12,11 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "format": "npm run format:fix",
+    "lint:spec": "lint-openapi docs/openapi.json --report_statistics",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint": "npm run lint:fix",
+    "validate:spec": "lint-openapi docs/openapi.json --errors_only",
     "clean": "rm -rf node_modules",
     "clean:build": "rm -rf dist",
     "transpile": "babel ./src --out-dir dist",
@@ -45,6 +47,7 @@
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -59,6 +62,7 @@
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.22.1",
     "faker": "^5.4.0",
+    "ibm-openapi-validator": "^0.35.0",
     "jest": "^26.6.3",
     "jest-cucumber": "^3.0.1",
     "mongodb-memory-server": "^6.9.3",

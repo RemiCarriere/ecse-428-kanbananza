@@ -1,0 +1,545 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Kanbanaza RESTful API",
+    "description": "This is the backend for the Kanbananza Kanban board tool.",
+    "contact": {
+      "name": "GitHub repository",
+      "url": "https://github.com/RemiCarriere/ecse-428-kanbananza"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:{port}",
+      "description": "Development server",
+      "variables": {
+        "port": {
+          "default": "3000"
+        }
+      }
+    },
+    {
+      "url": "https://kanbananza-backend.herokuapp.com",
+      "description": "Production server"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "HttpError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reasonPhrase": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "Board": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "boardId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "idParam": {
+        "name": "id",
+        "description": "The ID of the record",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "userNameParam": {
+        "name": "name",
+        "in": "query",
+        "description": "The name by which to filter the users from the system matching firstName or lastName",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "boardNameParam": {
+        "name": "name",
+        "in": "query",
+        "description": "The name by which to filter the boards from the system",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "columnNameParam": {
+        "name": "name",
+        "in": "query",
+        "description": "The name by which to filter the columns from the system",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "limitParam": {
+        "name": "limit",
+        "in": "query",
+        "description": "The maximum number of records to return",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "offsetParam": {
+        "name": "offset",
+        "in": "query",
+        "description": "The number of records to skip",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "HttpError": {
+        "description": "General HTTP Error payload",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HttpError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "Returns users from the system that the user has access to",
+        "operationId": "listUsers",
+        "responses": {
+          "200": {
+            "description": "A list of existing users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userNameParam"
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a user in the system with form data",
+        "operationId": "createUser",
+        "responses": {
+          "201": {
+            "description": "The created user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/idParam"
+        }
+      ],
+      "get": {
+        "description": "Returns an existing user from the system based on ID",
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "The user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      },
+      "put": {
+        "description": "Updates an existing user in the system based on ID with complete form data",
+        "operationId": "replaceUser",
+        "responses": {
+          "200": {
+            "description": "The updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates an existing user in the system based on ID with partial form data",
+        "operationId": "updateUser",
+        "responses": {
+          "200": {
+            "description": "The updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    },
+    "/users/email/{email}": {
+      "parameters": [
+        {
+          "name": "email",
+          "description": "The email of the user",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "description": "Returns an existing user from the system based on email",
+        "operationId": "getUserByEmail",
+        "responses": {
+          "200": {
+            "description": "The user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    },
+    "/users/{id}/boards": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/idParam"
+        }
+      ],
+      "get": {
+        "description": "Returns the boards from the system based on the ID of their existing owner user",
+        "operationId": "listUserBoards",
+        "responses": {
+          "200": {
+            "description": "A list of existing boards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Board"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/boardNameParam"
+          }
+        ]
+      }
+    },
+    "/boards": {
+      "get": {
+        "description": "Returns boards from the system that the user based on ID has access to",
+        "operationId": "listBoards",
+        "responses": {
+          "200": {
+            "description": "A list of existing boards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Board"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/boardNameParam"
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a board in the system with form data",
+        "operationId": "createBoard",
+        "responses": {
+          "201": {
+            "description": "The created board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    },
+    "/boards/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/idParam"
+        }
+      ],
+      "get": {
+        "description": "Returns an existing board from the system based on ID",
+        "operationId": "getBoard",
+        "responses": {
+          "200": {
+            "description": "The board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Updates an existing board in the system based on ID with complete form data",
+        "operationId": "replaceBoard",
+        "responses": {
+          "200": {
+            "description": "The updated board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      },
+      "patch": {
+        "description": "Updates an existing board in the system based on ID with partial form data",
+        "operationId": "updateBoard",
+        "responses": {
+          "200": {
+            "description": "The updated board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete an existing board in the system based on ID",
+        "operationId": "deleteBoard",
+        "responses": {
+          "204": {
+            "description": "No-content response indicating succesful deletion of the board"
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    },
+    "/boards/{id}/columns": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/idParam"
+        }
+      ],
+      "get": {
+        "description": "Returns the columns from the system based on the ID of their existing board",
+        "operationId": "listBoardColumns",
+        "responses": {
+          "200": {
+            "description": "A list of columns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Column"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/columnNameParam"
+          }
+        ]
+      }
+    },
+    "/columns": {
+      "get": {
+        "description": "Returns columns from the system that the user has access to",
+        "operationId": "listColumns",
+        "responses": {
+          "200": {
+            "description": "A list of existing columns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Column"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/columnNameParam"
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a column in the system with form data",
+        "operationId": "createColumn",
+        "responses": {
+          "201": {
+            "description": "The created column",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/HttpError"
+          }
+        }
+      }
+    }
+  }
+}
