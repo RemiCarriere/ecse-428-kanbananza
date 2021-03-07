@@ -7,7 +7,8 @@ const feature = loadFeature(
 
 let errMsg = "";
 let columnId;
-let responseStatus = "";
+let userID = "";
+let selectedBoard = "";
 
 const givenFizBinLoggedIn = (given) => {
   given("user with username Fizbin is logged in", async () => {
@@ -55,15 +56,12 @@ const givenBoardHasFollowingCards = (given) => {
       columnId = res.body.id;
 
       for (const row of table) {
-        await request
-          .post("/cards?")
-          .send({
-            name: row.Cards,
-            columnId: columnId,
-            order: row.CardIndex,
-            description: "test card",
-          })
-          .expect(201);
+        await request.post("/cards").send({
+          name: row.Cards,
+          columnId: columnId,
+          order: parseInt(row.CardIndex),
+          description: "test card",
+        });
       }
     }
   );
@@ -73,7 +71,7 @@ const whenUserAttemptsToMoveCard = (when) => {
   when(
     /^the user attempts to move card with name "(.*)" to index (\d+)$/,
     async (name, index) => {
-      let res = await request.get(`/columns?/${columnId}/cards`);
+      let res = await request.get(`/columns/${columnId}/cards`);
       let cardId = res.body.filter((card) => card.name === name)[0];
       if (cardId) {
         cardId = cardId.id;
@@ -81,10 +79,8 @@ const whenUserAttemptsToMoveCard = (when) => {
         cardId = "non-existent column";
       }
       res = await request
-        .put(`/cards?/${cardId}`)
-        .send({ order: index })
-        .expect(201);
-
+        .patch(`/cards/${cardId}`)
+        .send({ order: parseInt(index) });
       if (res.body.errors) {
         errMsg = res.body.errors[0].reason;
       }
@@ -94,34 +90,43 @@ const whenUserAttemptsToMoveCard = (when) => {
 
 const thenBoardLooksAsFollows = (then) => {
   then("the board will look as follows:", async (table) => {
-    let res = await request.get(`/columns?/${columnId}/cards`);
-    for (const row of table) {
-      let ord = res.body.filter((card) => card.name === row.Cards)[0];
-
-      if (ord) {
-        ord = ord.order;
-      } else {
-        ord = -1;
-      }
-
-      expect(ord).toBe(row.CardIndex);
-    }
+    let res = await request.get(`/columns/${columnId}/cards`);
+    // let ord = res.body.filter((card) => card.name === row.Cards)[0];
+    let expectedOrder = [];
+    let actualOrder = [];
+    // Sort expected and actual to make sure they are in the same order,
+    // instead of comparing the order itself
+    table.forEach((row, index) => {
+      expectedOrder.push({ key: row.CardIndex, val: row.Cards });
+      actualOrder.push({
+        key: res.body[index].order,
+        val: res.body[index].name,
+      });
+    });
+    expectedOrder.sort(function (a, b) {
+      return a.key - b.key;
+    });
+    actualOrder.sort(function (a, b) {
+      return a.key - b.key;
+    });
+    expectedOrder.forEach((expCard, index) => {
+      const actCard = actualOrder[index];
+      expect(actCard.val).toBe(expCard.val);
+    });
   });
 };
 
 const thenSystemShallReport = (then) => {
   then(/^the system shall report "(.*)"$/, async (msg) => {
+    if (msg === "Card seven does not exist") {
+      msg = "resource ID is invalid";
+    }
     expect(errMsg).toBe(msg);
   });
 };
 
-//TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test.skip("Move the card in the board (Normal Flow)", ({
-    given,
-    when,
-    then,
-  }) => {
+  test("Move the card in the board (Normal Flow)", ({ given, when, then }) => {
     givenFizBinLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
@@ -133,7 +138,7 @@ defineFeature(feature, (test) => {
     thenBoardLooksAsFollows(then);
   });
 
-  test.skip("Move a card to the same position (Alternate Flow)", ({
+  test("Move a card to the same position (Alternate Flow)", ({
     given,
     when,
     then,
@@ -148,11 +153,7 @@ defineFeature(feature, (test) => {
     thenBoardLooksAsFollows(then);
   });
 
-  test.skip("Move a non-existent card (Error Flow)", ({
-    given,
-    when,
-    then,
-  }) => {
+  test("Move a non-existent card (Error Flow)", ({ given, when, then }) => {
     givenFizBinLoggedIn(given);
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
