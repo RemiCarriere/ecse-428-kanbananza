@@ -1,4 +1,8 @@
 export interface card {
-  id: number;
-  //and other data we will get from the BE
+  name: string,
+  columnId: string,
+  order: number,
+  description: string,
+  priority: string,
+  id?: string
 }

@@ -7,6 +7,9 @@ import "./app.css";
 import "../index.css";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
+import Board from "../components/Board/Board";
+import CreateCard from "../components/Card/CreateCard";
+import TmpBoard from "../components/Board/tmpBoard";
 
 const Main = () => {
   const [loggedIn, setloggedIn] = useState<boolean>(Cookies.get("token"));
@@ -26,23 +29,23 @@ const Main = () => {
         </Link>
       </li>
     ) : (
-      <li className="nav-item">
-        <Link className="nav-link" to={"/sign-in"}>
-          Login
+        <li className="nav-item">
+          <Link className="nav-link" to={"/sign-in"}>
+            Login
         </Link>
-      </li>
-    );
+        </li>
+      );
   }
   function signUpLink() {
     return loggedIn ? (
       ""
     ) : (
-      <li className="nav-item">
-        <Link className="nav-link" to={"/sign-up"}>
-          Sign up
+        <li className="nav-item">
+          <Link className="nav-link" to={"/sign-up"}>
+            Sign up
         </Link>
-      </li>
-    );
+        </li>
+      );
   }
 
   return (
@@ -75,6 +78,8 @@ const Main = () => {
             <Signup setloggedIn={setloggedIn} />
           </Route>
           <Route path="/home" component={UserHome} />
+          <Route path="/board" component={Board} />
+          <Route path="/createCard" component={CreateCard} />
         </Switch>
       </div>
     </Router>

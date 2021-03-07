@@ -3,7 +3,7 @@ import API from "./api";
 
 /** template */
 
-export const createBoard = (boardData: board) => {
+export const createBoard = (boardData) => {
   return API.post("/board", {
     name: boardData.name,
     ownerId: boardData.ownerId,
@@ -21,4 +21,13 @@ export const getBoardById = (id: string): any => {
   return API.get(`/board/${id}`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
+};
+
+export const getBoardColumns = (id: string): any => {
+  return API.get(`/board/${id}/columns`)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log("an error happened");
+      console.log(err);
+    });
 };

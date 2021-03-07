@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { checkToken, getUserBoards, getUser } from "../../api/userApi";
+import { checkToken, getUserBoards } from "../../api/userApi";
 import Cookies from "js-cookie";
 import { board } from "../../types/board";
 import { createBoard } from "../../api/boardApi";
@@ -15,26 +15,38 @@ const UserHome = () => {
   useEffect(() => {
     async function initializeData() {
       const loginRes = await checkToken(Cookies.get("token"));
+      console.log(loginRes);
       if (!loginRes || (loginRes && !loginRes.email)) {
         history.push("/sign-in");
         return;
       }
-
-      ownerID = loginRes._id;
-      const user = await getUser(ownerID);
-      setUsrName(user.firstName + " " + user.lastName);
+      ownerID = loginRes.id;
+      setUsrName(loginRes.firstName + " " + loginRes.lastName);
       const boardRes = await getUserBoards(ownerID);
       setBoards(boardRes);
     }
     initializeData();
   }, [usrName]);
 
+  const handleClick = (board) => {
+    history.push({ pathname: "/board", state: { board: board } }); // test this
+  };
   function populateBoard() {
     return boards.map((board, index) => {
       if (board && board.name) {
         return (
           <div className="col-md-4" key={index}>
-            <h3>{board.name}</h3>
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                margin: "0",
+                padding: "0",
+              }}
+              onClick={() => handleClick(board)}
+            >
+              <h3>{board.name}</h3>
+            </button>
             <p>Project description</p>
           </div>
         );
