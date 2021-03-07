@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
 import CardComponent from "../Card/Card";
+import CreateCardComponent from "../Card/CreateCard";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -42,9 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Board = () => {
+const Board = (props) => {
+  const [modalShow, setModalShow] = React.useState(false);
   // will probably require props
-  const [boardData, setBoardData] = useState<board | undefined>(undefined); // initialize the variable to empty string
+  const [boardData, setBoardData] = useState<board>({
+    id: "",
+    name: "",
+    ownerId: "",
+  });
   const [columnName, setColumnName] = useState<string>("");
   const classes = useStyles();
   const history = useHistory();
@@ -69,12 +75,12 @@ const Board = () => {
       console.log("empty name");
     }
   };
-  const onCreateCard = () => {
-    const columnList = getColumns();
-    history.push({
-      pathname: "/createCard",
-      state: { columnList: columnList, boardData: boardData },
-    });
+  const boardName = () => {
+    if (boardData) {
+      return boardData.name;
+    } else {
+      return "Something went wrong";
+    }
   };
 
   return (
@@ -85,10 +91,14 @@ const Board = () => {
           onChange={(e) => setColumnName(e.target.value)}
         ></input>
         <button onClick={onAddColumn}>Add Column</button>
-        <button onClick={onCreateCard}>Create Card</button>
+        <button onClick={() => setModalShow(true)}>Create Card</button>
         <div>
-          <strong>placeholder for board name</strong>
+          <strong>{boardData.name}</strong>
         </div>
+        <CreateCardComponent
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
         <Grid alignItems="center" justify="center" container spacing={4}>
           <Grid item>
             <Paper className={classes.card}>

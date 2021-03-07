@@ -13,38 +13,36 @@ const Signup = (params) => {
   const [confirmpassword, setconfirmPassword] = useState<string>("");
   const history = useHistory();
   var error;
-  var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+  var pattern = new RegExp(
+    /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+  );
 
   async function onLogin(event: any) {
-
     //need to add error if user account is already created
-    
-      if (password !== confirmpassword){
-        $("#error").text("Passwords Do Not Match!");
-        $("#error").css("color", "red");
+
+    if (password !== confirmpassword) {
+      $("#error").text("Passwords Do Not Match!");
+      $("#error").css("color", "red");
+    }
+    if (!pattern.test(email)) {
+      $("#error1").text("Please Enter A Valid Email!");
+      $("#error1").css("color", "red");
+    } else {
+      const res = await createUser(firstname, lastname, email, password);
+
+      if (res && res.token) {
+        Cookies.set("token", res.token);
+        params.setloggedIn(true);
+        history.push("/home");
       }
-      if (!pattern.test(email)){
-        $("#error1").text("Please Enter A Valid Email!");
-        $("#error1").css("color", "red");
-      }
-      else{
-        const res = await createUser(firstname, lastname, email, password);
-      
-        if (res && res.token) {
-          Cookies.set("token", res.token);
-          params.setloggedIn(true);
-          history.push("/home");
-        } 
-      }
+    }
   }
-  
+
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
         <form>
           <h3>Sign Up</h3>
-
-          
 
           <div className="form-group">
             <label>First name</label>
@@ -66,7 +64,7 @@ const Signup = (params) => {
             />
           </div>
 
-          <span id = "error1"></span>
+          <span id="error1"></span>
 
           <div className="form-group">
             <label>Email address</label>
@@ -78,7 +76,7 @@ const Signup = (params) => {
             />
           </div>
 
-          <span id = "error"></span>
+          <span id="error"></span>
 
           <div className="form-group">
             <label>Password</label>

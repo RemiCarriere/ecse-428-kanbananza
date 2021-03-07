@@ -12,28 +12,25 @@ const Login = (params) => {
   var error;
 
   async function onLogin(event: any) {
-  
-      const res = await createLogin(email, password);
-      if (res && res.token) {
-        Cookies.set("token", res.token);
-        params.setloggedIn(true);
-        history.push("/home");
-      } else{
-       $("#error").text("Wrong Email or Password!");
-       $("#error").css("color", "red");
-       console.log("here");
-      }
-    } 
-  
+    const res = await createLogin(email, password);
+    if (res && res.token) {
+      Cookies.set("token", res.token);
+      params.setloggedIn(true);
+      history.push("/home");
+    } else {
+      $("#error").text("Wrong Email or Password!");
+      $("#error").css("color", "red");
+      console.log("here");
+    }
+  }
 
   return (
     <div className="auth-wrapper">
-      
       <div className="auth-inner">
         <form>
           <h3>Sign In</h3>
 
-          <span id = "error"></span>
+          <span id="error"></span>
 
           <div className="form-group">
             <label>Email address</label>

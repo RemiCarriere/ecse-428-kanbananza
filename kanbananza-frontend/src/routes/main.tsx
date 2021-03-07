@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "../components/Login/Login";
 import Signup from "../components/Login/Signup";
 import UserHome from "../components/UserHome/UserHome";
-import DisplayBoard from "../components/Board/DisplayBoard";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./app.css";
 import "../index.css";
