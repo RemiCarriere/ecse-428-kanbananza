@@ -2,11 +2,8 @@ import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import HttpError from "../http_error";
 import ValidationError from "../validation_error";
-
-const userSchema = require("../controllers/schemas/user.json");
-const boardSchema = require("../controllers/schemas/board.json");
-const columnSchema = require("../controllers/schemas/column.json");
-const cardSchema = require("../controllers/schemas/card.json");
+import forms from "../controllers/schemas";
+import {capitalize} from "../utils/string";
 
 const ajv = new Ajv({
   allErrors: true,
@@ -25,11 +22,11 @@ ajv.addKeyword({
   errors: false,
 });
 
-// register schemas
-ajv.addSchema(userSchema, "userSchema");
-ajv.addSchema(boardSchema, "boardSchema");
-ajv.addSchema(columnSchema, "columnSchema");
-ajv.addSchema(cardSchema, "cardSchema");
+// register partial and complete versions of each schema form
+Object.keys(forms).forEach((key) => {
+  ajv.addSchema(forms[key].partial, "partial" + capitalize(key));
+  ajv.addSchema(forms[key].complete, "complete" + capitalize(key));
+});
 
 /**
  * @example ajv.addSchema('new-user.schema.json', 'new-user'); ...; app.post('/users', validate('new-user'), (req, res) => {});

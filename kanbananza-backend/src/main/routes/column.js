@@ -5,7 +5,7 @@ import idParamValidator from "../middleware/id_param_validator";
 export default (router) => {
   router.post(
     "/columns?",
-    validateSchema("columnSchema"),
+    validateSchema("completeColumn"),
     columnController.create
   );
   router.get("/columns", columnController.select);
@@ -14,9 +14,9 @@ export default (router) => {
   router.put(
     "/columns?/:id",
     idParamValidator,
-    validateSchema("columnSchema"),
+    validateSchema("completeColumn"),
     columnController.update
   ); // see https://stackoverflow.com/a/34400076
-  router.patch("/columns?/:id", idParamValidator, columnController.update);
+  router.patch("/columns?/:id", idParamValidator, validateSchema("partialColumn"), columnController.update);
   router.delete("/columns?/:id", idParamValidator, columnController.remove); // delete is a reserved name
 };
