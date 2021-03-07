@@ -57,4 +57,5 @@ export default {
   findCardById,
   findCardsByName,
   updateCardById,
+  findCardsWithLargerOrder,
 };

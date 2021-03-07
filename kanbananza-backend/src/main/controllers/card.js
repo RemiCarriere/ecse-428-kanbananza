@@ -90,7 +90,7 @@ const update = async (req, res, next) => {
           break;
         }
 
-        cardService.updateCardById(req.params.id, { order: myCard.order + 1 });
+        cardService.updateCardById(myCard.id, { order: myCard.order + 1 });
         lastIncreasedOrder += 1;
       }
     }
