@@ -114,94 +114,68 @@ const givenCardHasNullPriority = (given) => { //Check that, could have an error 
     }
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test("Set a priority for a card with an existing priority (Alternate Flow)", ({
+  test.skip("Set a priority for a card with an existing priority (Alternate Flow)", ({
     given,
     when,
     then,
   }) => {
-    givenFizBinLoggedIn(given); //Remy
+    given("user with username Fizbin is logged into the system", () => {});
 
-    givenUserHasOneBoard(given); //Remy
+    given("the user has one board", () => {});
 
-    givenBoardSelected(given); // Remy
+    given("the user has selected that board", () => {});
 
-    givenBoardHasColumnWithName(given); // Remy
+    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
 
-    givenColumnHasOneCardWithName(given); //I implemented this
+    given(
+      /^that column has one and only one card with name "(.*)"$/,
+      (arg0) => {}
+    );
 
-    givenCardShallHaveThatPriority(given); // I implemented this 
+    given(
+      /^the card with name "(.*)" has priority "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    whenUserSetsPriorityOfCard(when); // I implemented this.
+    when(
+      /^the user sets the priority of card with name "(.*)" to "(.*)"$/,
+      (arg0, arg1) => {}
+    );
 
-    thenCardShallHaveThatPriority(then); //I implemented this
+    then(/^the card with name "(.*)" has priority "(.*)"$/, (arg0, arg1) => {});
   });
 
-  test("Set a priority for a card with no priority (Normal Flow)", ({
+  test.skip("Set a priority for a card with no priority (Normal Flow)", ({
     given,
     when,
     then,
   }) => {
-    givenFizBinLoggedIn(given); //Remy
+    given("user with username Fizbin is logged into the system", () => {});
 
-    givenUserHasOneBoard(given); //Remy
+    given("the user has one board", () => {});
 
-    givenBoardSelected(given); // Remy
+    given("the user has selected that board", () => {});
 
-    givenBoardHasColumnWithName(given); // Remy
+    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
 
-    givenColumnHasOneCardWithName(given); //I implemented this
+    given(
+      /^that column has one and only one card with name "(.*)"$/,
+      (arg0) => {}
+    );
 
-    givenCardHasNullPriority(given); //I implemented this
+    given(
+      /^the card with name "(.*)" does not have a priority set$/,
+      (arg0) => {}
+    );
 
-    whenUserSetsPriorityOfCard(when); // I implemented this.
+    when(
+      /^the user sets the priority of the card with name "(.*)" to (.*)$/,
+      (arg0, arg1) => {}
+    );
 
-    thenCardShallHaveThatPriority(then); //I implemented this
+    then(/^the card with name "(.*)" has priority (.*)$/, (arg0, arg1) => {});
   });
 });
+

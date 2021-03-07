@@ -29,5 +29,3 @@ Given the card with name "Project Presentation" has a description "Initial card 
 When the user sets the description of the card with name "Project Presentation" to "      "
 Then a message "Description cannot be empty" is issued
 Then the card with name "Project Presentation" has description "Initial card description"
-
-
