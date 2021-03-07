@@ -30,8 +30,8 @@ const findCardsByName = async (name) => {
   return Card.find({ name }).exec();
 };
 
-const findCardsWithLargerOrder = async (id, order) => {
-  return Card.find({ id, order: { $gte: order } })
+const findCardsWithLargerOrder = async (colId, order) => {
+  return Card.find({ columnId: colId, order: { $gte: order } })
     .sort("order")
     .exec();
 };
