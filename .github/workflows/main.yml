@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - remi/deploy-front-end
+      - main
 
 jobs:
   deploy-fe:
