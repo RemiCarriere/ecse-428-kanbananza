@@ -12,5 +12,10 @@ export default (router) => {
     validateSchema("completeCard"),
     cardController.update
   ); // see https://stackoverflow.com/a/34400076
-  router.patch("/cards?/:id", idParamValidator, validateSchema("partialCard"), cardController.update);
+  router.patch(
+    "/cards?/:id",
+    idParamValidator,
+    validateSchema("partialCard"),
+    cardController.update
+  );
 };

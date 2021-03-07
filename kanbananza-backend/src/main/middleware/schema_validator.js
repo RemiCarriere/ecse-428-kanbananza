@@ -3,7 +3,7 @@ import addFormats from "ajv-formats";
 import HttpError from "../http_error";
 import ValidationError from "../validation_error";
 import forms from "../controllers/schemas";
-import {capitalize} from "../utils/string";
+import { capitalize } from "../utils/string";
 
 const ajv = new Ajv({
   allErrors: true,
@@ -47,10 +47,10 @@ export const validateSchema = (schemaName) => {
           })
       );
 
-      const result = schemaName.match(/(.*)Schema/);
+      const result = schemaName.match(/(?:partial|complete)([A-Z]\w*)/);
       let resourceName;
       if (result.length === 2) {
-        resourceName = schemaName.match(/([a-z]+)Schema/)[1];
+        resourceName = result[1].toLowerCase();
       }
 
       return next(

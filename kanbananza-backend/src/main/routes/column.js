@@ -17,6 +17,11 @@ export default (router) => {
     validateSchema("completeColumn"),
     columnController.update
   ); // see https://stackoverflow.com/a/34400076
-  router.patch("/columns?/:id", idParamValidator, validateSchema("partialColumn"), columnController.update);
+  router.patch(
+    "/columns?/:id",
+    idParamValidator,
+    validateSchema("partialColumn"),
+    columnController.update
+  );
   router.delete("/columns?/:id", idParamValidator, columnController.remove); // delete is a reserved name
 };

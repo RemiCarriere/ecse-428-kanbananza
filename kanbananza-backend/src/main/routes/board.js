@@ -5,7 +5,7 @@ import idParamValidator from "../middleware/id_param_validator";
 export default (router) => {
   router.post(
     "/boards?",
-    validateSchema("boardSchema"),
+    validateSchema("completeBoard"),
     boardController.create
   );
   router.get("/boards", boardController.select);
