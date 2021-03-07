@@ -71,6 +71,9 @@ jobs:
       - name: Check formatting of source code
         run: npm run format:check
         continue-on-error: true
+      - name: Fail check on any step failure
+        if: ${{ failure() }}
+        run: throw "at least one code quality check step failed"
 
   validate-spec:
     runs-on: ubuntu-latest
