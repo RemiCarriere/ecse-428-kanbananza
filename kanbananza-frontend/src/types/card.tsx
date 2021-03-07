@@ -4,4 +4,5 @@ export interface card {
   order: number,
   description: string,
   priority: string,
+  id?: string
 }

@@ -3,7 +3,12 @@ import { board } from "../../types/board";
 import CardComponent from "../Card/Card";
 import CreateCardComponent from "../Card/CreateCard";
 import Grid from "@material-ui/core/Grid";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createStyles,
+  Theme
+}
+  from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -16,6 +21,12 @@ import {
 import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
 import { column } from "../../types/column";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable
+}
+  from 'react-beautiful-dnd'
 // use effect is similar to componentDidMount and componentDidUpdate and component will unmount
 // use effect runs after each render!!
 // each render occurs after a set state
@@ -73,27 +84,10 @@ const Board = (props) => {
   };
   const onAddColumn = () => {
     if (columnName && boardData) {
-      createColumn({ name: columnName, boardId: boardData.id, order: 1 });
+      const order = columnList.length + 1
+      createColumn({ name: columnName, boardId: boardData.id, order: order });
     } else {
       console.log("empty name");
-    }
-  };
-<<<<<<< HEAD
-  const onCreateCard = () => {
-    if (columnList.length) {
-      history.push({
-        pathname: "/createCard",
-        state: { columnList: columnList, boardData: boardData },
-      });
-    } else {
-      console.log('Could not create card, board date is missing')
-=======
-  const boardName = () => {
-    if (boardData) {
-      return boardData.name;
-    } else {
-      return "Something went wrong";
->>>>>>> 0e1349701a31f9616d4a1021279304b8a5e2c4ad
     }
   };
 
@@ -112,11 +106,26 @@ const Board = (props) => {
         <CreateCardComponent
           show={modalShow}
           onHide={() => setModalShow(false)}
+          columns={[]} // TODO: switch to column list used empty array because othewrwise this will cause the modal to crash until the promise issue in get board columns
         />
-        <Grid alignItems="center" justify="center" container spacing={4}>
-          {console.log(columnList)}
-          {columnList.length && columnList.map((col) => { return <Grid item><Column boardId={col.boardId} id={col.id} order={col.order} name={col.name} /></Grid> })}
-        </Grid>
+        <DragDropContext>
+          <Grid alignItems="center" justify="center" container spacing={4}>
+            {console.log(columnList)}
+            {columnList.length && columnList.map((col) =>
+              <Droppable droppableId="droppable">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    <Column boardId={col.boardId} id={col.id} order={col.order} name={col.name} />
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            )}
+          </Grid>
+        </DragDropContext>
       </div>
       {/*here we will do something like boardData.columns.map(column=> <Column></Column>)*/}
       {/*same thing in the column compoenent with cards*/}
