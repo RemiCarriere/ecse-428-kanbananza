@@ -81,7 +81,7 @@ const updateCardById = async (id, updatedInfo) => {
 const setCardOrderById = async (id, newOrder) => {
   const card = await findCardById(id);
 
-  let cards = await findColumnCardsWithGreaterOrder(card.columnId, newOrder);
+  const cards = await findColumnCardsWithGreaterOrder(card.columnId, newOrder);
 
   let lastIncreasedOrder = newOrder;
   let c;
