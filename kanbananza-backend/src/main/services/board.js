@@ -54,10 +54,10 @@ const findBoardColumnsByName = async (id, name) => {
 };
 
 const deleteBoardById = async (id) => {
-  (await Column.find({ boardId: id })).forEach((column) => {
-    columnService.deleteColumnById(column._id);
+  (await Column.find({ boardId: id }).exec()).forEach((column) => {
+    columnService.deleteColumnById(column._id).exec();
   }); // cascade
-  return Board.findByIdAndDelete(id);
+  return Board.findByIdAndDelete(id).exec();
 };
 
 export default {

@@ -74,12 +74,12 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
-  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
 const deleteColumnById = async (id) => {
-  await Card.deleteMany({ columnId: id }); // cascade
-  return Column.findByIdAndDelete(id);
+  await Card.deleteMany({ columnId: id }).exec(); // cascade
+  return Column.findByIdAndDelete(id).exec();
 };
 
 export default {
