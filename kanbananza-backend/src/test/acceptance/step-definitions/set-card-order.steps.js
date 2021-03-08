@@ -42,7 +42,7 @@ const givenBoardSelected = (given) => {
 
 const givenBoardHasFollowingCards = (given) => {
   given(
-    "the selected board has one with two cards ordered as follows:",
+    "the selected board has one column with two cards ordered as follows:",
     async (table) => {
       let res = await request
         .post("/column")
@@ -73,11 +73,13 @@ const whenUserAttemptsToMoveCard = (when) => {
     async (name, index) => {
       let res = await request.get(`/columns/${columnId}/cards`);
       let cardId = res.body.filter((card) => card.name === name)[0];
+
       if (cardId) {
         cardId = cardId.id;
       } else {
         cardId = "non-existent column";
       }
+
       res = await request
         .patch(`/cards/${cardId}`)
         .send({ order: parseInt(index) });
@@ -103,12 +105,14 @@ const thenBoardLooksAsFollows = (then) => {
         val: res.body[index].name,
       });
     });
+
     expectedOrder.sort(function (a, b) {
       return a.key - b.key;
     });
     actualOrder.sort(function (a, b) {
       return a.key - b.key;
     });
+
     expectedOrder.forEach((expCard, index) => {
       const actCard = actualOrder[index];
       expect(actCard.val).toBe(expCard.val);

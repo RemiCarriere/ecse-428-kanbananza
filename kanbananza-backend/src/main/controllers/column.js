@@ -1,5 +1,4 @@
 import columnService from "../services/column";
-import cardService from "../services/card";
 import ValidationError from "../validation_error";
 import HttpError from "../http_error";
 
@@ -120,7 +119,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const column = columnService.findColumnById(req.params.id);
+    const column = await columnService.findColumnById(req.params.id);
 
     if (column === null) {
       return next(
@@ -131,7 +130,7 @@ const remove = async (req, res, next) => {
       );
     }
 
-    columnService.deleteColumnById(req.params.id);
+    await columnService.deleteColumnById(req.params.id);
 
     return res.sendStatus(204);
   } catch (e) {

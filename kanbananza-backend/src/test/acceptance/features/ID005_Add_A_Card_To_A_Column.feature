@@ -17,7 +17,6 @@ Feature: Add a card to a column
     And the number of cards included in the column with name "Doing" shall increase by one
     And the number of cards in the board shall increase by one
 
-
   Scenario: Successfully add a card with a valid but existing name to an existing column (Alternate Flow)
     Given the column with name "Doing" includes an existing card with name "Repetitive Task"
     When the user attempts to add a card with name "Repetitive Task" to the column with name "Doing"
