@@ -69,8 +69,8 @@ const givenCardShallHaveThatPriority = (given) => {
     /^the card with name "(.*)" has priority "(.*)"$/,
     async (cardName, cardPriority) => {
       const { body } = await request
-        .put(`/card/${cardId}`)
-        .send({priority: cardPriority}) //I think this has an error
+        .put(`/cards/${cardId}`)
+        .send({ priority: cardPriority }) //I think this has an error
         .expect(200);
     }
   );
