@@ -5,6 +5,14 @@ import { isValidMongooseObjectId } from "../utils/validators";
 const createCard = async ({ name, columnId, order, description, priority }) => {
   const cardsOfColumn = await Card.find({ columnId });
 
+  // let c;
+  // for (let i = 0; i < cardsOfColumn.length; i++) {
+  //   c = cardsOfColumn[i];
+  //   if (c.order === order) {
+  //     setCardOrderById(id, updatedInfo.order);
+  //   }
+  // }
+
   cardsOfColumn.forEach((card) => {
     if (card.order === order) {
       throw new ValidationError({
@@ -63,7 +71,7 @@ const updateCardById = async (id, updatedInfo) => {
   }
 
   if (updatedInfo.order !== undefined) {
-    setCardOrderById(id, updatedInfo.order);
+    await setCardOrderById(id, updatedInfo.order);
     delete updatedInfo.order;
   }
 
@@ -73,14 +81,14 @@ const updateCardById = async (id, updatedInfo) => {
 const setCardOrderById = async (id, newOrder) => {
   const card = await findCardById(id);
 
-  const cards = await findColumnCardsWithGreaterOrder(card.columnId, newOrder);
+  let cards = await findColumnCardsWithGreaterOrder(card.columnId, newOrder);
 
   let lastIncreasedOrder = newOrder;
   let c;
   for (let i = 0; i < cards.length; i += 1) {
     c = cards[i];
 
-    if (c.order > lastIncreasedOrder) {
+    if (c._id === id || c.order > lastIncreasedOrder) {
       break;
     }
 
@@ -90,6 +98,9 @@ const setCardOrderById = async (id, newOrder) => {
 
     lastIncreasedOrder += 1;
   }
+
+  card.order = newOrder;
+  return card.save();
 };
 
 const findColumnCardsWithGreaterOrder = async (columnId, order) => {
