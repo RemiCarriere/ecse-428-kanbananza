@@ -1,5 +1,4 @@
 import columnService from "../services/column";
-import cardService from "../services/card";
 import ValidationError from "../validation_error";
 import HttpError from "../http_error";
 
@@ -93,11 +92,11 @@ const update = async (req, res, next) => {
       );
     }
 
-    const updatedInfo = {
-      name: req.body.name !== undefined ? req.body.name : column.name,
-      boardId:
-        req.body.boardId !== undefined ? req.body.boardId : column.boardId,
-      order: req.body.order !== undefined ? req.body.order : column.order,
+    // prettier-ignore
+    const updatedInfo = { // see https://www.kevinpeters.net/adding-object-properties-conditionally-with-es-6
+      ...(req.body.name !== undefined && {name: req.body.name}),
+      ...(req.body.boardId !== undefined && {boardId: req.body.boardId}),
+      ...(req.body.order !== undefined && {order: req.body.order})
     };
 
     column = await columnService.updateColumnById(req.params.id, updatedInfo);
@@ -120,7 +119,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const column = columnService.findColumnById(req.params.id);
+    const column = await columnService.findColumnById(req.params.id);
 
     if (column === null) {
       return next(
@@ -131,7 +130,7 @@ const remove = async (req, res, next) => {
       );
     }
 
-    columnService.deleteColumnById(req.params.id);
+    await columnService.deleteColumnById(req.params.id);
 
     return res.sendStatus(204);
   } catch (e) {

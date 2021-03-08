@@ -55,12 +55,31 @@ const updateColumnById = async (id, updatedInfo) => {
     });
   }
 
-  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+  const newBoardId =
+    updatedInfo.boardId !== undefined
+      ? updatedInfo.boardId
+      : (await findColumnById(id)).boardId;
+
+  if (
+    updatedInfo.name !== undefined &&
+    (await Column.exists({
+      boardId: newBoardId,
+      name: updatedInfo.name,
+    }))
+  ) {
+    throw new ValidationError({
+      path: "name",
+      reason: "column name already in use for board",
+      data: updatedInfo.name,
+    });
+  }
+
+  return Column.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
 const deleteColumnById = async (id) => {
-  await Card.deleteMany({ columnId: id }); // cascade
-  return Column.findByIdAndDelete(id);
+  await Card.deleteMany({ columnId: id }).exec(); // cascade
+  return Column.findByIdAndDelete(id).exec();
 };
 
 export default {

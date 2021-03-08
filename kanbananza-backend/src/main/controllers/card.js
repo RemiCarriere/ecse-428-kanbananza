@@ -11,6 +11,7 @@ const create = async (req, res, next) => {
       description: req.body.description,
       priority: req.body.priority,
     });
+
     return res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
@@ -76,17 +77,13 @@ const update = async (req, res, next) => {
       );
     }
 
-    const updatedInfo = {
-      name: req.body.name !== undefined ? req.body.name : card.name,
-      columnId:
-        req.body.columnId !== undefined ? req.body.columnId : card.columnId,
-      order: req.body.order !== undefined ? req.body.order : card.order,
-      description:
-        req.body.description !== undefined
-          ? req.body.description
-          : card.description,
-      priority:
-        req.body.priority !== undefined ? req.body.priority : card.priority,
+    // prettier-ignore
+    const updatedInfo = { // see https://www.kevinpeters.net/adding-object-properties-conditionally-with-es-6
+      ...(req.body.name !== undefined && {name: req.body.name}),
+      ...(req.body.columnId !== undefined && {columnId: req.body.columnId}),
+      ...(req.body.order !== undefined && {order: req.body.order}),
+      ...(req.body.description !== undefined && {description: req.body.description}),
+      ...(req.body.priority !== undefined && {priority: req.body.priority}),
     };
 
     card = await cardService.updateCardById(req.params.id, updatedInfo);

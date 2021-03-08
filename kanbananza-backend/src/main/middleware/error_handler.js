@@ -1,7 +1,9 @@
 import HttpError from "../http_error";
 
 export default (err, req, res, next) => {
-  if (process.env.NODE_ENV !== "test") console.error(err.stack);
+  if (process.env.NODE_ENV !== "test") {
+    console.error(err.stack);
+  }
 
   let httpError;
 

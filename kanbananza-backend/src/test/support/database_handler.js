@@ -14,6 +14,7 @@ const connect = async () => {
     useUnifiedTopology: true,
     useCreateIndex: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
   };
 
   await mongoose.connect(uri, mongooseOpts);
