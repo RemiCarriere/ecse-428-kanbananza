@@ -59,7 +59,6 @@ const givenColumnHasOneCardWithName = (given) => {
       .expect(201);
 
       cardId = req.body.id;
-      console.log(cardId);
     }
   );
 };
@@ -69,8 +68,8 @@ const givenCardShallHaveThatPriority = (given) => {
     /^the card with name "(.*)" has priority "(.*)"$/,
     async (cardName, cardPriority) => {
       const { body } = await request
-        .put(`/cards/${cardId}`)
-        .send({ priority: cardPriority }) //I think this has an error
+        .patch(`/cards/${cardId}`)
+        .send({ priority: cardPriority }) 
         .expect(200);
     }
   );
@@ -81,8 +80,8 @@ const whenUserSetsPriorityOfCard = (when) => {
     /^the user sets the priority of the card with name "(.*)" to (.*)$/,
     async (cardName, cardPriority) => {
       const res = await request
-        .put(`/cards/${cardId}`)
-        .set({ priority: cardPriority })
+        .patch(`/cards/${cardId}`)
+        .send({ priority: cardPriority })
         .expect(200);
     }
   );
@@ -93,11 +92,12 @@ const thenCardShallHaveThatPriority = (then) => {
   then(
     /^the card with name "(.*)" has priority (.*)$/,
     async (cardName, cardPriority) => {
-      const { body } = await request
-        .get(`/column/${colID}/cards/`) //I think this has an error
+      const body = await request
+        .get(`/column/${colID}/cards/`) 
         .expect(200);
 
-      expect(body[0].priority).toBe(cardPriority);
+      
+      expect(body.body.filter((card) => card.name === cardName)[0].priority).toBe(cardPriority);
     }
   );
 };
