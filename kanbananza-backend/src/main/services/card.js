@@ -3,7 +3,7 @@ import ValidationError from "../validation_error";
 import { isValidMongooseObjectId } from "../utils/validators";
 
 const createCard = async ({ name, columnId, order, description, priority }) => {
-  const cardsOfColumn = await Card.find({ columnId });
+  const cardsOfColumn = await Card.find({ columnId }).exec();
 
   // let c;
   // for (let i = 0; i < cardsOfColumn.length; i++) {
@@ -75,7 +75,7 @@ const updateCardById = async (id, updatedInfo) => {
     delete updatedInfo.order;
   }
 
-  return Card.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+  return Card.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
 const setCardOrderById = async (id, newOrder) => {
@@ -115,7 +115,6 @@ const findColumnCardWithGreatestOrder = async (columnId) => {
     .limit(1)
     .exec();
 
-  console.log(result);
   if (result.length === 0) {
     return null;
   }
