@@ -3,6 +3,7 @@ import { board } from "../../types/board";
 import CardComponent from "../Card/Card";
 import CreateCardComponent from "../Card/CreateCard";
 import Grid from "@material-ui/core/Grid";
+import Modal from "react-bootstrap/Modal";
 import {
   makeStyles,
   createStyles,
@@ -56,7 +57,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Board = (props) => {
-  const [modalShow, setModalShow] = React.useState(false);
+  const [modalShowcard, setModalShowcard] = React.useState(false);
+  const [modalShowname, setModalShowname] = React.useState(false);
+  const [modalShowdelete, setModalShowdelete] = React.useState(false);
   // will probably require props
   const [boardData, setBoardData] = useState<board>({
     id: "",
@@ -93,21 +96,30 @@ const Board = (props) => {
 
   return (
     <>
+    
       <div className={classes.root}>
         <input
           type="text"
           onChange={(e) => setColumnName(e.target.value)}
         ></input>
         <button onClick={onAddColumn}>Add Column</button>
-        <button onClick={() => setModalShow(true)}>Create Card</button>
+        <button onClick={() => setModalShowcard(true)}>Create Card</button>
+        <button onClick={() => setModalShowdelete(true)}>Delete Column</button>
+        <button onClick={() => setModalShowname(true)}>Set Column Name</button>
+        
         <div>
           <strong>{boardData.name}</strong>
         </div>
         <CreateCardComponent
-          show={modalShow}
-          onHide={() => setModalShow(false)}
+          show={modalShowcard}
+          onHide={() => setModalShowcard(false)}
           columns={[]} // TODO: switch to column list used empty array because othewrwise this will cause the modal to crash until the promise issue in get board columns
         />
+        {/* <DeleteColumnComponent
+          show={modalShowdelete}
+          onHide={() => setModalShowdelete(false)}
+          columns={[]} // TODO: switch to column list used empty array because othewrwise this will cause the modal to crash until the promise issue in get board columns
+        /> */}
         <DragDropContext>
           <Grid alignItems="center" justify="center" container spacing={4}>
             {console.log(columnList)}

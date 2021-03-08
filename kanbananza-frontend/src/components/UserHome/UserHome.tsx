@@ -100,6 +100,8 @@ const UserHome = () => {
                   >
                     Create Project
                   </button>
+
+                
                 </form>
               </div>
               <div className="row">{populateBoard()}</div>

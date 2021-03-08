@@ -6,3 +6,9 @@ export const createColumn = (columnData): any => {
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
+
+export const deleteColumn = (columnData): any => {
+  API.delete("/column", columnData)
+  .then((res) => console.log(res))
+  .catch((err) => console.log(err));
+}
