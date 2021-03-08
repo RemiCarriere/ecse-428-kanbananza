@@ -114,7 +114,6 @@ defineFeature(feature, (test) => {
     thenBoardLooksAsFollows(then);
   });
 
-  //TODO: remove.skip once endpoint is fixed
   test("Rename column to an already existing name (Alternate Flow)", ({
     given,
     when,
@@ -135,7 +134,6 @@ defineFeature(feature, (test) => {
     thenBoardLooksAsFollows(then);
   });
 
-  //TODO: remove.skip once endpoint is fixed
   test("Rename a column to empty name (Error Flow)", ({
     given,
     when,

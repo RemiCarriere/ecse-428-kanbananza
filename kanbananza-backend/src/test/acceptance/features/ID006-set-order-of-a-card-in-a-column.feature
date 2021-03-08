@@ -9,15 +9,16 @@ Given the selected board has one with two cards ordered as follows:
 | columnName | Cards              |CardIndex |
 |      TODO  | Card One           | 1	     |
 |      TODO  | Card Two           | 2        |
+|      TODO  | Card Three         | 3        |
 
 
 Scenario: Move the card in the board (Normal Flow)
-When the user attempts to move card with name "Card One" to index 2
+When the user attempts to move card with name "Card Two" to index 1
 Then the board will look as follows:
 | columnName | Cards              |CardIndex |
 |      TODO  | Card One           | 2	     |
 |      TODO  | Card Two           | 1        |
-
+|      TODO  | Card Three         | 3        |
 Scenario: Move a card to the same position (Alternate Flow)
 When the user attempts to move card with name "Card One" to index 1
 Then the board will look as follows:
