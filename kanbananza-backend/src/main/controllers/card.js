@@ -11,6 +11,7 @@ const create = async (req, res, next) => {
       description: req.body.description,
       priority: req.body.priority,
     });
+
     return res.status(201).json(card.toDTO()); // convert to dto
   } catch (e) {
     if (e instanceof ValidationError) {
@@ -76,17 +77,32 @@ const update = async (req, res, next) => {
       );
     }
 
-    const updatedInfo = {
-      name: req.body.name !== undefined ? req.body.name : card.name,
-      columnId:
-        req.body.columnId !== undefined ? req.body.columnId : card.columnId,
-      order: req.body.order !== undefined ? req.body.order : card.order,
-      description:
-        req.body.description !== undefined
-          ? req.body.description
-          : card.description,
-      priority:
-        req.body.priority !== undefined ? req.body.priority : card.priority,
+    if (req.body.order !== undefined) {
+      const cards = await cardService.findCardsWithLargerOrder(
+        card.columnId,
+        req.body.order
+      );
+      let lastIncreasedOrder = req.body.order;
+      let i = 0;
+      let myCard;
+      for (i = 0; i < cards.length; i += 1) {
+        myCard = cards[i];
+        if (myCard.order > lastIncreasedOrder) {
+          break;
+        }
+
+        cardService.updateCardById(myCard.id, { order: myCard.order + 1 });
+        lastIncreasedOrder += 1;
+      }
+    }
+
+    // prettier-ignore
+    const updatedInfo = { // see https://www.kevinpeters.net/adding-object-properties-conditionally-with-es-6
+      ...(req.body.name !== undefined && {name: req.body.name}),
+      ...(req.body.columnId !== undefined && {columnId: req.body.columnId}),
+      ...(req.body.order !== undefined && {order: req.body.order}),
+      ...(req.body.description !== undefined && {order: req.body.description}),
+      ...(req.body.priority !== undefined && {order: req.body.priority}),
     };
 
     card = await cardService.updateCardById(req.params.id, updatedInfo);
