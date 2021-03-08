@@ -15,12 +15,27 @@ const createCard = async ({ name, columnId, order, description, priority }) => {
     }
   });
 
+  let newCardOrder;
   if (order === undefined) {
-    const greatestOrder = (await findColumnCardWithGreatestOrder(columnId)).order;
-    order = greatestOrder + 1;
+    const cardWithGreatestOrder = await findColumnCardWithGreatestOrder(
+      columnId
+    );
+    if (cardWithGreatestOrder === null) {
+      newCardOrder = 0;
+    } else {
+      newCardOrder = cardWithGreatestOrder.order + 1;
+    }
+  } else {
+    newCardOrder = order;
   }
 
-  return Card.create({ name, columnId, order, description, priority });
+  return Card.create({
+    name,
+    columnId,
+    order: newCardOrder,
+    description,
+    priority,
+  });
 };
 
 const findAllCards = async () => {
@@ -51,27 +66,14 @@ const updateCardById = async (id, updatedInfo) => {
     setCardOrderById(id, updatedInfo.order);
     delete updatedInfo.order;
   }
-  
+
   return Card.findByIdAndUpdate(id, updatedInfo, { new: true }); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
-const findColumnCardsWithGreaterOrder = async (columnId, order) => {
-  return Card.find({ columnId, order: { $gte: order } })
-    .sort({order: "asc"})
-    .exec();
-};
-
-const findColumnCardWithGreatestOrder = async (columnId) => {
-  return Card.find({columnId}).sort({order: "asc"}).limit(1).exec();
-};
-
-const setCardOrderById = (id, newOrder) => {
+const setCardOrderById = async (id, newOrder) => {
   const card = await findCardById(id);
 
-  const cards = await findColumnCardsWithGreaterOrder(
-    card.columnId,
-    newOrder
-  );
+  const cards = await findColumnCardsWithGreaterOrder(card.columnId, newOrder);
 
   let lastIncreasedOrder = newOrder;
   let c;
@@ -82,11 +84,31 @@ const setCardOrderById = (id, newOrder) => {
       break;
     }
 
-    c.order = c.order + 1;
+    c.order += 1;
+    // eslint-disable-next-line no-await-in-loop
     await c.save();
 
     lastIncreasedOrder += 1;
   }
+};
+
+const findColumnCardsWithGreaterOrder = async (columnId, order) => {
+  return Card.find({ columnId, order: { $gte: order } })
+    .sort({ order: "asc" })
+    .exec();
+};
+
+const findColumnCardWithGreatestOrder = async (columnId) => {
+  const result = await Card.find({ columnId })
+    .sort({ order: "desc" })
+    .limit(1)
+    .exec();
+
+  console.log(result);
+  if (result.length === 0) {
+    return null;
+  }
+  return result[0];
 };
 
 export default {

@@ -27,7 +27,9 @@
     "global-require": "off",
     "no-unused-vars": "warn",
     "arrow-body-style": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "no-use-before-define": "warn",
+    "no-param-reassign": ["error", { "props": false }]
   },
   "overrides": [
     {
