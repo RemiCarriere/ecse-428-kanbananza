@@ -131,7 +131,7 @@ const remove = async (req, res, next) => {
       );
     }
 
-    columnService.deleteColumnById(req.params.id);
+    await columnService.deleteColumnById(req.params.id);
 
     return res.sendStatus(204);
   } catch (e) {
