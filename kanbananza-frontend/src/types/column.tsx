@@ -5,6 +5,5 @@ export interface column {
   name: string;
   boardId: string;
   order: number
-  //cards: card[]
-  // and other data we will get from the backend
+
 }
