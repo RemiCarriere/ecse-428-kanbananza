@@ -16,6 +16,13 @@ const CreateCard = (props: Props) => {
     const [cardDescription, setCardDescription] = useState<string>("");
     const [cardTitle, setCardTitle] = useState<string>("");
     const [selectedColumn, setSelectedColumn] = useState<string>("")
+    const [cardPriority, setCardPriority] = useState<string>("")
+
+    enum Priority {
+        HIGH = 'HIGH',
+        MEDIUM = 'MEDIUM',
+        LOW = 'LOW',
+    }
 
     const onSubmit = () => {
         // make the api call to create a card
@@ -25,6 +32,7 @@ const CreateCard = (props: Props) => {
             columnId: selectedColumn,
             order: Math.floor(Math.random() * 10000), //TODO: leave this temporarily until backend sets order
             description: cardDescription,
+            priority: cardPriority
         });
         props.onHide();
         // TODO: Update column data
@@ -78,6 +86,16 @@ const CreateCard = (props: Props) => {
                             style={{ width: '100%', padding: '0.5%', marginBottom: '2%' }}
                             name="columnOptions" form="form_id" onChange={(e) => setSelectedColumn(e.target.value)}>
                             {props.columns ? props.columns.map((col) => <option value={col.id}>{col.name}</option>) : <></>}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>PRIORITY</label>
+                        <select
+                            style={{ width: '100%', padding: '0.5%', marginBottom: '2%' }}
+                            name="columnOptions" form="form_id" onChange={(e) => setCardPriority(e.target.value)}>
+                            <option value={Priority.HIGH}>{Priority.HIGH}</option>
+                            <option value={Priority.MEDIUM}>{Priority.MEDIUM}</option>
+                            <option value={Priority.LOW}>{Priority.LOW}</option>
                         </select>
                     </div>
                     <button
