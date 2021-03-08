@@ -101,8 +101,8 @@ const update = async (req, res, next) => {
       ...(req.body.name !== undefined && {name: req.body.name}),
       ...(req.body.columnId !== undefined && {columnId: req.body.columnId}),
       ...(req.body.order !== undefined && {order: req.body.order}),
-      ...(req.body.description !== undefined && {order: req.body.description}),
-      ...(req.body.priority !== undefined && {order: req.body.priority}),
+      ...(req.body.description !== undefined && {description: req.body.description}),
+      ...(req.body.priority !== undefined && {priority: req.body.priority}),
     };
 
     card = await cardService.updateCardById(req.params.id, updatedInfo);
