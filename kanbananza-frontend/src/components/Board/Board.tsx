@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
 import CreateCardComponent from "../Card/CreateCard";
-import Grid from "@material-ui/core/Grid";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import {
-  getAllBoards,
-  getBoardColumns,
-  getBoardById,
-} from "../../api/boardApi";
+import { getBoardColumns } from "../../api/boardApi";
 import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
-import { column } from "../../types/column";
 import { card } from "../../types/card";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { getColumnCards } from "../../api/cardApi";
 
-interface columnCards{
-  cards: Array<card>
+interface columnContainer {
+  name: string;
+  id: string;
+  boardId: string;
+  order: number;
+  cards: Array<card>;
 }
 
-interface boardCards{
-  columns: Array<columnCards>
+interface boardContainer {
+  columns: Array<columnContainer>;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,97 +40,122 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Board = (props) => {
   const [modalShowCard, setModalShowCard] = React.useState(false);
-  const [modalShowdelete, setModalShowdelete] = React.useState(false);
-  // will probably require props
   const [boardData, setBoardData] = useState<board>({
     id: "",
     name: "",
     ownerId: "",
   });
-  const [columnList, setColumnList] = useState<Array<column>>([]);
-  const [nextCardOrder, setnextCardOrder] = useState<number>(0);
-  const [cardList, setcardList] = useState<boardCards>(
-    {columns:[]}
-  );
-
-  const classes = useStyles();
+  const [boardContainerData, setBoardContainerData] = useState<boardContainer>({ columns: [] });
   const history = useHistory();
+
   useEffect(() => {
     async function initializeData() {
-      const res = await getBoardColumns(history.location.state.board.id);
-      setColumnList(res);
-      if (res[0]) {
-        const res1 = await getColumnCards(res[0].id);
-        setnextCardOrder(res1.length);
-        let b : boardCards = {columns:[]}
-        for (const element of res){
-          const res2= await getColumnCards(element.id);
-          console.log(res2)
-          let a :columnCards = res;
-          b.columns.push(a)
-          setcardList(b)
+      const colListRes = await getBoardColumns(history.location.state.board.id);
+      if (colListRes[0]) {
+        let b: boardContainer = { columns: [] };
+        for (const element of colListRes) {
+          const cardListRes = await getColumnCards(element.id);
+          let a: columnContainer = {
+            name: element.name,
+            id: element.id,
+            order: element.order,
+            boardId: element.boardId,
+            cards: cardListRes,
+          };
+          b.columns.push(a);
+          setBoardContainerData(b);
         }
-
       }
     }
     if (history.location.state.board) {
       setBoardData(history.location.state.board);
       initializeData();
     }
-    // if (boardData) setColumnList(getColumns(history.location.state.board.id));
   }, [boardData]);
 
   const onAddColumn = () => {
     if (boardData) {
-      const order = columnList.length + 1;
+      const order = boardContainerData.columns.length + 1;
       createColumn({
         name: "New Column - " + order,
         boardId: boardData.id,
         order: order,
       });
     } else {
-      console.log("empty name");
+      console.log("no board data");
     }
   };
 
-  const reorder = (list, startIndex, endIndex): Array<column> => {
-    const result: Array<column> = Array.from(list);
+  const reorder = (list, startIndex, endIndex): Array<columnContainer> => {
+    const result: Array<columnContainer> = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
     return result;
   };
+  const reorderInner = (list, startIndex, endIndex): Array<card> => {
+    const result: Array<card> = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
   const onOuterDragEnd = (result) => {
     const items = reorder(
-      columnList,
+      boardContainerData.columns,
       result.source.index,
       result.destination.index
     );
-    setColumnList(items);
-  }
+    setBoardContainerData({ columns: items });
+  };
 
   const onInnerDragEnd = (result) => {
-    console.log("dropping sub-item")
-    var data = React.Children.map(props.children, child => child);
-    console.log(data)
-    // const itemSubItemMap = this.state.items.reduce((acc, item) => {
-    //   acc[item.id] = item.subItems;
-    //   return acc;
-    // }, {});
+    console.log("dropping sub-item");
+    const sourceIndex = result.source.index;
+    const destIndex = result.destination.index;
+    const itemSubItemMap = boardContainerData.columns.reduce((acc, item) => {
+      acc[item.id] = item.cards;
+      return acc;
+    }, {});
+    const sourceParentId = result.source.droppableId;
+    const destParentId = result.destination.droppableId;
 
-  }
+    const sourceSubItems = itemSubItemMap[sourceParentId];
+    const destSubItems = itemSubItemMap[destParentId];
+
+    let newItems = [...boardContainerData.columns];
+
+    if (sourceParentId === destParentId) {
+      console.log("here")
+      const reorderedSubItems = reorderInner(
+        sourceSubItems,
+        sourceIndex,
+        destIndex
+      );
+      newItems = newItems.map((item) => {
+        if (item.id === sourceParentId) {
+          item.cards = reorderedSubItems;
+          item.cards = item.cards.filter(function( element ) {
+            return element !== undefined;
+          });
+        }
+        return  item;
+      })
+      console.log(newItems[1].cards)
+      setBoardContainerData({columns:newItems})
+    }
+  };
 
   const onDragEnd = (result) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
+    console.log(boardContainerData.columns[1].cards)
     if (result.type === "droppableItem") {
-      onOuterDragEnd(result)
-    }
-    if (result.type === "droppableSubItem") {
-      onInnerDragEnd(result)
-     
-    }
+      onOuterDragEnd(result);
+    } else if (result.type === "droppableSubItem") {
+      onInnerDragEnd(result);
+    } 
   };
   const onShowCardModal = () => {
     setModalShowCard(true);
@@ -152,45 +175,14 @@ const Board = (props) => {
       </button>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable
-          type="droppableItem"
-          droppableId="droppable"
-          direction="horizontal"
-        >
-          {(provided, snapshot) => (
-            <div ref={provided.innerRef}>
-              <Grid
-                container
-                direction="row"
-                alignItems="stretch"
-                justify="center"
-                spacing={4}
-              >
-                {columnList.length &&
-                  columnList.map((col, index) => (
-                    <Column
-                      boardId={col.boardId}
-                      id={col.id}
-                      order={index}
-                      name={col.name}
-                      key={col.id}
-                      onShow={onShowCardModal}
-                    />
-                  ))}
-
-                {provided.placeholder}
-              </Grid>
-            </div>
-          )}
-        </Droppable>
+        <Column columns={boardContainerData} onShow={onShowCardModal} key="asdsd" />
       </DragDropContext>
-      {/* <button onClick={onAddColumn}>Add Column</button> */}
-      {/* <button type="button" className="btn btn-outline-secondary"onClick={onAddColumn}>Add Column</button> */}
+
       <CreateCardComponent
         show={modalShowCard}
         onHide={() => setModalShowCard(false)}
-        order={nextCardOrder}
-        columns={columnList} // TODO: switch to column list used empty array because othewrwise this will cause the modal to crash until the promise issue in get board columns
+        order={0}
+        columns={boardContainerData.columns}
       />
     </>
   );

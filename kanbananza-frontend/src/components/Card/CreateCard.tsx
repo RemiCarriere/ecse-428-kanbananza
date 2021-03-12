@@ -4,13 +4,8 @@ import { column } from "../../types/column";
 import Modal from "react-bootstrap/Modal";
 import { createCard } from "../../api/cardApi";
 
-interface Props {
-  columns: column[];
-  onHide: () => void;
-  show: boolean;
-  order: number;
-}
-const CreateCard = (props: Props) => {
+
+const CreateCard = (props: any) => {
   // maybe just display this under the board?
   //const [columnList, setColumnList] = useState<column[] | undefined>(undefined);
   const history = useHistory();
@@ -33,7 +28,7 @@ const CreateCard = (props: Props) => {
     createCard({
       name: cardTitle,
       columnId: props.columns[0].id,
-      order: order + 1, //TODO: leave this temporarily until backend sets order
+      order: props.columns[0].cards.length +1, //TODO: leave this temporarily until backend sets order
       description: cardDescription,
       // priority: cardPriority, //TODO implement
     });
