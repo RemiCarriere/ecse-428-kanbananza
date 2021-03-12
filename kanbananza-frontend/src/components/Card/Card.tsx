@@ -6,10 +6,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
-import {
-  Draggable
-}
-  from 'react-beautiful-dnd'
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
   root: {
@@ -37,30 +34,46 @@ const CardComponent = (cardProps: any) => {
     // sync props with state
     setCardData(cardProps);
   }, [cardProps]);
+
   return (
     <div>
-      {cardData &&
-        <Draggable key={cardData.id} draggableId={`card-${cardData.id}`} index={cardData.order}>{/**mightneed to hardcode order while it is not ready */}
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-            >
-              <Card className={classes.root}>
-                <CardContent>
-                  <Typography className={classes.title}>{cardData ? cardData.name : 'Card Title'}</Typography>
-                  <Typography className={classes.pos}>{cardData ? cardData.description : 'Description'}</Typography>
-                  <Typography variant="body2" component="p">
-                    bla bla bla
-        </Typography>
-                </CardContent>
-                <CardActions></CardActions>
-              </Card>
+      {cardProps.type && (
+        <Droppable droppableId={cardProps.type} type={`droppableSubItem`}>
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef}>
+              {cardProps.cards.map((cardData, index) => (
+                <Draggable
+                  key={cardData.id}
+                  draggableId={`card-${cardData.id}`}
+                  index={cardData.order}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card className={classes.root}>
+                        <CardContent>
+                          <Typography className={classes.title}>
+                            {cardData ? cardData.name : "Card Title"}
+                          </Typography>
+                          <Typography variant="body2" component="p">
+                            {cardData ? cardData.description : "Description"}
+                          </Typography>
+                        </CardContent>
+                        <CardActions></CardActions>
+                      </Card>
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
           )}
-        </Draggable>
-      }
+        </Droppable>
+      )}
     </div>
   );
 };

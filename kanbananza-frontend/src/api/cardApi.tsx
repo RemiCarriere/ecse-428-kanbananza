@@ -8,13 +8,14 @@ export const createCard = (cardData): any => {
 };
 
 export const getAllCards = (): any => {
-  return API.get('/cards')
+  return API.get("/cards")
     .then((res) => res.data)
-    .catch((err) => console.log(err))
-}
+    .catch((err) => console.log(err));
+};
 
-export const getColumnCards = (columnId: string): any => { // what is this ? mark
-  return API.get(`/cards?/${columnId}`)
+export const getColumnCards = (columnId: string): any => {
+  // what is this ? mark
+  return API.get(`/column/${columnId}/cards`)
     .then((res) => res.data)
-    .catch((err) => console.log(err))
-}
+    .catch((err) => console.log(err));
+};
