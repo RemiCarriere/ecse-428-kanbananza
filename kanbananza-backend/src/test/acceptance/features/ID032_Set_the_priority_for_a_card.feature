@@ -20,5 +20,5 @@ Examples:
 
 Scenario: Set a priority for a card with an existing priority (Alternate Flow)
 Given the card with name "Project Presentation" has priority "Low"
-When the user sets the priority of card with name "Project Presentation" to "High"
+When the user sets the priority of the card with name "Project Presentation" to "High"
 Then the card with name "Project Presentation" has priority "High"
