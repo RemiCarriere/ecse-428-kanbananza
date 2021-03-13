@@ -10,7 +10,7 @@ interface Props {
   ownerid: string;
 }
 
-const CreateBoard = (props: Props) => {
+const CreateBoard = (props: any) => {
   // maybe just display this under the board?
   //const [columnList, setColumnList] = useState<column[] | undefined>(undefined);
   const history = useHistory();
@@ -23,25 +23,22 @@ const CreateBoard = (props: Props) => {
     LOW = "LOW",
   }
   const onSubmit = async () => {
-    // make the api call to create a card
     if (projectName) {
+      let newBoard;
       try {
-        const a = await createBoard({
+        newBoard = await createBoard({
           ownerId: props.ownerid,
           name: projectName,
         });
-        // Needs to be fixed to update board component dynamically
-        // if boards is added to useEffect() as dependency,
-        // it works, but we get an infinite loop
-        // https://dmitripavlutin.com/react-useeffect-infinite-loop/
-        window.location.reload(); //TODO remove this line when issue above is solved
+        if (newBoard && newBoard.name) {
+          props.onAddBoard(newBoard);
+        }
       } catch (err) {
         console.log(err);
       }
     }
     //TODO: Error Handling
     props.onHide();
-    // TODO: Update column data
   };
 
   return (

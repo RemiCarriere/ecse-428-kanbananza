@@ -38,9 +38,7 @@ const NavBar = (props) => {
             Kanbananza
           </Link>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <ul className="navbar-nav ml-auto">
-              {loginLogoutLink()}
-            </ul>
+            <ul className="navbar-nav ml-auto">{loginLogoutLink()}</ul>
           </div>
         </div>
       </nav>

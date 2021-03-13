@@ -21,7 +21,13 @@ const BoardSummary = (props) => {
         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
         Quisque volutpat mattis eros.
       </p>
-      <button type="button" className="btn btn-outline-secondary"onClick={() => handleClick(props.board)}>see more</button>
+      <button
+        type="button"
+        className="btn btn-outline-secondary"
+        onClick={() => handleClick(props.board)}
+      >
+        see more
+      </button>
     </div>
   );
 };

@@ -13,21 +13,27 @@ const Dashboard = () => {
   const [newBoardName, setNewBoardName] = useState("");
   const history = useHistory();
 
-  useEffect(() => {
-    async function initializeData() {
-      const loginRes = await checkToken(Cookies.get("token"));
-      console.log(loginRes);
-      if (!loginRes || (loginRes && !loginRes.email)) {
-        history.push("/sign-in");
-        return;
-      }
-      ownerID = loginRes.id;
-      setUsrName(loginRes.firstName + " " + loginRes.lastName);
-      const boardRes = await getUserBoards(ownerID);
-      setBoards(boardRes);
+  async function initializeData() {
+    const loginRes = await checkToken(Cookies.get("token"));
+    // Don't iniitialze data if user not logged in
+    if (!loginRes || (loginRes && !loginRes.email)) {
+      history.push("/sign-in");
+      return;
     }
+    ownerID = loginRes.id;
+    setUsrName(loginRes.firstName + " " + loginRes.lastName);
+    const boardRes = await getUserBoards(ownerID);
+    setBoards(boardRes);
+  }
+
+  useEffect(() => {
     initializeData();
-  }, [usrName]);
+  }, []);
+
+  const addBoard = (board: board) => {
+    boards.push(board);
+    setBoards(boards);
+  };
 
   function populateBoard() {
     return boards.map((board, index) => {
@@ -47,6 +53,7 @@ const Dashboard = () => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         ownerid={ownerID}
+        onAddBoard={(board) => addBoard(board)}
       />
       <div className="row">
         <div className="col-md-12">
