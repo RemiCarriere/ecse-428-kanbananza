@@ -4,10 +4,7 @@ import { column } from "../../types/column";
 import Modal from "react-bootstrap/Modal";
 import { createCard } from "../../api/cardApi";
 
-
 const CreateCard = (props: any) => {
-  // maybe just display this under the board?
-  //const [columnList, setColumnList] = useState<column[] | undefined>(undefined);
   const history = useHistory();
   const [cardDescription, setCardDescription] = useState<string>("");
   const [cardTitle, setCardTitle] = useState<string>("");
@@ -20,24 +17,27 @@ const CreateCard = (props: any) => {
     LOW = "LOW",
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // make the api call to create a card
+    if (cardTitle) {
+      let newCard;
+      try {
+        newCard = await createCard({
+          name: cardTitle,
+          columnId: props.columns[0].id,
+          order: props.columns[0].cards.length + 1, //TODO: leave this temporarily until backend sets order
+          description: cardDescription,
+          // priority: cardPriority, //TODO implement
+        });
+        if (newCard && newCard.name) {
+          props.onAddCard(newCard);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
     //TODO: Error Handling
-    const order = props.order;
-    createCard({
-      name: cardTitle,
-      columnId: props.columns[0].id,
-      order: props.columns[0].cards.length +1, //TODO: leave this temporarily until backend sets order
-      description: cardDescription,
-      // priority: cardPriority, //TODO implement
-    });
     props.onHide();
-    // TODO: Update card data
-    // Needs to be fixed to update board component dynamically
-        // if boards is added to useEffect() as dependency,
-        // it works, but we get an infinite loop
-        // https://dmitripavlutin.com/react-useeffect-infinite-loop/
-        window.location.reload(); //TODO remove this line when issue above is solved
   };
   return (
     <Modal

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
-import CreateCardComponent from "../Card/CreateCard";
+import CreateCardComponent from "../Card/CreateCardModal";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import { getBoardColumns } from "../../api/boardApi";
 import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
 import { card } from "../../types/card";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import { getColumnCards } from "../../api/cardApi";
 
 interface columnContainer {
@@ -20,6 +20,9 @@ interface columnContainer {
 
 interface boardContainer {
   columns: Array<columnContainer>;
+  id: string;
+  ownerId: string;
+  name: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,58 +42,87 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Board = (props) => {
-  const [modalShowCard, setModalShowCard] = React.useState(false);
-  const [boardData, setBoardData] = useState<board>({
-    id: "",
-    name: "",
-    ownerId: "",
-  });
-  const [boardContainerData, setBoardContainerData] = useState<boardContainer>({
-    columns: [],
-  });
   const history = useHistory();
+  const [modalShowCard, setModalShowCard] = React.useState(false);
+  const [boardData, setBoardData] = useState<boardContainer>({
+    columns: [],
+    id: history.location.state.board.id,
+    name: history.location.state.board.name,
+    ownerId: history.location.state.board.id,
+  });
 
-  useEffect(() => {
-    async function initializeData() {
-      const colListRes = await getBoardColumns(history.location.state.board.id);
-      if (colListRes[0]) {
-        let b: boardContainer = { columns: [] };
-        for (const element of colListRes) {
-          const cardListRes = await getColumnCards(element.id);
-          let a: columnContainer = {
-            name: element.name,
-            id: element.id,
-            order: element.order,
-            boardId: element.boardId,
-            cards: cardListRes,
-          };
-          b.columns.push(a);
-          setBoardContainerData(b);
-        }
+  async function initializeData() {
+    let board: board = history.location.state.board;
+    const colListRes = await getBoardColumns(history.location.state.board.id);
+    if (colListRes.length) {
+      let newBoard: boardContainer = {
+        columns: [],
+        id: board.id,
+        name: board.name,
+        ownerId: board.ownerId,
+      };
+      for (const column of colListRes) {
+        const cardListRes = await getColumnCards(column.id);
+        let newColumn: columnContainer = {
+          name: column.name,
+          id: column.id,
+          order: column.order,
+          boardId: column.boardId,
+          cards: cardListRes,
+        };
+        newBoard.columns.push(newColumn);
       }
+      setBoardData(newBoard);
     }
+  }
+  useEffect(() => {
     if (history.location.state.board) {
-      setBoardData(history.location.state.board);
       initializeData();
     }
-  }, [boardData]);
+  }, []);
 
-  const onAddColumn = () => {
+  const setColumns = (newColumns: Array<columnContainer>) => {
+    setBoardData({
+      columns: newColumns,
+      id: boardData.id,
+      name: boardData.name,
+      ownerId: boardData.ownerId,
+    });
+  };
+
+  const onAddColumn = async () => {
     if (boardData) {
-      const order = boardContainerData.columns.length + 1;
-      createColumn({
+      const order = boardData.columns.length + 1; //TODO the backend should take care of this?
+      let colRes = await createColumn({
         name: "New Column - " + order,
         boardId: boardData.id,
         order: order,
       });
-      // Needs to be fixed to update board component dynamically
-      // if boards is added to useEffect() as dependency,
-      // it works, but we get an infinite loop
-      // https://dmitripavlutin.com/react-useeffect-infinite-loop/
-      window.location.reload(); //TODO remove this line when issue above is solved
+      if (colRes) {
+        let newColumnData = [...boardData.columns];
+        const newCol: columnContainer = {
+          cards: [],
+          name: colRes.name,
+          boardId: colRes.boardId,
+          order: colRes.order,
+          id: colRes.id,
+        };
+        newColumnData.push(newCol);
+        setColumns(newColumnData);
+      } else {
+        console.log("error creating column");
+      }
     } else {
       console.log("no board data");
     }
+  };
+
+  const addCard = (card: card) => {
+    let newColumnData = [...boardData.columns];
+    let newCardData = [...boardData.columns[0].cards];
+    newCardData.push(card);
+    newColumnData[0].cards = newCardData;
+    setColumns(newColumnData);
   };
 
   const reorder = (list, startIndex, endIndex): Array<columnContainer> => {
@@ -108,19 +140,19 @@ const Board = (props) => {
 
   const onOuterDragEnd = (result) => {
     // TODO: update order on backend
-    const items = reorder(
-      boardContainerData.columns,
+    const newColumns = reorder(
+      boardData.columns,
       result.source.index,
       result.destination.index
     );
-    setBoardContainerData({ columns: items });
+    setColumns(newColumns);
   };
 
   const onInnerDragEnd = (result) => {
     // TODO: update order on backend
     const sourceIndex = result.source.index;
     const destIndex = result.destination.index;
-    const subCardMap = boardContainerData.columns.reduce((acc, column) => {
+    const subCardMap = boardData.columns.reduce((acc, column) => {
       acc[column.id] = column.cards;
       return acc;
     }, {});
@@ -130,7 +162,7 @@ const Board = (props) => {
     const sourceColumnCards = subCardMap[sourceParentId];
     const destColumnCards = subCardMap[destParentId];
 
-    let newColumnData = [...boardContainerData.columns];
+    let newColumnData = [...boardData.columns];
     // Dropped in source column
     if (sourceParentId === destParentId) {
       const reorderedColumnCards = reorderInner(
@@ -141,13 +173,10 @@ const Board = (props) => {
       newColumnData = newColumnData.map((column) => {
         if (column.id === sourceParentId) {
           column.cards = reorderedColumnCards;
-          column.cards = column.cards.filter(function (card) {
-            return card !== undefined;
-          });
         }
         return column;
       });
-      setBoardContainerData({ columns: newColumnData });
+      setColumns(newColumnData);
     }
     // Dropeed in different column
     else {
@@ -163,7 +192,7 @@ const Board = (props) => {
         }
         return column;
       });
-      setBoardContainerData({ columns: newColumnData });
+      setColumns(newColumnData);
     }
   };
 
@@ -196,18 +225,15 @@ const Board = (props) => {
       </button>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Column
-          columns={boardContainerData}
-          onShow={onShowCardModal}
-          key="asdsd"
-        />
+        <Column columns={boardData} onShow={onShowCardModal} />
       </DragDropContext>
 
       <CreateCardComponent
         show={modalShowCard}
         onHide={() => setModalShowCard(false)}
         order={0}
-        columns={boardContainerData.columns}
+        columns={boardData.columns}
+        onAddCard={(card) => addCard(card)}
       />
     </>
   );

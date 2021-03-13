@@ -7,7 +7,7 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import Board from "../components/Board/Board";
 import NavBar from "../components/NavBar/NavBar";
-import CreateCard from "../components/Card/CreateCard";
+import CreateCard from "../components/Card/CreateCardModal";
 import TmpBoard from "../components/Board/tmpBoard";
 import { useState } from "react";
 import Cookies from "js-cookie";
