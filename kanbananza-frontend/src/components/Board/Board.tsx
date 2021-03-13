@@ -45,7 +45,9 @@ const Board = (props) => {
     name: "",
     ownerId: "",
   });
-  const [boardContainerData, setBoardContainerData] = useState<boardContainer>({ columns: [] });
+  const [boardContainerData, setBoardContainerData] = useState<boardContainer>({
+    columns: [],
+  });
   const history = useHistory();
 
   useEffect(() => {
@@ -81,6 +83,11 @@ const Board = (props) => {
         boardId: boardData.id,
         order: order,
       });
+      // Needs to be fixed to update board component dynamically
+      // if boards is added to useEffect() as dependency,
+      // it works, but we get an infinite loop
+      // https://dmitripavlutin.com/react-useeffect-infinite-loop/
+      window.location.reload(); //TODO remove this line when issue above is solved
     } else {
       console.log("no board data");
     }
@@ -100,6 +107,7 @@ const Board = (props) => {
   };
 
   const onOuterDragEnd = (result) => {
+    // TODO: update order on backend
     const items = reorder(
       boardContainerData.columns,
       result.source.index,
@@ -109,39 +117,53 @@ const Board = (props) => {
   };
 
   const onInnerDragEnd = (result) => {
-    console.log("dropping sub-item");
+    // TODO: update order on backend
     const sourceIndex = result.source.index;
     const destIndex = result.destination.index;
-    const itemSubItemMap = boardContainerData.columns.reduce((acc, item) => {
-      acc[item.id] = item.cards;
+    const subCardMap = boardContainerData.columns.reduce((acc, column) => {
+      acc[column.id] = column.cards;
       return acc;
     }, {});
     const sourceParentId = result.source.droppableId;
     const destParentId = result.destination.droppableId;
 
-    const sourceSubItems = itemSubItemMap[sourceParentId];
-    const destSubItems = itemSubItemMap[destParentId];
+    const sourceColumnCards = subCardMap[sourceParentId];
+    const destColumnCards = subCardMap[destParentId];
 
-    let newItems = [...boardContainerData.columns];
-
+    let newColumnData = [...boardContainerData.columns];
+    // Dropped in source column
     if (sourceParentId === destParentId) {
-      console.log("here")
-      const reorderedSubItems = reorderInner(
-        sourceSubItems,
+      const reorderedColumnCards = reorderInner(
+        sourceColumnCards,
         sourceIndex,
         destIndex
       );
-      newItems = newItems.map((item) => {
-        if (item.id === sourceParentId) {
-          item.cards = reorderedSubItems;
-          item.cards = item.cards.filter(function( element ) {
-            return element !== undefined;
+      newColumnData = newColumnData.map((column) => {
+        if (column.id === sourceParentId) {
+          column.cards = reorderedColumnCards;
+          column.cards = column.cards.filter(function (card) {
+            return card !== undefined;
           });
         }
-        return  item;
-      })
-      console.log(newItems[1].cards)
-      setBoardContainerData({columns:newItems})
+        return column;
+      });
+      setBoardContainerData({ columns: newColumnData });
+    }
+    // Dropeed in different column
+    else {
+      let newSourceColCards = [...sourceColumnCards];
+      const [draggedItem] = newSourceColCards.splice(sourceIndex, 1);
+      let newDestColCards = [...destColumnCards];
+      newDestColCards.splice(destIndex, 0, draggedItem);
+      newColumnData = newColumnData.map((column) => {
+        if (column.id === sourceParentId) {
+          column.cards = newSourceColCards;
+        } else if (column.id === destParentId) {
+          column.cards = newDestColCards;
+        }
+        return column;
+      });
+      setBoardContainerData({ columns: newColumnData });
     }
   };
 
@@ -150,12 +172,11 @@ const Board = (props) => {
     if (!result.destination) {
       return;
     }
-    console.log(boardContainerData.columns[1].cards)
     if (result.type === "droppableItem") {
       onOuterDragEnd(result);
     } else if (result.type === "droppableSubItem") {
       onInnerDragEnd(result);
-    } 
+    }
   };
   const onShowCardModal = () => {
     setModalShowCard(true);
@@ -175,7 +196,11 @@ const Board = (props) => {
       </button>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Column columns={boardContainerData} onShow={onShowCardModal} key="asdsd" />
+        <Column
+          columns={boardContainerData}
+          onShow={onShowCardModal}
+          key="asdsd"
+        />
       </DragDropContext>
 
       <CreateCardComponent

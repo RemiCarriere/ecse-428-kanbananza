@@ -23,7 +23,6 @@ const CreateCard = (props: any) => {
   const onSubmit = () => {
     // make the api call to create a card
     //TODO: Error Handling
-    // console.log(props.columns[0].id)
     const order = props.order;
     createCard({
       name: cardTitle,
@@ -33,7 +32,12 @@ const CreateCard = (props: any) => {
       // priority: cardPriority, //TODO implement
     });
     props.onHide();
-    // TODO: Update column data
+    // TODO: Update card data
+    // Needs to be fixed to update board component dynamically
+        // if boards is added to useEffect() as dependency,
+        // it works, but we get an infinite loop
+        // https://dmitripavlutin.com/react-useeffect-infinite-loop/
+        window.location.reload(); //TODO remove this line when issue above is solved
   };
   return (
     <Modal
@@ -83,7 +87,7 @@ const CreateCard = (props: any) => {
           <button
             onClick={onSubmit}
             type="button"
-            className="btn btn-primary btn-block"
+            className="btn btn-outline-secondary btn-block"
           >
             Submit
           </button>

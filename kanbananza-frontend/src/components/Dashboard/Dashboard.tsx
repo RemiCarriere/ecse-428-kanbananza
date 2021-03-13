@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { checkToken, getUserBoards } from "../../api/userApi";
 import Cookies from "js-cookie";
 import { board } from "../../types/board";
-import { createBoard } from "../../api/boardApi";
 import { useHistory } from "react-router-dom";
 import BoardSummary from "./BoardSummary";
 import CreateBoard from "./CreateBoardModal";
@@ -54,13 +53,12 @@ const Dashboard = () => {
           <h2>{usrName}'s Projects</h2>
           <div className="row">
             <div className="col-md-4">
-              <button
-                type="button"
+              <div
                 onClick={() => setModalShow(true)}
-                className="board-button"
+                className="board-button btn-outline-secondary"
               >
                 <h3>Create a new project</h3>
-              </button>
+              </div>
             </div>
             {populateBoard()}
           </div>

@@ -45,7 +45,7 @@ const CardComponent = (cardProps: any) => {
                 <Draggable
                   key={cardData.id}
                   draggableId={`card-${cardData.id}`}
-                  index={cardData.order}
+                  index={index}
                 >
                   {(provided) => (
                     <div

@@ -55,7 +55,7 @@ const Login = (params) => {
           <button
             onClick={onLogin}
             type="button"
-            className="btn btn-primary btn-block"
+            className="btn btn-outline-secondary btn-block"
           >
             Submit
           </button>

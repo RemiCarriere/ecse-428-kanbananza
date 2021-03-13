@@ -37,7 +37,7 @@ const AddCardButton = (cardProps: any) => {
 
   return (
     <div onClick={cardProps.onShow}>
-      <Card className={classes.root}>
+      <Card className={`${classes.root} btn-outline-secondary`}>
         <CardContent>
           <Typography className={classes.title}>Add a new card</Typography>
         </CardContent>

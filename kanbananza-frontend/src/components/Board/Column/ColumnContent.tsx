@@ -64,8 +64,12 @@ const ColumnContent = (columnProps: any) => {
   }
 
   const onDelete = () => {
-    console.log("hdfghgfhfgd");
     deleteColumn(columnData.id);
+    // Needs to be fixed to update board component dynamically
+        // if boards is added to useEffect() as dependency,
+        // it works, but we get an infinite loop
+        // https://dmitripavlutin.com/react-useeffect-infinite-loop/
+        window.location.reload(); //TODO remove this line when issue above is solved
   };
   return (
     <>

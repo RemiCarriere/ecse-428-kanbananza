@@ -79,7 +79,7 @@ const CreateBoard = (props: Props) => {
           <button
             onClick={onSubmit}
             type="button"
-            className="btn btn-primary btn-block"
+            className="btn btn-outline-secondary btn-block"
           >
             Submit
           </button>
