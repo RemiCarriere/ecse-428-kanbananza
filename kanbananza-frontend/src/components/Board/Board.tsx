@@ -1,43 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { board } from "../../types/board";
-import CardComponent from "../Card/Card";
 import CreateCardComponent from "../Card/CreateCard";
-import Grid from "@material-ui/core/Grid";
-import {
-  makeStyles,
-  createStyles,
-  Theme
-}
-  from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import {
-  getAllBoards,
-  getBoardColumns,
-  getBoardById,
-} from "../../api/boardApi";
+import { getBoardColumns } from "../../api/boardApi";
 import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
-import { column } from "../../types/column";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable
+import { card } from "../../types/card";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { getColumnCards } from "../../api/cardApi";
+
+interface columnContainer {
+  name: string;
+  id: string;
+  boardId: string;
+  order: number;
+  cards: Array<card>;
 }
-  from 'react-beautiful-dnd'
-// use effect is similar to componentDidMount and componentDidUpdate and component will unmount
-// use effect runs after each render!!
-// each render occurs after a set state
-/***
- * Experienced JavaScript developers might notice that the function passed to useEffect is
- * going to be different on every render. This is intentional. In fact, this is what lets us
- * read the count value from inside the effect without worrying about it getting stale.
- * Every time we re-render, we schedule a different effect, replacing the previous one.
- * In a way, this makes the effects behave more like a part of the render result — each effect “belongs”
- * to a particular render. We will see more clearly why this is useful later on this page.
- */
+
+interface boardContainer {
+  columns: Array<columnContainer>;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,148 +39,178 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Board = (props) => {
-  const [modalShow, setModalShow] = React.useState(false);
-  // will probably require props
+  const [modalShowCard, setModalShowCard] = React.useState(false);
   const [boardData, setBoardData] = useState<board>({
     id: "",
     name: "",
     ownerId: "",
   });
-  const [columnName, setColumnName] = useState<string>("");
-  const [columnList, setColumnList] = useState<column[]>([])
-
-  const classes = useStyles();
+  const [boardContainerData, setBoardContainerData] = useState<boardContainer>({
+    columns: [],
+  });
   const history = useHistory();
+
   useEffect(() => {
+    async function initializeData() {
+      const colListRes = await getBoardColumns(history.location.state.board.id);
+      if (colListRes[0]) {
+        let b: boardContainer = { columns: [] };
+        for (const element of colListRes) {
+          const cardListRes = await getColumnCards(element.id);
+          let a: columnContainer = {
+            name: element.name,
+            id: element.id,
+            order: element.order,
+            boardId: element.boardId,
+            cards: cardListRes,
+          };
+          b.columns.push(a);
+          setBoardContainerData(b);
+        }
+      }
+    }
     if (history.location.state.board) {
       setBoardData(history.location.state.board);
+      initializeData();
     }
-    if (boardData)
-      setColumnList(getColumns(history.location.state.board.id))
-  }, [boardData])
-  const getColumns = (boardId: string): column[] => {
-    var cols = [];
-    console.log("I get here");
-    cols = getBoardColumns(boardId);
-    console.log(cols)
-    return cols
-  };
+  }, [boardData]);
+
   const onAddColumn = () => {
-    if (columnName && boardData) {
-      const order = columnList.length + 1
-      createColumn({ name: columnName, boardId: boardData.id, order: order });
+    if (boardData) {
+      const order = boardContainerData.columns.length + 1;
+      createColumn({
+        name: "New Column - " + order,
+        boardId: boardData.id,
+        order: order,
+      });
+      // Needs to be fixed to update board component dynamically
+      // if boards is added to useEffect() as dependency,
+      // it works, but we get an infinite loop
+      // https://dmitripavlutin.com/react-useeffect-infinite-loop/
+      window.location.reload(); //TODO remove this line when issue above is solved
     } else {
-      console.log("empty name");
+      console.log("no board data");
     }
+  };
+
+  const reorder = (list, startIndex, endIndex): Array<columnContainer> => {
+    const result: Array<columnContainer> = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+  const reorderInner = (list, startIndex, endIndex): Array<card> => {
+    const result: Array<card> = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const onOuterDragEnd = (result) => {
+    // TODO: update order on backend
+    const items = reorder(
+      boardContainerData.columns,
+      result.source.index,
+      result.destination.index
+    );
+    setBoardContainerData({ columns: items });
+  };
+
+  const onInnerDragEnd = (result) => {
+    // TODO: update order on backend
+    const sourceIndex = result.source.index;
+    const destIndex = result.destination.index;
+    const subCardMap = boardContainerData.columns.reduce((acc, column) => {
+      acc[column.id] = column.cards;
+      return acc;
+    }, {});
+    const sourceParentId = result.source.droppableId;
+    const destParentId = result.destination.droppableId;
+
+    const sourceColumnCards = subCardMap[sourceParentId];
+    const destColumnCards = subCardMap[destParentId];
+
+    let newColumnData = [...boardContainerData.columns];
+    // Dropped in source column
+    if (sourceParentId === destParentId) {
+      const reorderedColumnCards = reorderInner(
+        sourceColumnCards,
+        sourceIndex,
+        destIndex
+      );
+      newColumnData = newColumnData.map((column) => {
+        if (column.id === sourceParentId) {
+          column.cards = reorderedColumnCards;
+          column.cards = column.cards.filter(function (card) {
+            return card !== undefined;
+          });
+        }
+        return column;
+      });
+      setBoardContainerData({ columns: newColumnData });
+    }
+    // Dropeed in different column
+    else {
+      let newSourceColCards = [...sourceColumnCards];
+      const [draggedItem] = newSourceColCards.splice(sourceIndex, 1);
+      let newDestColCards = [...destColumnCards];
+      newDestColCards.splice(destIndex, 0, draggedItem);
+      newColumnData = newColumnData.map((column) => {
+        if (column.id === sourceParentId) {
+          column.cards = newSourceColCards;
+        } else if (column.id === destParentId) {
+          column.cards = newDestColCards;
+        }
+        return column;
+      });
+      setBoardContainerData({ columns: newColumnData });
+    }
+  };
+
+  const onDragEnd = (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+    if (result.type === "droppableItem") {
+      onOuterDragEnd(result);
+    } else if (result.type === "droppableSubItem") {
+      onInnerDragEnd(result);
+    }
+  };
+  const onShowCardModal = () => {
+    setModalShowCard(true);
   };
 
   return (
     <>
-      <div className={classes.root}>
-        <input
-          type="text"
-          onChange={(e) => setColumnName(e.target.value)}
-        ></input>
-        <button onClick={onAddColumn}>Add Column</button>
-        <button onClick={() => setModalShow(true)}>Create Card</button>
-        <div>
-          <strong>{boardData.name}</strong>
-        </div>
-        <CreateCardComponent
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-          columns={[]} // TODO: switch to column list used empty array because othewrwise this will cause the modal to crash until the promise issue in get board columns
+      <h3>
+        <strong>{boardData.name}</strong>
+      </h3>
+      <button
+        type="button"
+        className="btn btn-outline-secondary"
+        onClick={onAddColumn}
+      >
+        Add Column
+      </button>
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Column
+          columns={boardContainerData}
+          onShow={onShowCardModal}
+          key="asdsd"
         />
-        <DragDropContext>
-          <Grid alignItems="center" justify="center" container spacing={4}>
-            {console.log(columnList)}
-            {columnList.length && columnList.map((col) =>
-              <Droppable droppableId="droppable">
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    <Column boardId={col.boardId} id={col.id} order={col.order} name={col.name} />
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            )}
-          </Grid>
-        </DragDropContext>
-      </div>
-      {/*here we will do something like boardData.columns.map(column=> <Column></Column>)*/}
-      {/*same thing in the column compoenent with cards*/}
+      </DragDropContext>
+
+      <CreateCardComponent
+        show={modalShowCard}
+        onHide={() => setModalShowCard(false)}
+        order={0}
+        columns={boardContainerData.columns}
+      />
     </>
   );
 };
 
 export default Board;
-
-/**
- * <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Paper className={classes.card}>
-              <IconButton
-                style={{ left: "40%", padding: "0px", margin: "0px" }}
-                aria-label="delete"
-              >
-                <HighlightOffIcon />
-              </IconButton>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-              <CardComponent
-                className={classes.card}
-                {...undefined}
-              ></CardComponent>
-            </Paper>
- */

@@ -2,43 +2,48 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { column } from "../../types/column";
 import Modal from "react-bootstrap/Modal";
-import { createCard } from "../../api/cardApi";
+import { createBoard } from "../../api/boardApi";
 
+interface Props {
+  onHide: () => void;
+  show: boolean;
+  ownerid: string;
+}
 
-const CreateCard = (props: any) => {
+const CreateBoard = (props: Props) => {
   // maybe just display this under the board?
   //const [columnList, setColumnList] = useState<column[] | undefined>(undefined);
   const history = useHistory();
-  const [cardDescription, setCardDescription] = useState<string>("");
-  const [cardTitle, setCardTitle] = useState<string>("");
-  const [selectedColumn, setSelectedColumn] = useState<string>("");
-  const [cardPriority, setCardPriority] = useState<string>("");
+  const [projectDescription, setProjectDescription] = useState<string>("");
+  const [projectName, setProjectName] = useState<string>("");
 
   enum Priority {
     HIGH = "HIGH",
     MEDIUM = "MEDIUM",
     LOW = "LOW",
   }
-
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // make the api call to create a card
-    //TODO: Error Handling
-    const order = props.order;
-    createCard({
-      name: cardTitle,
-      columnId: props.columns[0].id,
-      order: props.columns[0].cards.length +1, //TODO: leave this temporarily until backend sets order
-      description: cardDescription,
-      // priority: cardPriority, //TODO implement
-    });
-    props.onHide();
-    // TODO: Update card data
-    // Needs to be fixed to update board component dynamically
+    if (projectName) {
+      try {
+        const a = await createBoard({
+          ownerId: props.ownerid,
+          name: projectName,
+        });
+        // Needs to be fixed to update board component dynamically
         // if boards is added to useEffect() as dependency,
         // it works, but we get an infinite loop
         // https://dmitripavlutin.com/react-useeffect-infinite-loop/
         window.location.reload(); //TODO remove this line when issue above is solved
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    //TODO: Error Handling
+    props.onHide();
+    // TODO: Update column data
   };
+
   return (
     <Modal
       {...props}
@@ -48,41 +53,28 @@ const CreateCard = (props: any) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Create a new card
+          Create a Project
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form id="form_id">
           <div className="form-group">
-            <label>Card Title</label>
+            <label>Project Name</label>
             <input
               type="text"
               className="form-control"
               placeholder="Enter the card title"
-              onChange={(e) => setCardTitle(e.target.value)}
+              onChange={(e) => setProjectName(e.target.value)}
             />
           </div>
 
           <div className="form-group">
-            <label>Card Description</label>
+            <label>Project Description</label>
             <textarea
               className="form-control"
               placeholder="Enter card Description"
-              onChange={(e) => setCardDescription(e.target.value)}
+              onChange={(e) => setProjectDescription(e.target.value)}
             />
-          </div>
-          <div className="form-group">
-            <label>PRIORITY</label>
-            <select
-              style={{ width: "100%", padding: "0.5%", marginBottom: "2%" }}
-              name="columnOptions"
-              form="form_id"
-              onChange={(e) => setCardPriority(e.target.value)}
-            >
-              <option value={Priority.HIGH}>{Priority.HIGH}</option>
-              <option value={Priority.MEDIUM}>{Priority.MEDIUM}</option>
-              <option value={Priority.LOW}>{Priority.LOW}</option>
-            </select>
           </div>
           <button
             onClick={onSubmit}
@@ -96,4 +88,4 @@ const CreateCard = (props: any) => {
     </Modal>
   );
 };
-export default CreateCard;
+export default CreateBoard;

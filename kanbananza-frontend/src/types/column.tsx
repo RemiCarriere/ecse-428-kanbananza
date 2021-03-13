@@ -4,7 +4,8 @@ export interface column {
   id: string;
   name: string;
   boardId: string;
-  order: number
+  order: number;
+  onShow?: VoidFunction;
   //cards: card[]
   // and other data we will get from the backend
 }

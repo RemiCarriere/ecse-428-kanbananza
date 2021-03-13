@@ -101,12 +101,12 @@ const Signup = (params) => {
           <button
             type="button"
             onClick={onLogin}
-            className="btn btn-primary btn-block"
+            className="btn btn-outline-secondary btn-block"
           >
             Sign Up
           </button>
           <p className="forgot-password text-right">
-            Already registered <a href="/sign-in">sign in?</a>
+            Already registered? <a href="/sign-in">Sign-in</a>
           </p>
         </form>
       </div>
