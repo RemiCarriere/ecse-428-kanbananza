@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { board } from "../../types/board";
 import { Grid, Paper } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {deleteBoard } from '../../api/boardApi'
 
 var ownerID;
 const BoardSummary = (props) => {
@@ -21,13 +23,24 @@ const BoardSummary = (props) => {
         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
         Quisque volutpat mattis eros.
       </p>
+      <div>
       <button
         type="button"
+        style={{display: 'inline-block'}}
         className="btn btn-outline-secondary"
         onClick={() => handleClick(props.board)}
       >
-        see more
+        See more
       </button>
+      <button
+        style={{display: 'inline-block', margin: '5px'}}
+        type="button"
+        className="btn btn-outline-danger"
+        onClick={() => props.deleteBrd(props.board)}
+      >
+        Delete
+      </button>
+      </div>
     </div>
   );
 };

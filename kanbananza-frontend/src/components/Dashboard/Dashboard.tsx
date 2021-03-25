@@ -5,6 +5,7 @@ import { board } from "../../types/board";
 import { useHistory } from "react-router-dom";
 import BoardSummary from "./BoardSummary";
 import CreateBoard from "./CreateBoardModal";
+import { deleteBoard } from "../../api/boardApi";
 var ownerID;
 const Dashboard = () => {
   const [modalShow, setModalShow] = useState(false);
@@ -35,12 +36,22 @@ const Dashboard = () => {
     setBoards(boards);
   };
 
+  const deleteBrd = async (board: board) => {
+    const res = await deleteBoard(board.id)
+    if(res === 204){
+      setBoards(boards.filter(brd => brd.id != board.id ))
+    }
+    else {
+      console.log(res)
+    }
+  };
+
   function populateBoard() {
     return boards.map((board, index) => {
       if (board && board.name) {
         return (
           <div className="col-md-4" key={index}>
-            <BoardSummary board={board} />
+            <BoardSummary deleteBrd={deleteBrd} board={board} />
           </div>
         );
       }
