@@ -67,9 +67,7 @@ const givenCardShallHaveThatDescription = (given) => {
   given(
     /^the card with name "(.*)" has a description "(.*)"$/,
     async (cardName, cardDescription) => {
-      const { body } = await request
-        .get(`/column/${colID}/cards/`) 
-        .expect(200);
+      const { body } = await request.get(`/column/${colID}/cards/`).expect(200);
 
       expect(body[0].description).toBe(cardDescription);
     }
@@ -81,9 +79,7 @@ const givenCardHasNullDescription = (given) => {
   given(
     /^the card with name "(.*)" does not have a description$/,
     async (cardName, NULL) => {
-      const { body } = await request
-        .get(`/column/${colID}/cards/`)
-        .expect(200);
+      const { body } = await request.get(`/column/${colID}/cards/`).expect(200);
 
       expect(body[0].description).toBe(NULL);
     }
@@ -137,7 +133,7 @@ defineFeature(feature, (test) => {
       async (cardName, cardDescription) => {
         const { body } = await request
           .patch(`/card/${cardID}`)
-          .send({description: cardDescription}) //I think this has an error
+          .send({ description: cardDescription }) //I think this has an error
           .expect(200);
       }
     );
@@ -180,7 +176,7 @@ defineFeature(feature, (test) => {
       async (cardName, cardDescription) => {
         const { body } = await request
           .patch(`/cards/${cardID}`)
-          .send({description: cardDescription}) //I think this has an error
+          .send({ description: cardDescription }) //I think this has an error
           .expect(200);
       }
     );
@@ -194,9 +190,7 @@ defineFeature(feature, (test) => {
       }
     );
 
-    then(/^a message "(.*)" is issued$/, (message) => {
-      
-    });
+    then(/^a message "(.*)" is issued$/, (message) => {});
 
     then(
       /^the card with name "(.*)" has description (.*)$/,

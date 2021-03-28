@@ -54,9 +54,10 @@ const givenColumnHasOneCardWithName = (given) => {
   given(
     /^that column has one and only one card with name "(.*)"$/,
     async (name) => {
-      const req = await request.post("/card")
-      .send({ name: name, columnId: colID, order: 1})
-      .expect(201);
+      const req = await request
+        .post("/card")
+        .send({ name: name, columnId: colID, order: 1 })
+        .expect(201);
 
       cardId = req.body.id;
     }
@@ -69,7 +70,7 @@ const givenCardShallHaveThatPriority = (given) => {
     async (cardName, cardPriority) => {
       const { body } = await request
         .patch(`/cards/${cardId}`)
-        .send({ priority: cardPriority }) 
+        .send({ priority: cardPriority })
         .expect(200);
     }
   );
@@ -92,12 +93,11 @@ const thenCardShallHaveThatPriority = (then) => {
   then(
     /^the card with name "(.*)" has priority (.*)$/,
     async (cardName, cardPriority) => {
-      const body = await request
-        .get(`/column/${colID}/cards/`) 
-        .expect(200);
+      const body = await request.get(`/column/${colID}/cards/`).expect(200);
 
-      
-      expect(body.body.filter((card) => card.name === cardName)[0].priority).toBe(cardPriority);
+      expect(
+        body.body.filter((card) => card.name === cardName)[0].priority
+      ).toBe(cardPriority);
     }
   );
 };
@@ -122,7 +122,6 @@ defineFeature(feature, (test) => {
     when,
     then,
   }) => {
-    
     givenFizBinLoggedIn(given);
 
     givenUserHasOneBoard(given);

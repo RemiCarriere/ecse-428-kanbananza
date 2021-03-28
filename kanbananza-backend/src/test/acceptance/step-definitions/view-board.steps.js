@@ -22,56 +22,50 @@ const givenUserLoggedIn = (given) => {
   );
 };
 
-
 const givenUserHasFollowingBoards = (given) => {
-  given(
-    "the user has boards with names as following:",
-    async (table) => {
-      for (const row of table) {
-        await request.post("/board").send({
+  given("the user has boards with names as following:", async (table) => {
+    for (const row of table) {
+      await request
+        .post("/board")
+        .send({
           name: row.boardName,
-          ownerId: userID
-        }).expect(201);
-      }
+          ownerId: userID,
+        })
+        .expect(201);
     }
-  );
+  });
 };
 
 const theUserHasFollowingBoards = (then) => {
-  then(
-    "the boards with names as following are returned:",
-    async (table) => {
+  then("the boards with names as following are returned:", async (table) => {
     //const userBoards = (await request.get(/user/${user.id}/boards)).body;
-      for (const row of table) {
-        expect(userBoards.filter((board) => board.name === row.boardName).length).toBe(1);
-      }
+    for (const row of table) {
+      expect(
+        userBoards.filter((board) => board.name === row.boardName).length
+      ).toBe(1);
     }
-  );
+  });
 };
 
+const givenUserHasNoBoards = (given) => {
+  given(/^the user has no boards$/, async () => {
+    const { body } = await request.get(`/user/${userID}/boards`).expect(200);
 
-  const givenUserHasNoBoards = (given) => {
-    given(/^the user has no boards$/, async () => {
-      const { body } = await request
-        .get(`/user/${userID}/boards`)
-        .expect(200);
-      
-      expect(body.length).toBe(0);
-    });
-  };
+    expect(body.length).toBe(0);
+  });
+};
 
-  const whenUserViewsBoards = (when) => {
-    when(/^the user attempts to view their boards$/, async () => {
-        userBoards = (await request.get(`/user/${userID}/boards`)).body;
-    });
-  };
-  
-  const thenNoBoardsAreReturned = (then) => {
-    then(/^no boards are returned$/, async () => {
-      expect(userBoards.length).toBe(0);
-    });
-  };
-  
+const whenUserViewsBoards = (when) => {
+  when(/^the user attempts to view their boards$/, async () => {
+    userBoards = (await request.get(`/user/${userID}/boards`)).body;
+  });
+};
+
+const thenNoBoardsAreReturned = (then) => {
+  then(/^no boards are returned$/, async () => {
+    expect(userBoards.length).toBe(0);
+  });
+};
 
 defineFeature(feature, (test) => {
   test("View boards of a user with multiple boards (Normal Flow)", ({
@@ -84,10 +78,9 @@ defineFeature(feature, (test) => {
     givenUserLoggedIn(given);
 
     givenUserHasFollowingBoards(given);
-    whenUserViewsBoards(when); 
+    whenUserViewsBoards(when);
     theUserHasFollowingBoards(then);
-
-    });
+  });
 
   test("View boards of a new user with no boards (Alternate Flow)", ({
     given,
@@ -98,7 +91,7 @@ defineFeature(feature, (test) => {
 
     givenUserLoggedIn(given);
 
-    givenUserHasNoBoards(given); 
+    givenUserHasNoBoards(given);
     whenUserViewsBoards(when);
     thenNoBoardsAreReturned(then);
   });

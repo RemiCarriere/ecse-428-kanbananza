@@ -2,7 +2,6 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import { givenExistsUser } from "./shared-steps";
 import request from "../../support/request";
 
-
 let response;
 const feature = loadFeature(
   "src/test/acceptance/features/ID036_Update_the_name_of_a_board.feature"
@@ -30,7 +29,7 @@ const givenUserHasOneBoard = (given) => {
       .send({ ownerId: userID, name: name });
     selectedBoard = res.body.id;
   });
-}
+};
 
 const whenUserUpdatesBoardWithName = (when) => {
   when(
@@ -39,8 +38,10 @@ const whenUserUpdatesBoardWithName = (when) => {
       const userBoards = (await request.get(`/user/${userID}/boards`)).body;
       let board = userBoards.filter((board) => board.name === name)[0].id;
 
-      const res = await request.put(`/boards/${board}`).send({ name: newName })
-      .expect(200);
+      const res = await request
+        .put(`/boards/${board}`)
+        .send({ name: newName })
+        .expect(200);
     }
   );
 };
@@ -53,12 +54,9 @@ const userShallHaveBoardWithName = (then) => {
 };
 
 const userShallHaveOneBoard = (then) => {
-  then(
-    'the user shall have one board',
-    async () => {
-      expect((await request.get(`/user/${userID}/boards`)).body.length).toBe(1);
-    }
-  );
+  then("the user shall have one board", async () => {
+    expect((await request.get(`/user/${userID}/boards`)).body.length).toBe(1);
+  });
 };
 
 defineFeature(feature, (test) => {
@@ -77,7 +75,6 @@ defineFeature(feature, (test) => {
 
     userShallHaveBoardWithName(then);
     userShallHaveOneBoard(then);
-    
   });
 
   test("Update the name of one of the user's boards to a new valid name (Alternate Flow)", ({
@@ -88,28 +85,35 @@ defineFeature(feature, (test) => {
     givenExistsUser(given);
     givenUserLoggedIn(given);
 
-    given('the user has boards with names as following:', async (table) => {
+    given("the user has boards with names as following:", async (table) => {
       for (const row of table) {
         await request.post("/boards").send({
           name: row.boardName,
-          ownerId: userID
+          ownerId: userID,
         });
       }
     });
 
     whenUserUpdatesBoardWithName(when);
 
-    then('the user shall have boards with names as following:', async (table) => {
-      const userBoards = (await request.get(`/user/${userID}/boards`)).body;
-      for (const row of table) {
-        expect(userBoards.filter((board) => board.name === row.boardName).length).toBe(1);
+    then(
+      "the user shall have boards with names as following:",
+      async (table) => {
+        const userBoards = (await request.get(`/user/${userID}/boards`)).body;
+        for (const row of table) {
+          expect(
+            userBoards.filter((board) => board.name === row.boardName).length
+          ).toBe(1);
+        }
       }
-    });
+    );
 
-    then('the user shall have three boards', () => {
+    then("the user shall have three boards", () => {
       async () => {
-        expect((await request.get(`/user/${userID}/boards`)).body.length).toBe(3);
-      }
+        expect((await request.get(`/user/${userID}/boards`)).body.length).toBe(
+          3
+        );
+      };
     });
   });
 
@@ -125,7 +129,7 @@ defineFeature(feature, (test) => {
     givenUserHasOneBoard(given);
 
     whenUserUpdatesBoardWithName(when);
-    
+
     userShallHaveBoardWithName(then);
 
     userShallHaveOneBoard(then);
@@ -144,9 +148,10 @@ defineFeature(feature, (test) => {
 
     whenUserUpdatesBoardWithName(when);
 
-    then('the system shall report that the board name cannot be empty', () => {
-
-    });
+    then(
+      "the system shall report that the board name cannot be empty",
+      () => {}
+    );
 
     userShallHaveBoardWithName(then);
 

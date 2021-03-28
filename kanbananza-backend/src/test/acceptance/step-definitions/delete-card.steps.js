@@ -51,65 +51,61 @@ const givenBoardHasFollowingColumns = (given) => {
   );
 };
 
-
 const givenColumnHasFollowingCards = (then) => {
-    then(
-        /^the column with name "(.*)" has cards with names and order as follows:$/,
-      async (colName, table) => {
-        const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colID = res.body.filter((column) => column.name === colName)[0].id;
-        for (const row of table) {
-          await request.post(`/column/${colID}/cards`).send({
-            name: row.cardName,
-            columnId: colID,
-            order: parseInt(row.cardOrder),
-          });
-        }
+  then(
+    /^the column with name "(.*)" has cards with names and order as follows:$/,
+    async (colName, table) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      let colID = res.body.filter((column) => column.name === colName)[0].id;
+      for (const row of table) {
+        await request.post(`/column/${colID}/cards`).send({
+          name: row.cardName,
+          columnId: colID,
+          order: parseInt(row.cardOrder),
+        });
       }
-    );
-  };
-
+    }
+  );
+};
 
 const whenUserAttemptsToDeleteCard = (when) => {
-    when(
-      /^the user attempts to delete the card with name "(.*)"$/,
-      async (colName,cardName) => {
-        const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colID = res.body.filter((column) => column.name === colName)[0];
+  when(
+    /^the user attempts to delete the card with name "(.*)"$/,
+    async (colName, cardName) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      let colID = res.body.filter((column) => column.name === colName)[0];
 
-        const res2 = await request.get(`/column/${colID}/cards`);
-        let cardId = res2.body.filter((card) => card.cardName === cardName)[0];
-        if (cardId) {
-          cardId = cardId.id;
-        } else {
-          cardId = "non-existent card";
-        }
-        const res1 = await request.delete(`/column/${colID}/cards/${cardId}`);
-        if (res1.body) {
-          errMsg = res1.body.errors;
-        }
+      const res2 = await request.get(`/column/${colID}/cards`);
+      let cardId = res2.body.filter((card) => card.cardName === cardName)[0];
+      if (cardId) {
+        cardId = cardId.id;
+      } else {
+        cardId = "non-existent card";
       }
-    );
-  };
-
-
-  const thenColumnHasFollowingCards = (then) => {
-    then(
-        /^the column with name "(.*)" shall have cards with names and orders as follows:$/,
-      async (colName, table) => {
-        const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colID = res.body.filter((column) => column.name === colName)[0];
-        for (const row of table) {
-          await request.post("/column/${colID}/cards").send({
-            name: row.cardName,
-            columnId: colID,
-            order: parseInt(row.cardOrder),
-          });
-        }
+      const res1 = await request.delete(`/column/${colID}/cards/${cardId}`);
+      if (res1.body) {
+        errMsg = res1.body.errors;
       }
-    );
-  };
+    }
+  );
+};
 
+const thenColumnHasFollowingCards = (then) => {
+  then(
+    /^the column with name "(.*)" shall have cards with names and orders as follows:$/,
+    async (colName, table) => {
+      const res = await request.get(`/board/${selectedBoard}/columns`);
+      let colID = res.body.filter((column) => column.name === colName)[0];
+      for (const row of table) {
+        await request.post("/column/${colID}/cards").send({
+          name: row.cardName,
+          columnId: colID,
+          order: parseInt(row.cardOrder),
+        });
+      }
+    }
+  );
+};
 
 defineFeature(feature, (test) => {
   test("Delete an existing card at the end of its column (Normal Flow)", ({
@@ -122,11 +118,10 @@ defineFeature(feature, (test) => {
 
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
-    givenBoardHasFollowingColumns(given); 
+    givenBoardHasFollowingColumns(given);
     givenColumnHasFollowingCards(given);
     whenUserAttemptsToDeleteCard(when);
     thenColumnHasFollowingCards(then);
-
   });
 
   test("Delete an existing card at the middle of its column (Alternate Flow)", ({
@@ -140,7 +135,7 @@ defineFeature(feature, (test) => {
 
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
-    givenBoardHasFollowingColumns(given); 
+    givenBoardHasFollowingColumns(given);
     givenColumnHasFollowingCards(given);
     whenUserAttemptsToDeleteCard(when);
     thenColumnHasFollowingCards(then);
