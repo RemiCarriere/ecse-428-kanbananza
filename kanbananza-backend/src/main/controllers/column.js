@@ -50,6 +50,7 @@ const selectCards = async (req, res, next) => {
       );
     } else {
       cards = await columnService.findAllColumnCards(req.params.id);
+      await cards.sort((a, b) => (a.order > b.order ? 1 : -1));
     }
   } catch (e) {
     next(e);
