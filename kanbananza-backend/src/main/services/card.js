@@ -121,6 +121,26 @@ const findColumnCardWithGreatestOrder = async (columnId) => {
   return result[0];
 };
 
+const deleteCardById = async (id) => {
+  const card = await findCardById(id);
+
+  const cards = await findColumnCardsWithGreaterOrder(
+    card.columnId,
+    card.order
+  );
+
+  let c;
+  for (let i = 0; i < cards.length; i += 1) {
+    c = cards[i];
+
+    c.order += c.order - 1;
+    // eslint-disable-next-line no-await-in-loop
+    await c.save();
+  }
+
+  return Card.findByIdAndDelete(id).exec();
+};
+
 export default {
   createCard,
   findAllCards,
@@ -128,4 +148,5 @@ export default {
   findCardsByName,
   updateCardById,
   setCardOrderById,
+  deleteCardById,
 };
