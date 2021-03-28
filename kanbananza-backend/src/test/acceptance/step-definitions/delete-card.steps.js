@@ -1,14 +1,25 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
-import card from "../../../main/models/card";
+import { givenExistsUser } from "./shared-steps";
 import request from "../../support/request";
 
 const feature = loadFeature(
-  "src/test/acceptance/features/ID012_Delete_a_cardfeature"
+  "src/test/acceptance/features/ID012_Delete_a_card.feature"
 );
 let errMsg = "";
 let userID = "";
 let selectedBoard = "";
 
+const givenUserLoggedIn = (given) => {
+  given(
+    /^the user with email "(.*)" is logged into the system$/,
+    async (email) => {
+      const res = await request
+        .post("/login")
+        .send({ email, password: "foobar" });
+      userID = res.body.id;
+    }
+  );
+};
 
 const givenUserHasOneBoard = (given) => {
   given("the user has one board", async () => {
@@ -46,9 +57,9 @@ const givenColumnHasFollowingCards = (then) => {
         /^the column with name "(.*)" has cards with names and order as follows:$/,
       async (colName, table) => {
         const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colId = res.body.filter((column) => column.name === colName)[0];
+        let colID = res.body.filter((column) => column.name === colName)[0].id;
         for (const row of table) {
-          await request.post("/column/${colID}/cards").send({
+          await request.post(`/column/${colID}/cards`).send({
             name: row.cardName,
             columnId: colID,
             order: parseInt(row.cardOrder),
@@ -61,10 +72,10 @@ const givenColumnHasFollowingCards = (then) => {
 
 const whenUserAttemptsToDeleteCard = (when) => {
     when(
-      /^the user attempts to delete card with name "(.*)"$/,
+      /^the user attempts to delete the card with name "(.*)"$/,
       async (colName,cardName) => {
         const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colId = res.body.filter((column) => column.name === colName)[0];
+        let colID = res.body.filter((column) => column.name === colName)[0];
 
         const res2 = await request.get(`/column/${colID}/cards`);
         let cardId = res2.body.filter((card) => card.cardName === cardName)[0];
@@ -87,7 +98,7 @@ const whenUserAttemptsToDeleteCard = (when) => {
         /^the column with name "(.*)" shall have cards with names and orders as follows:$/,
       async (colName, table) => {
         const res = await request.get(`/board/${selectedBoard}/columns`);
-        let colId = res.body.filter((column) => column.name === colName)[0];
+        let colID = res.body.filter((column) => column.name === colName)[0];
         for (const row of table) {
           await request.post("/column/${colID}/cards").send({
             name: row.cardName,
@@ -102,30 +113,35 @@ const whenUserAttemptsToDeleteCard = (when) => {
 
 defineFeature(feature, (test) => {
   test("Delete an existing card at the end of its column (Normal Flow)", ({
+    given,
     when,
     then,
   }) => {
-    givenUserExists(given);
     givenExistsUser(given);
+    givenUserLoggedIn(given);
+
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
     givenBoardHasFollowingColumns(given); 
-    // add the last given 
+    givenColumnHasFollowingCards(given);
     whenUserAttemptsToDeleteCard(when);
     thenColumnHasFollowingCards(then);
 
   });
 
   test("Delete an existing card at the middle of its column (Alternate Flow)", ({
+    given,
     when,
     then,
   }) => {
-    givenUserExists(given);
     givenExistsUser(given);
+
+    givenUserLoggedIn(given);
+
     givenUserHasOneBoard(given);
     givenBoardSelected(given);
     givenBoardHasFollowingColumns(given); 
-    // add the last given 
+    givenColumnHasFollowingCards(given);
     whenUserAttemptsToDeleteCard(when);
     thenColumnHasFollowingCards(then);
   });

@@ -37,7 +37,7 @@ const whenUserUpdatesBoardWithName = (when) => {
     /^the user attempts to update the name of the board with name "(.*)" to "(.*)"$/,
     async (name, newName) => {
       const userBoards = (await request.get(`/user/${userID}/boards`)).body;
-      board = userBoards.filter((board) => board.name === name)[0].id;
+      let board = userBoards.filter((board) => board.name === name)[0].id;
 
       const res = await request.put(`/boards/${board}`).send({ name: newName })
       .expect(200);
@@ -88,7 +88,7 @@ defineFeature(feature, (test) => {
     givenExistsUser(given);
     givenUserLoggedIn(given);
 
-    given('the user has boards with names as following:', (table) => {
+    given('the user has boards with names as following:', async (table) => {
       for (const row of table) {
         await request.post("/boards").send({
           name: row.boardName,
@@ -99,7 +99,7 @@ defineFeature(feature, (test) => {
 
     whenUserUpdatesBoardWithName(when);
 
-    then('the user shall have boards with names as following:', (table) => {
+    then('the user shall have boards with names as following:', async (table) => {
       const userBoards = (await request.get(`/user/${userID}/boards`)).body;
       for (const row of table) {
         expect(userBoards.filter((board) => board.name === row.boardName).length).toBe(1);
