@@ -104,4 +104,25 @@ const update = async (req, res, next) => {
   }
 };
 
-export default { create, select, index, update };
+const remove = async (req, res, next) => {
+  try {
+    const card = await cardService.findCardById(req.params.id);
+
+    if (card === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Card with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    await cardService.deleteCardById(req.params.id);
+
+    return res.sendStatus(204);
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export default { create, select, index, update, remove };

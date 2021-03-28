@@ -18,4 +18,5 @@ export default (router) => {
     validateSchema("partialCard"),
     cardController.update
   );
+  router.delete("/cards?/:id", idParamValidator, cardController.remove); // delete is a reserved name
 };
