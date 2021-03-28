@@ -8,7 +8,7 @@ import Column from "./Column/Column";
 import { createColumn } from "../../api/columnApi";
 import { card } from "../../types/card";
 import { DragDropContext } from "react-beautiful-dnd";
-import { getColumnCards } from "../../api/cardApi";
+import { deleteCard, getColumnCards } from "../../api/cardApi";
 
 interface columnContainer {
   name: string;
@@ -125,6 +125,19 @@ const Board = (props) => {
     setColumns(newColumnData);
   };
 
+  const deleteCrd = async (card: card) => {
+    const status = card.id && await deleteCard(card.id)
+    if(status === 204){
+    let newColumnData = [...boardData.columns];
+    let newCardData = [...boardData.columns[0].cards];
+    newCardData =  newCardData.filter(crd => crd.id != card.id)
+    newColumnData[0].cards = newCardData;
+    setColumns(newColumnData);
+    } else {
+      console.log('an error has happened')
+    }
+  }
+
   const reorder = (list, startIndex, endIndex): Array<columnContainer> => {
     const result: Array<columnContainer> = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -225,7 +238,7 @@ const Board = (props) => {
       </button>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Column columns={boardData} onShow={onShowCardModal} />
+        <Column deleteCrd={deleteCrd} columns={boardData} onShow={onShowCardModal} />
       </DragDropContext>
 
       <CreateCardComponent

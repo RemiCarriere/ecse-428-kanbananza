@@ -19,3 +19,9 @@ export const getColumnCards = (columnId: string): any => {
     .then((res) => res.data)
     .catch((err) => console.log(err));
 };
+export const deleteCard = (id: string): any => {
+  // what is this ? mark
+  return API.delete(`/cards/${id}`)
+    .then((res) => res.status)
+    .catch((err) => err);
+};

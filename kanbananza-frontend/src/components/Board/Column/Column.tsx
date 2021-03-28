@@ -70,7 +70,7 @@ const Column = (columnProps: any) => {
                           <Paper className={classes.column}>
                             <ColumnContent col={col} />
 
-                            <CardComponent cards={col.cards} type={col.id} />
+                            <CardComponent deleteCrd={columnProps.deleteCrd} cards={col.cards} type={col.id} />
                             {index == 0 && (
                               <AddCardButton onShow={columnProps.onShow} />
                             )}
