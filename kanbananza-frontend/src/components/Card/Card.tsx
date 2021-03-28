@@ -5,6 +5,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
@@ -54,6 +55,7 @@ const CardComponent = (cardProps: any) => {
                       {...provided.dragHandleProps}
                     >
                       <Card className={classes.root}>
+                        <HighlightOffIcon style={{float: 'right'}} onClick={() => cardProps.deleteCrd(cardData)}>Delete</HighlightOffIcon>
                         <CardContent>
                           <Typography className={classes.title}>
                             {cardData ? cardData.name : "Card Title"}

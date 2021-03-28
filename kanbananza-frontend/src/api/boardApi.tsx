@@ -31,3 +31,9 @@ export const getBoardColumns = (id: string): any => {
       console.log(err);
     });
 };
+
+export const deleteBoard = (id: string): any => {
+  return API.delete(`/board/${id}`)
+  .then((res) => res.status)
+  .catch((err) => err)
+}
