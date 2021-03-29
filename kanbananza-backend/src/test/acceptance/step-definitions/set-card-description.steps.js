@@ -10,6 +10,7 @@ let userID = "";
 let selectedBoard = "";
 let colID = "";
 let cardID = "";
+let Msg2 = "";
 
 const givenFizBinLoggedIn = (given) => {
   given("user with username Fizbin is logged into the system", async () => {
@@ -66,9 +67,7 @@ const givenCardShallHaveThatDescription = (given) => {
   given(
     /^the card with name "(.*)" has a description "(.*)"$/,
     async (cardName, cardDescription) => {
-      const { body } = await request
-        .get(`/column/${colID}/cards/`) //I think this has an error
-        .expect(200);
+      const { body } = await request.get(`/column/${colID}/cards/`).expect(200);
 
       expect(body[0].description).toBe(cardDescription);
     }
@@ -80,9 +79,7 @@ const givenCardHasNullDescription = (given) => {
   given(
     /^the card with name "(.*)" does not have a description$/,
     async (cardName, NULL) => {
-      const { body } = await request
-        .get(`/column/${colID}/cards/`) //I think this has an error
-        .expect(200);
+      const { body } = await request.get(`/column/${colID}/cards/`).expect(200);
 
       expect(body[0].description).toBe(NULL);
     }
@@ -116,73 +113,91 @@ const thenCardShallHaveThatDescription = (then) => {
 
 //TODO: Implement the step definitions and remove .skip
 defineFeature(feature, (test) => {
-  test.skip("Set a valid description for a card with an existing description (Alternate Flow)", ({
+  test("Set a valid description for a card with an existing description (Alternate Flow)", ({
     given,
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged into the system", () => {});
+    givenFizBinLoggedIn(given);
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given);
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given);
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given);
 
-    given(
-      /^that column has one and only one card with name "(.*)"$/,
-      (arg0) => {}
-    );
+    givenColumnHasOneCardWithName(given);
 
     given(
       /^the card with name "(.*)" has a description "(.*)"$/,
-      (arg0, arg1) => {}
+      async (cardName, cardDescription) => {
+        const { body } = await request
+          .patch(`/card/${cardID}`)
+          .send({ description: cardDescription }) //I think this has an error
+          .expect(200);
+      }
     );
 
     when(
       /^the user sets the description of the card with name "(.*)" to "(.*)"$/,
-      (arg0, arg1) => {}
+      async (arg0, cardDescription) => {
+        const res = await request
+          .patch(`/cards/${cardID}`)
+          .send({ description: cardDescription });
+      }
     );
 
     then(
       /^the card with name "(.*)" has description "(.*)"$/,
-      (arg0, arg1) => {}
+      async (arg0, cardDescription) => {
+        const res = await request.get(`/card/${cardID}`);
+        expect(res.body.description).toBe(cardDescription);
+      }
     );
   });
 
-  test.skip("Set the description for a card with no description to whitespace (Error Flow)", ({
+  test("Set the description for a card with no description to whitespace (Error Flow)", ({
     given,
     when,
     then,
   }) => {
-    given("user with username Fizbin is logged into the system", () => {});
+    givenFizBinLoggedIn(given);
 
-    given("the user has one board", () => {});
+    givenUserHasOneBoard(given);
 
-    given("the user has selected that board", () => {});
+    givenBoardSelected(given);
 
-    given(/^the board has one column with name "(.*)"$/, (arg0) => {});
+    givenBoardHasColumnWithName(given);
 
-    given(
-      /^that column has one and only one card with name "(.*)"$/,
-      (arg0) => {}
-    );
+    givenColumnHasOneCardWithName(given);
 
     given(
       /^the card with name "(.*)" has a description "(.*)"$/,
-      (arg0, arg1) => {}
+      async (cardName, cardDescription) => {
+        const { body } = await request
+          .patch(`/cards/${cardID}`)
+          .send({ description: cardDescription }) //I think this has an error
+          .expect(200);
+      }
     );
 
     when(
       /^the user sets the description of the card with name "(.*)" to "(.*)"$/,
-      (arg0, arg1) => {}
+      async (arg0, cardDescription) => {
+        const res = await request
+          .patch(`/cards/${cardID}`)
+          .send({ description: cardDescription });
+      }
     );
 
-    then(/^a message "(.*)" is issued$/, (arg0) => {});
+    then(/^a message "(.*)" is issued$/, (message) => {});
 
     then(
-      /^the card with name "(.*)" has description "(.*)"$/,
-      (arg0, arg1) => {}
+      /^the card with name "(.*)" has description (.*)$/,
+      async (arg0, cardDescription) => {
+        const res = await request.get(`/card/${cardID}`);
+        expect(res.body.description).toBe(cardDescription);
+      }
     );
   });
 
