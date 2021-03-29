@@ -17,6 +17,7 @@
     },
     "description": {
       "type": "string",
+      "isNotEmpty": true,
       "description": "description of the card"
     },
     "priority": {
