@@ -82,6 +82,45 @@ const selectColumns = async (req, res, next) => {
   return res.status(200).json(columns.map((column) => column.toDTO()));
 };
 
+const update = async (req, res, next) => {
+  try {
+    let board;
+
+    board = await boardService.findBoardById(req.params.id);
+
+    if (board === null) {
+      return next(
+        new HttpError({
+          code: 404,
+          message: `Board with id ${req.params.id} does not exist.`,
+        })
+      );
+    }
+
+    // prettier-ignore
+    const updatedInfo = { // see https://www.kevinpeters.net/adding-object-properties-conditionally-with-es-6
+      ...(req.body.name !== undefined && {name: req.body.name}),
+      ...(req.body.ownerId !== undefined && {columnId: req.body.ownerId}),
+    };
+
+    board = await boardService.updateBoardById(req.params.id, updatedInfo);
+
+    return res.status(200).json(board.toDTO());
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(
+        new HttpError({
+          code: 400,
+          message: "Invalid board information.",
+          errors: [e],
+        })
+      );
+    }
+
+    return next(e);
+  }
+};
+
 const remove = async (req, res, next) => {
   try {
     await boardService.deleteBoardById(req.params.id);
@@ -91,4 +130,4 @@ const remove = async (req, res, next) => {
   return res.sendStatus(204);
 };
 
-export default { create, select, index, selectColumns, remove };
+export default { create, select, index, selectColumns, update, remove };

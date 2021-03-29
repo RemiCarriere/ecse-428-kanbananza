@@ -53,6 +53,22 @@ const findBoardColumnsByName = async (id, name) => {
   return Column.find({ boardId: id, name }).exec();
 };
 
+const updateBoardById = async (id, updatedInfo) => {
+  if (
+    updatedInfo.ownerId !== undefined &&
+    !isValidMongooseObjectId(updatedInfo.columnId)
+  ) {
+    throw new ValidationError({
+      path: "ownerId",
+      reason: "owner ID is invalid",
+      data: updatedInfo.ownerId,
+    });
+  }
+
+  return Board.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
+
+};
+
 const deleteBoardById = async (id) => {
   (await Column.find({ boardId: id }).exec()).forEach((column) => {
     columnService.deleteColumnById(column._id).exec();
@@ -67,5 +83,6 @@ export default {
   findBoardsByName,
   findAllBoardColumns,
   findBoardColumnsByName,
+  updateBoardById,
   deleteBoardById,
 };
