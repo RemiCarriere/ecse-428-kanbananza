@@ -66,7 +66,6 @@ const updateBoardById = async (id, updatedInfo) => {
   }
 
   return Board.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
-
 };
 
 const deleteBoardById = async (id) => {

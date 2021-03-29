@@ -149,12 +149,9 @@ defineFeature(feature, (test) => {
 
     whenUserUpdatesBoardWithName(when);
 
-    then(
-      "the system shall report that the board name cannot be empty",
-      () => {
-        expect(status).toBeGreaterThanOrEqual(400);
-      }
-    );
+    then("the system shall report that the board name cannot be empty", () => {
+      expect(status).toBeGreaterThanOrEqual(400);
+    });
 
     userShallHaveBoardWithName(then);
 
