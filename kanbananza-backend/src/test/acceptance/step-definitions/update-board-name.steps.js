@@ -9,6 +9,7 @@ const feature = loadFeature(
 
 let userID = "";
 let selectedBoard = "";
+let status = 0;
 
 const givenUserLoggedIn = (given) => {
   given(
@@ -39,9 +40,9 @@ const whenUserUpdatesBoardWithName = (when) => {
       let board = userBoards.filter((board) => board.name === name)[0].id;
 
       const res = await request
-        .put(`/boards/${board}`)
-        .send({ name: newName })
-        .expect(200);
+        .patch(`/boards/${board}`)
+        .send({ name: newName });
+      status = res.status;
     }
   );
 };
@@ -148,10 +149,9 @@ defineFeature(feature, (test) => {
 
     whenUserUpdatesBoardWithName(when);
 
-    then(
-      "the system shall report that the board name cannot be empty",
-      () => {}
-    );
+    then("the system shall report that the board name cannot be empty", () => {
+      expect(status).toBeGreaterThanOrEqual(400);
+    });
 
     userShallHaveBoardWithName(then);
 

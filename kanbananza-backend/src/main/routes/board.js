@@ -15,7 +15,17 @@ export default (router) => {
     idParamValidator,
     boardController.selectColumns
   );
-  router.put("/boards?/:id", idParamValidator, validateSchema("completeBoard"), boardController.update);
-  router.patch("/boards?/:id", idParamValidator, validateSchema("partialBoard"), boardController.update);
+  router.put(
+    "/boards?/:id",
+    idParamValidator,
+    validateSchema("completeBoard"),
+    boardController.update
+  );
+  router.patch(
+    "/boards?/:id",
+    idParamValidator,
+    validateSchema("partialBoard"),
+    boardController.update
+  );
   router.delete("/boards?/:id", idParamValidator, boardController.remove);
 };

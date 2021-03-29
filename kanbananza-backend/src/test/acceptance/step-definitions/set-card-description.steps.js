@@ -193,7 +193,7 @@ defineFeature(feature, (test) => {
     then(/^a message "(.*)" is issued$/, (message) => {});
 
     then(
-      /^the card with name "(.*)" has description (.*)$/,
+      /^the card with name "(.*)" has description "(.*)"$/,
       async (arg0, cardDescription) => {
         const res = await request.get(`/card/${cardID}`);
         expect(res.body.description).toBe(cardDescription);
@@ -221,7 +221,7 @@ defineFeature(feature, (test) => {
     });
 
     when(
-      /^the user sets the description of the card with name "(.*)" to (.*)$/,
+      /^the user sets the description of the card with name "(.*)" to "(.*)"$/,
       async (arg0, cardDescription) => {
         const res = await request
           .patch(`/card/${cardID}`)
@@ -230,7 +230,7 @@ defineFeature(feature, (test) => {
     );
 
     then(
-      /^the card with name "(.*)" has description (.*)$/,
+      /^the card with name "(.*)" has description "(.*)"$/,
       async (arg0, cardDescription) => {
         const res = await request.get(`/card/${cardID}`);
         expect(res.body.description).toBe(cardDescription);
