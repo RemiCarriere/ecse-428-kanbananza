@@ -13,9 +13,11 @@ export const editColumnName = (id: string, name: string): any => {
     .catch((err) => console.log(err));
 };
 
-export const deleteColumn = (columnId: string): any => {
+export const deleteColumn = (columnId: string, order: number): any => {
   // what is this ? mark
-  return API.delete(`/column/${columnId}`)
+  
+  return API.delete(`/column/${columnId}`), API.post("/column/order", order - 1)
     .then((res) => res.data)
     .catch((err) => console.log(err));
+  
 };

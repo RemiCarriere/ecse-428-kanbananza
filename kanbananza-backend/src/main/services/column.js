@@ -77,7 +77,25 @@ const updateColumnById = async (id, updatedInfo) => {
   return Column.findByIdAndUpdate(id, updatedInfo, { new: true }).exec(); // see https://masteringjs.io/tutorials/mongoose/findoneandupdate
 };
 
+const findCurrentOrder = async (columnId, order) => {
+  return Column.find({ columnId, order: { $gte: order } })
+    .sort({ order: "asc" })
+    .exec();
+};
+
 const deleteColumnById = async (id) => {
+  const column = await findColumnById(id);
+
+  const columns = await findCurrentOrder(column.columnId, column.order);
+
+  let c;
+  for (let i = 0; i < columns.length; i += 1){
+    c = cards[i];
+
+    c.order += c.order - 1;
+    await c.save();
+  }
+
   await Card.deleteMany({ columnId: id }).exec(); // cascade
   return Column.findByIdAndDelete(id).exec();
 };

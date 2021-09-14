@@ -64,7 +64,7 @@ const ColumnContent = (columnProps: any) => {
   }
 
   const onDelete = () => {
-    deleteColumn(columnData.id);
+    deleteColumn(columnData.id, columnData.order);
     // Needs to be fixed to update board component dynamically
     // if boards is added to useEffect() as dependency,
     // it works, but we get an infinite loop
